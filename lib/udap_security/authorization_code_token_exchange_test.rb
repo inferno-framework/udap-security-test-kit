@@ -1,0 +1,89 @@
+require_relative 'udap_client_assertion_payload_builder'
+
+module UDAPSecurity
+  class AuthorizationCodeTokenExchangeTest < Inferno::Test
+    title 'OAuth token exchange request succeeds when supplied correct information'
+    description %(
+      The [UDAP Security IG Section 4.2 on Obtaining an Access Token](https://hl7.org/fhir/us/udap-security/STU1/consumer.html#obtaining-an-access-token)
+      states the following:
+      > - Client applications SHALL exchange authorization codes for access tokens as per Section 4.1.3 of RFC 6749
+      > - Client applications authenticating with a private key and Authentication Token ... SHALL submit a POST request
+      to the Authorization Server’s token endpoint
+      > - An Authorization Server receiving token requests containing Authentication Tokens as above SHALL validate and
+      respond to the request as per Sections 6 and 7 of UDAP JWT-Based Client Authentication.
+    )
+    id :udap_authorization_code_token_exchange
+
+    input :udap_authorization_code,
+          :udap_client_id
+
+    input :udap_token_endpoint,
+          title: 'Token Endpoint',
+          description: 'The full URL from which Inferno will request an access token'
+
+    input :udap_client_cert_pem_auth_code_flow,
+          title: 'X.509 Client Certificate (PEM Format)',
+          description: 'The X.509 certificate used by the client when registering with the authorization server'
+
+    input :udap_client_private_key_auth_code_flow,
+          title: 'Client Private Key (PEM Format)',
+          description: 'The private key corresponding to the X.509 client certificate'
+
+    input :udap_jwt_signing_alg,
+          title: 'JWT Signing Algorithm',
+          description: %(
+            Algorithm used to sign UDAP JSON Web Tokens (JWTs). UDAP Implementations SHALL support
+            RS256.
+            ),
+          type: 'radio',
+          options: {
+            list_options: [
+              {
+                label: 'RS256',
+                value: 'RS256'
+              }
+            ]
+          },
+          default: 'RS256',
+          locked: true
+
+    output :token_retrieval_time
+    output :authorization_code_token_response_body
+    makes_request :token_exchange
+
+    config options: { redirect_uri: "#{Inferno::Application['base_url']}/custom/udap_security/redirect" }
+
+    run do
+      client_assertion_payload = UDAPClientAssertionPayloadBuilder.build(
+        udap_client_id,
+        udap_token_endpoint,
+        nil
+      )
+      client_assertion_jwt = UDAPSecurity::UDAPJWTBuilder.encode_jwt_with_x5c_header(
+        client_assertion_payload,
+        udap_client_private_key_auth_code_flow,
+        udap_jwt_signing_alg,
+        udap_client_cert_pem_auth_code_flow
+      )
+
+      token_exchange_headers, token_exchange_body = UDAPSecurity::UDAPRequestBuilder.build_token_exchange_request(
+        client_assertion_jwt,
+        'authorization_code',
+        udap_authorization_code,
+        config.options[:redirect_uri]
+      )
+
+      post(udap_token_endpoint,
+           body: token_exchange_body,
+           name: :token_exchange,
+           headers: token_exchange_headers)
+
+      assert_response_status(200)
+      assert_valid_json(request.response_body)
+
+      output token_retrieval_time: Time.now.iso8601
+
+      output authorization_code_token_response_body: request.response_body
+    end
+  end
+end

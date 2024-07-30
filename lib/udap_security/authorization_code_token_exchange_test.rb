@@ -63,7 +63,7 @@ module UDAPSecurity
         client_assertion_payload,
         udap_client_private_key_auth_code_flow,
         udap_jwt_signing_alg,
-        udap_client_cert_pem_auth_code_flow
+        [udap_client_cert_pem_auth_code_flow]
       )
 
       token_exchange_headers, token_exchange_body = UDAPSecurity::UDAPRequestBuilder.build_token_exchange_request(

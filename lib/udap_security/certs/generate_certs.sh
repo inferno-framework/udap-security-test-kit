@@ -6,7 +6,8 @@ openssl genrsa -out InfernoCA.key 4096
 echo "CA private key generated"
 
 echo "Now generating self-signed CA cert"
-openssl req -x509 -new -nodes -key InfernoCA.key -sha256 -days 3650 -subj "/C=US/ST=MA/L=Bedford/O=Inferno/CN=Inferno-UDAP-Root-CA/emailAddress=inferno@groups.mitre.org" -out InfernoCA.pem
+# TODO: Create CRL that can be hosted at local enpoint
+openssl req -x509 -new -nodes -key InfernoCA.key -sha256 -days 3650 -subj "/C=US/ST=MA/L=Bedford/O=Inferno/CN=Inferno-UDAP-Root-CA/emailAddress=inferno@groups.mitre.org" -addext "keyUsage = digitalSignature, keyCertSign" -addext "certificatePolicies = anyPolicy" -out InfernoCA.pem
 
 echo "Self-signed CA cert generated"
 
@@ -20,12 +21,12 @@ openssl req -new -key TestClientPrivateKey.key -subj "/C=US/ST=MA/L=Bedford/O=In
 echo "Client's certificate signing request generated"
 
 echo "Now generating client certificate using extension file & signing with CA"
-openssl x509 -req -in TestClientCSR.csr -CA InfernoCA.pem -CAkey InfernoCA.key -CAcreateserial -out TestClient.pem -days 3650 -sha256 -extfile v3_ac.ext
+openssl x509 -req -in TestClientCSR.csr -CA InfernoCA.pem -CAkey InfernoCA.key -CAcreateserial -out TestClient.pem -days 3650 -sha256 -extfile v3_client.ext
 
 echo "Client certificate generated and signed"
 
 echo "Now creating a cert chain of client and CA certs"
-# Validate the contents of the certificate
+
 openssl x509 -in TestClient.pem -noout -text
 echo "Cert chain generated"
 echo "Script complete"

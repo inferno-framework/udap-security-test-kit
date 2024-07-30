@@ -44,7 +44,7 @@ module UDAPSecurity
         software_statement_payload,
         udap_client_private_key_pem,
         udap_jwt_signing_alg,
-        udap_client_cert_pem
+        [udap_client_cert_pem]
       )
 
       output udap_software_statement_jwt: signed_jwt

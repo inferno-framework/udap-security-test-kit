@@ -47,7 +47,7 @@ module UDAPSecurity
         software_statement_payload,
         udap_client_private_key_pem,
         udap_jwt_signing_alg,
-        udap_client_cert_pem
+        [udap_client_cert_pem]
       )
 
       registration_headers, registration_body = UDAPSecurity::UDAPRequestBuilder.build_registration_request(

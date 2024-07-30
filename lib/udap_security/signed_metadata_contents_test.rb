@@ -1,5 +1,5 @@
 require 'jwt'
-
+require_relative 'udap_jwt_validator'
 module UDAPSecurity
   class SignedMetadataContentsTest < Inferno::Test
     include Inferno::DSL::Assertions
@@ -29,14 +29,15 @@ module UDAPSecurity
       assert token_header.key?('x5c'), 'JWT header does not contain `x5c` field'
       assert token_header.key?('alg'), 'JWT header does not contain `alg` field'
 
-      cert = OpenSSL::X509::Certificate.new(Base64.decode64(token_header['x5c'].first))
-      # TODO: handle root certs and crls
-      JWT.decode(
+      leaf_cert_der = Base64.urlsafe_decode64(token_header['x5c'].first)
+      leaf_cert = OpenSSL::X509::Certificate.new(leaf_cert_der)
+      signature_valid, error_message = UDAPSecurity::UDAPJWTValidator.validate_signature(
         signed_metadata_jwt,
-        cert.public_key,
-        true,
-        algorithm: token_header['alg']
+        token_header['alg'],
+        leaf_cert
       )
+
+      assert signature_valid, error_message
 
       ['iss', 'sub', 'exp', 'iat', 'jti'].each do |key|
         assert token_body.key?(key), "JWT does not contain `#{key}` claim"
@@ -56,7 +57,7 @@ module UDAPSecurity
         assert token_body['iss'] == udap_fhir_base_url,
                "`iss` claim `#{token_body['iss']}` is not the same as server base url `#{udap_fhir_base_url}`"
         alt_name =
-          cert.extensions
+          leaf_cert.extensions
             .find { |extension| extension.oid == 'subjectAltName' }
             .value
             .delete_prefix('URI:')

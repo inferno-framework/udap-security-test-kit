@@ -51,7 +51,7 @@ RSpec.describe UDAPSecurity::UDAPJWTBuilder do # rubocop:disable RSpec/FilePath,
   it 'creates a signed, valid JWT with x5c headers using PEM-formatted strings' do
     payload = { 'test_key' => 'test_value' }
 
-    encoded_jwt = described_class.encode_jwt_with_x5c_header(payload, rsa_private_string, jwt_alg, client_cert_string)
+    encoded_jwt = described_class.encode_jwt_with_x5c_header(payload, rsa_private_string, jwt_alg, [client_cert_string])
 
     rsa_private = described_class.generate_private_key(rsa_private_string)
     rsa_private.public_key
@@ -89,7 +89,7 @@ RSpec.describe UDAPSecurity::UDAPJWTBuilder do # rubocop:disable RSpec/FilePath,
     rsa_private = OpenSSL::PKey::RSA.generate 2048
     payload = { 'test_key' => 'test_value' }
 
-    encoded_jwt = described_class.encode_jwt_with_x5c_header(payload, rsa_private.to_s, jwt_alg, client_cert_string)
+    encoded_jwt = described_class.encode_jwt_with_x5c_header(payload, rsa_private.to_s, jwt_alg, [client_cert_string])
 
     # works with correct public key
     jwt_body, jwt_header = JWT.decode encoded_jwt, rsa_private.public_key, true, { algorithm: jwt_alg }

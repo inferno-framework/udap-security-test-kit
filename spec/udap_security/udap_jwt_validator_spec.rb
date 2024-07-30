@@ -55,7 +55,7 @@ RSpec.describe UDAPSecurity::UDAPJWTValidator do # rubocop:disable RSpec/FilePat
         [emr_client_cert.to_pem, emr_intermediate_ca.to_pem]
       )
 
-      token_body, token_header = JWT.decode(test_jwt, nil, false)
+      _token_body, token_header = JWT.decode(test_jwt, nil, false)
       trust_anchor_certs = [emr_root_ca]
 
       valid_trust_chain, error_message = described_class.validate_trust_chain(
@@ -75,7 +75,7 @@ RSpec.describe UDAPSecurity::UDAPJWTValidator do # rubocop:disable RSpec/FilePat
         [inferno_client_cert]
       )
 
-      token_body, token_header = JWT.decode(test_jwt, nil, false)
+      _token_body, token_header = JWT.decode(test_jwt, nil, false)
 
       trust_anchor_certs = [OpenSSL::X509::Certificate.new(inferno_root_ca)]
 
@@ -97,7 +97,7 @@ RSpec.describe UDAPSecurity::UDAPJWTValidator do # rubocop:disable RSpec/FilePat
         signing_algorithm,
         [inferno_client_cert]
       )
-      token_body, token_header = JWT.decode(test_jwt, nil, false)
+      _token_body, token_header = JWT.decode(test_jwt, nil, false)
 
       cert = OpenSSL::X509::Certificate.new(Base64.urlsafe_decode64(token_header['x5c'].first))
 

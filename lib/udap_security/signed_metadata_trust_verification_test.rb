@@ -30,7 +30,7 @@ module UDAPSecurity
           type: 'textarea'
 
     run do
-      token_body, token_header = JWT.decode(signed_metadata_jwt, nil, false)
+      _token_body, token_header = JWT.decode(signed_metadata_jwt, nil, false)
 
       assert token_header.key?('x5c'), 'JWT header does not contain `x5c` field'
       assert token_header.key?('alg'), 'JWT header does not contain `alg` field'

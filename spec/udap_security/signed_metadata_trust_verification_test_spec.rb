@@ -8,7 +8,6 @@ RSpec.describe UDAPSecurity::SignedMetadataTrustVerificationTest do
   let(:results_repo) { Inferno::Repositories::Results.new }
   let(:test_session) { repo_create(:test_session, test_suite_id: 'udap_security') }
 
-  # TODO: generate JWT from valid testing certs instead of using real certs
   let(:client_cert) do
     raw_cert = File.read(File.join(File.dirname(__FILE__),
                                    '../../lib/udap_security/certs/testing/EMRDirectTestClient.pem'))

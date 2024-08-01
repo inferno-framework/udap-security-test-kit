@@ -68,8 +68,6 @@ module UDAPSecurity
     output :udap_registration_endpoint
     output :udap_registration_grant_type
 
-    run_as_group
-
     test from: :udap_well_known_endpoint
     test from: :udap_versions_supported_field
     test from: :udap_grant_types_supported_field

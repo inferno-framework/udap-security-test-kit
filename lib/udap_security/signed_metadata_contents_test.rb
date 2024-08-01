@@ -56,14 +56,17 @@ module UDAPSecurity
 
         assert token_body['iss'] == udap_fhir_base_url,
                "`iss` claim `#{token_body['iss']}` is not the same as server base url `#{udap_fhir_base_url}`"
-        alt_name =
+
+        alt_names =
           leaf_cert.extensions
             .find { |extension| extension.oid == 'subjectAltName' }
             .value
-            .delete_prefix('URI:')
-        assert token_body['iss'] == alt_name,
-               "`iss` claim `#{token_body['iss']}` does not match Subject Alternative Name extension " \
-               "from the `x5c` JWT header `#{alt_name}`"
+
+        # Certification may have more than one SAN value
+        assert alt_names.include?("URI:#{token_body['iss']}"),
+               "`iss` claim `#{token_body['iss']}` not found in Subject Alternative Name extension " \
+               "from the `x5c` JWT header: `#{alt_names}`"
+
         assert token_body['iss'] == token_body['sub'],
                "`iss` claim `#{token_body['iss']}` does not match `sub` claim `#{token_body['sub']}`"
 

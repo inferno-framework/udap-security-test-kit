@@ -1,5 +1,4 @@
 require 'jwt'
-require 'pry'
 
 module UDAPSecurity
   class UDAPJWTValidator

@@ -21,6 +21,7 @@ module UDAPSecurity
     run do
       skip_if signed_metadata_jwt.blank?
 
+      binding.pry
       assert_valid_json(udap_well_known_metadata_json)
       config = JSON.parse(udap_well_known_metadata_json)
 

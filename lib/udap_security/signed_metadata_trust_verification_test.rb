@@ -30,6 +30,7 @@ module UDAPSecurity
           type: 'textarea'
 
     run do
+      skip_if udap_server_trust_anchor_certs.blank?
       _token_body, token_header = JWT.decode(signed_metadata_jwt, nil, false)
 
       assert token_header.key?('x5c'), 'JWT header does not contain `x5c` field'

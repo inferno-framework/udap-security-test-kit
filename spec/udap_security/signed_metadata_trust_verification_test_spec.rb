@@ -78,6 +78,14 @@ RSpec.describe UDAPSecurity::SignedMetadataTrustVerificationTest do
     )
   end
 
+  context 'when no trust anchor certificates are provided as inputs' do
+    it 'skips the test' do
+      result = run(runnable, signed_metadata_jwt: create_test_jwt,
+                             udap_server_trust_anchor_certs: '')
+      expect(result.result).to eq('skip')
+    end
+  end
+
   context 'when JWT includes client, intermediate, and root certs' do
     it 'passes when only root CA provided as trust anchor' do
       WebMock.allow_net_connect!

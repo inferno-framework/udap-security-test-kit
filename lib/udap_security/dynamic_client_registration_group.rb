@@ -1,4 +1,3 @@
-require_relative 'generate_client_certs_test'
 require_relative 'registration_failure_invalid_contents_test'
 require_relative 'registration_failure_invalid_jwt_signature_test'
 require_relative 'registration_success_test'
@@ -14,17 +13,20 @@ module UDAPSecurity
     id :udap_dynamic_client_registration_group
 
     input_instructions %(
-      If using auto-generated client certificates, Inferno's default self-signed certificate authority will issue and
-      sign the client cert(s). The default Inferno CA can be downloaded as a PEM file at the following link:
-      * `#{Inferno::Application[:base_url]}/custom/udap_security/inferno_ca.pem`
+      **Dynamic Client Registration Instructions**
 
-      Alternatively, testers may input their own client certificates signed by their own CA. Either way, **the
-      authorization server under test MUST be configured to trust the signing certificate** before Dynamic Client
-      Registration tests are run.
+      Testers must provide a client certificate and any additional CAs needed for the authorization server under test to
+      establish a trust chain.  Certs must be in string (PEM) format and separated by a single comma (no spaces) if
+      entering more than one.
 
-      Each run of the dynamic client registration tests requires unique
-      a unique client cert and private key. To auto-generate a fresh set,
-      clear the those inputs prior to re-running.
+      Cancelling a UDAP client's registration is not a required server capability and as such the Inferno client has no
+      way of resetting state on the authorization server after a successful registration attempt.  Testers wishing to
+      run the Dynamic Client Registration tests more than once must do one of the following:
+      - Remove the Inferno test client's registration out-of-band before re-running tests, to register the original
+      client URI anew
+      - Specifiy a different client URI as the issuer input (if the client cert has more than one Subject Alternative
+      Name (SAN) URI entry), to register a different logical client with the original certificate
+      - Provide a different client certificate and its associated URI to register a new logical client
     )
 
     input :udap_registration_endpoint,
@@ -52,6 +54,33 @@ module UDAPSecurity
               }
             ]
           }
+
+    input :udap_client_cert_pem,
+          title: 'X.509 Client Certificate(s) (PEM Format)',
+          description: %(
+            A comma-separted list of one or more X.509 certificates in PEM format. The first (leaf) certificate MUST
+            represent the client entity and the certificate chain must resolve to a CA trusted by the authorization
+            server under test.
+          ),
+          type: 'textarea',
+          optional: false
+
+    input :udap_client_private_key_pem,
+          title: 'Client Private Key (PEM Format)',
+          description: %(
+          The private key corresponding to the client certificate used for registration, in PEM format.  Used to sign
+          registration and/or authentication JWTs.
+          ),
+          type: 'textarea',
+          optional: false
+
+    input :udap_cert_iss,
+          title: 'JWT Issuer (iss) Claim',
+          description: %(
+            MUST correspond to a unique URI entry in the Subject Alternative Name (SAN) extension of the client
+            certificate used for registration.
+          ),
+          optional: false
 
     input :udap_jwt_signing_alg,
           title: 'JWT Signing Algorithm',
@@ -90,7 +119,6 @@ module UDAPSecurity
           type: 'textarea',
           optional: true
 
-    test from: :udap_generate_client_certs
     test from: :udap_registration_failure_invalid_contents
     test from: :udap_registration_failure_invalid_jwt_signature
     test from: :udap_registration_success

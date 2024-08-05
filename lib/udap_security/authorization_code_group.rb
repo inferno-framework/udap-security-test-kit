@@ -77,5 +77,14 @@ module UDAPSecurity
 
     group from: :udap_authorization_code_authentication_group,
           run_as_group: true
+
+    input_order :udap_fhir_base_url, :flow_type_auth_code,
+                :udap_server_trust_anchor_certs,
+                :reg_grant_type_auth_code,
+                :udap_client_cert_pem_auth_code_flow,
+                :udap_client_private_key_auth_code_flow,
+                :udap_cert_iss_auth_code_flow,
+                :udap_registration_scope_auth_code_flow,
+                :udap_jwt_signing_alg, :udap_registration_certifications
   end
 end

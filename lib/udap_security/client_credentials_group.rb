@@ -78,5 +78,13 @@ module UDAPSecurity
 
     group from: :udap_client_credentials_authentication_group,
           run_as_group: true
+
+    input_order :udap_fhir_base_url, :flow_type_client_creds,
+                :udap_server_trust_anchor_certs,
+                :reg_grant_type_client_creds, :udap_client_cert_pem_client_creds_flow,
+                :udap_client_private_key_client_creds_flow,
+                :udap_cert_iss_client_creds_flow,
+                :udap_registration_scope_client_creds_flow,
+                :udap_jwt_signing_alg, :udap_registration_certifications
   end
 end

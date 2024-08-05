@@ -23,9 +23,16 @@ module UDAPSecurity
 
     input :udap_client_cert_pem_auth_code_flow,
           title: 'X.509 Client Certificate (PEM Format)',
-          description: 'The X.509 certificate used by the client when registering with the authorization server'
+          type: 'textarea',
+          description: %(
+            A comma-separted list of one or more X.509 certificates in PEM format. The first (leaf) certificate MUST
+            represent the client entity Inferno registered as,
+            and the trust chain that will be built from the provided certificate(s) must resolve to a CA trusted by the
+            authorization server under test.
+          )
 
     input :udap_client_private_key_auth_code_flow,
+          type: 'textarea',
           title: 'Client Private Key (PEM Format)',
           description: 'The private key corresponding to the X.509 client certificate'
 

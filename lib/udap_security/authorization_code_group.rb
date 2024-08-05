@@ -50,16 +50,30 @@ module UDAPSecurity
                 locked: true
               },
               udap_client_cert_pem: {
-                name: :udap_client_cert_pem_auth_code_flow
+                name: :udap_client_cert_pem_auth_code_flow,
+                title: 'Authorization Code Client Certificate(s) (PEM Format)'
               },
               udap_client_private_key_pem: {
-                name: :udap_client_private_key_auth_code_flow
+                name: :udap_client_private_key_auth_code_flow,
+                title: 'Authorization Code Client Private Key (PEM Format)'
               },
               udap_cert_iss: {
-                name: :udap_cert_iss_auth_code_flow
+                name: :udap_cert_iss_auth_code_flow,
+                title: 'Authorization Code JWT Issuer (iss) Claim'
               },
               udap_registration_requested_scope: {
-                name: :udap_registration_scope_auth_code_flow
+                name: :udap_registration_scope_auth_code_flow,
+                title: 'Authorization Code Registration Requested Scope(s)',
+                description: %(
+                  String containing a space delimited list of scopes requested by the client application for use in
+                  subsequent requests. The Authorization Server MAY consider this list when deciding the scopes that it
+                  will allow the application to subsequently request. Apps requesting the "authorization_code" grant
+                  type SHOULD request user or patient scopes.
+                )
+              },
+              udap_registration_certifications: {
+                name: :udap_registration_certifications_auth_code_flow,
+                title: 'Authorization Code UDAP Registration Certifications'
               }
             },
             outputs: {

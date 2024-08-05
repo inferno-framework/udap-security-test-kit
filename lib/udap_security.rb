@@ -26,7 +26,23 @@ module UDAPSecurity
     )
 
     input_instructions %(
+      This menu will execute tests for both OAuth flows.
 
+      **Discovery Tests**
+
+      #{DiscoveryGroup.discovery_group_input_instructions}
+
+      **Dynamic Client Registration Tests**
+
+      A single logical UDAP client cannot register itself for both `authorization_code` and `client_credentials` grant
+      types.
+      Inferno will therefore represent a distinct logical client for each OAuth flow and requires a unique issuer URI
+      value for each flow's registration step.
+      If the provided client certificate has more than one URI entry in its Subject Alternative Name (SAN) extension,
+      client certificates may be reused for each flow. If not, each auth flow will require its own client certificate.
+
+      Please refer to the [UDAP Dynamic Client Registration IG Section 3.1](https://hl7.org/fhir/us/udap-security/STU1/registration.html#software-statement)
+      entries on `grant_type` and `iss` claims for more details.
     )
 
     cert_file = File.read(File.join(File.dirname(__FILE__), 'udap_security/certs/InfernoCA.pem'))

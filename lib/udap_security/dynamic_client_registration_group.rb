@@ -12,9 +12,8 @@ module UDAPSecurity
     )
     id :udap_dynamic_client_registration_group
 
-    input_instructions %(
-      **Dynamic Client Registration Instructions**
-
+    def self.dynamic_client_registration_input_instructions
+      %(
       Testers must provide a client certificate and any additional CAs needed for the authorization server under test to
       establish a trust chain.  Certs must be in string (PEM) format and separated by a single comma (no spaces) if
       entering more than one.
@@ -28,6 +27,9 @@ module UDAPSecurity
       Name (SAN) URI entry), to register a different logical client with the original certificate
       - Provide a different client certificate and its associated URI to register a new logical client
     )
+    end
+
+    input_instructions dynamic_client_registration_input_instructions
 
     input :udap_registration_endpoint,
           title: 'UDAP Dynamic Client Registration Endpoint',

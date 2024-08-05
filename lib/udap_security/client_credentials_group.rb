@@ -16,17 +16,13 @@ module UDAPSecurity
     id :udap_client_credentials_group
 
     input_instructions %(
-      If using auto-generated client certificates, Inferno's default self-signed certificate authority will issue and
-      sign the client cert(s). The default Inferno CA can be downloaded as a PEM file at the following link:
-      * `#{Inferno::Application[:base_url]}/custom/udap_security/inferno_ca.pem`
+      **Discovery Tests**
 
-      Alternatively, testers may input their own client certificates signed by their own CA. Either way, **the
-      authorization server under test MUST be configured to trust the signing certificate** before Dynamic Client
-      Registration tests are run.
+      #{DiscoveryGroup.discovery_group_input_instructions}
 
-      Each run of the dynamic client registration tests requires unique
-      a unique client cert and private key. To auto-generate a fresh set,
-      clear the those inputs prior to re-running.
+      **Dynamic Client Registration Tests**
+
+      #{DynamicClientRegistrationGroup.dynamic_client_registration_input_instructions}
     )
 
     group from: :udap_discovery_group,

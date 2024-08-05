@@ -10,8 +10,8 @@ module UDAPSecurity
 
       1. Discovery Group
       2. Dynamic Client Registration
-      3. Authorization and Authentication - supports both Consumer Facing and Business-to-Buisiness (B2B) profiles in
-      the UDAP IG
+      3. Authorization and Authentication - supports both [Consumer Facing](https://hl7.org/fhir/us/udap-security/STU1/consumer.html)
+      and [Business-to-Business (B2B)](https://hl7.org/fhir/us/udap-security/STU1/b2b.html) profiles in the UDAP IG
     )
     id :udap_authorization_code_group
 
@@ -99,6 +99,6 @@ module UDAPSecurity
                 :udap_client_private_key_auth_code_flow,
                 :udap_cert_iss_auth_code_flow,
                 :udap_registration_scope_auth_code_flow,
-                :udap_jwt_signing_alg, :udap_registration_certifications
+                :udap_jwt_signing_alg, :udap_registration_certifications_auth_code_flow
   end
 end

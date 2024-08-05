@@ -11,7 +11,8 @@ module UDAPSecurity
 
       1. Discovery Group
       2. Dynamic Client Registration
-      3. Authorization and Authentication - supports only Business-to-Business (B2B) UDAP profile
+      3. Authorization and Authentication - supports only the [Business-to-Business (B2B)](https://hl7.org/fhir/us/udap-security/STU1/b2b.html)
+      profile in the UDAP IG
     )
     id :udap_client_credentials_group
 
@@ -99,6 +100,6 @@ module UDAPSecurity
                 :udap_client_private_key_client_creds_flow,
                 :udap_cert_iss_client_creds_flow,
                 :udap_registration_scope_client_creds_flow,
-                :udap_jwt_signing_alg, :udap_registration_certifications
+                :udap_jwt_signing_alg, :udap_registration_certifications_client_creds_flow
   end
 end

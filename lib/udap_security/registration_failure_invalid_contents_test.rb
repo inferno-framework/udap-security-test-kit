@@ -43,7 +43,9 @@ module UDAPSecurity
         udap_registration_requested_scope
       )
 
-      x5c_certs = udap_client_cert_pem.split(',')
+      x5c_certs = UDAPSecurity::UDAPJWTBuilder.parse_cert_strings_from_user_input(
+        udap_client_cert_pem
+      )
 
       signed_jwt = UDAPSecurity::UDAPJWTBuilder.encode_jwt_with_x5c_header(
         software_statement_payload,

@@ -7,6 +7,14 @@ module UDAPSecurity
       OpenSSL::PKey.read(pkey_string)
     end
 
+    def self.parse_cert_strings_from_user_input(user_input_string)
+      x5c_certs = user_input_string.split(',')
+      x5c_certs.each_with_index do |cert, index|
+        cleaned_input = cert.chomp.strip
+        x5c_certs[index] = cleaned_input
+      end
+    end
+
     def self.encode_jwt_no_x5c_header(payload, private_key, alg)
       JWT.encode payload, private_key, alg
     end

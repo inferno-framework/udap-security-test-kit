@@ -47,15 +47,8 @@ module UDAPSecurity
             ]
           }
 
-    # TODO: sort out input instructions for final release (this was just an
-    # experiment in figuring out how to reuse input instructions when running
-    # tests at different group levels
     def self.discovery_group_input_instructions
       %(
-      If Discovery Tests are being not being run as part of a larger OAuth workflow and/or a the server is not required
-      to support a specific OAuth flow, select Either for Required OAuth2.0 Flow Type. Otherwise, Discovery Tests will
-      verify that the metadata returned by the server supports the designated flow.
-
       Inferno currently does not support the use of the Authority Information Access (AIA) extension to access issuing
       certificates.  As such, Inferno must be provided any intermediate server certificates needed to establish a
       trust chain.  If the intermediate CAs are not included in the x5c header of the server's signed metadata JWT,

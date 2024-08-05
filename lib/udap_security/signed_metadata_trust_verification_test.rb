@@ -7,7 +7,7 @@ module UDAPSecurity
     title 'signed_metadata contents: trust can be verified from server certificates'
     id :udap_signed_metadata_trust_verification
     description %(
-       The UDAP IG profile on UDAP Server Metadata Section 3.2 says:
+       The [UDAP IG profile on UDAP Server Metadata Section 3.2](https://www.udap.org/udap-server-metadata.html) says:
        > The Client app attempts to construct a valid certificate chain from the Server’s certificate (cert1) to an
        > anchor certificate trusted by the Client app using conventional X.509 chain building techniques and path
        > validation, including certificate validity and revocation status checking. The Server MAY provide a complete

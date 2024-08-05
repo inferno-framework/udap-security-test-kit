@@ -7,12 +7,9 @@ module UDAPSecurity
     title 'signed_metadata contents'
     id :udap_signed_metadata_contents
     description %(
-       `signed_metadata` is a string containing a JWT listing the server's endpoints
-      )
-
-    description %(
-      Validate the contents of the `signed_metadata` header, signature, and
-      contents.
+      `signed_metadata` is a string containing a JWT listing the server's endpoints.  This test will validate the JWT
+      signature as specified in [UDAP IG Section 1.2 JSON Web Token (JWT) Requirements](https://hl7.org/fhir/us/udap-security/STU1/index.html#json-web-token-jwt-requirements)
+      and validate the JWT contents as outlined in [UDAP Discovery IG Section 2.3 Signed Metadata Elements](https://hl7.org/fhir/us/udap-security/STU1/discovery.html#signed-metadata-elements).
     )
 
     input :signed_metadata_jwt, optional: true

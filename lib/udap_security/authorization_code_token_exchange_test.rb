@@ -6,11 +6,13 @@ module UDAPSecurity
     description %(
       The [UDAP Security IG Section 4.2 on Obtaining an Access Token](https://hl7.org/fhir/us/udap-security/STU1/consumer.html#obtaining-an-access-token)
       states the following:
-      > - Client applications SHALL exchange authorization codes for access tokens as per Section 4.1.3 of RFC 6749
-      > - Client applications authenticating with a private key and Authentication Token ... SHALL submit a POST request
-      to the Authorization Server’s token endpoint
-      > - An Authorization Server receiving token requests containing Authentication Tokens as above SHALL validate and
-      respond to the request as per Sections 6 and 7 of UDAP JWT-Based Client Authentication.
+      - Client applications SHALL exchange authorization codes for access
+        tokens as per Section 4.1.3 of RFC 6749
+      - Client applications authenticating with a private key and
+        Authentication Token ... SHALL submit a POST request to the Authorization Server’s token endpoint
+      - An Authorization Server receiving token requests containing
+        Authentication Tokens as above SHALL validate and respond to the request, as per Sections 6 and 7 of [UDAP
+        JWT-Based Client Authentication](https://www.udap.org/udap-jwt-client-auth.html).
     )
     id :udap_authorization_code_token_exchange
 

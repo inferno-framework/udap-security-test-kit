@@ -7,7 +7,7 @@ module UDAPSecurity
       > If the (token exchange) request is approved, the Authorization Server returns a token response as per Section
       5.1 of RFC 6749.
 
-      [RFC 6749 The OAuth 2.0 Authorization Framework, Section 5.1](https://datatracker.ietf.org/doc/html/rfc6749#section-5.1)
+      [RFC 6749 OAuth 2.0 Authorization Framework, Section 5.1](https://datatracker.ietf.org/doc/html/rfc6749#section-5.1)
       lists the `access_token` and `token_type` parameters as REQUIRED.
     )
 

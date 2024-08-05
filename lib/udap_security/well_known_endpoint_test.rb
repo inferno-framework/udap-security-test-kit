@@ -5,9 +5,13 @@ module UDAPSecurity
     title 'UDAP Well-Known configuration is available'
     id :udap_well_known_endpoint
     description %(
-      The metadata returned from `{baseURL}/.well-known/udap` **SHALL**
-      represent the server’s capabilities with respect to the UDAP workflows
-      described in this guide.
+      The [UDAP Discovery IG Section 2.1 Discovery Endpoints](https://hl7.org/fhir/us/udap-security/STU1/discovery.html#discovery-of-endpoints)
+      states:
+      > Servers SHALL allow access to the following metadata URL to unregistered client applications and without
+      > requiring client authentication, where {baseURL} represents the base FHIR URL for the FHIR server:
+      > `{baseURL}/.well-known/udap`
+
+      This test ensures the discovery endpoint returns a 200 status and valid JSON body.
     )
 
     input :udap_fhir_base_url,

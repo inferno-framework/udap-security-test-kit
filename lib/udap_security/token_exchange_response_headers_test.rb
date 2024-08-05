@@ -2,9 +2,12 @@ module UDAPSecurity
   class TokenExchangeResponseHeadersTest < Inferno::Test
     title 'Response includes correct HTTP Cache-Control and Pragma headers'
     description %(
-      The authorization servers response must include the HTTP Cache-Control
-      response header field with a value of no-store, as well as the Pragma
-      response header field with a value of no-cache.
+      [RFC 6749 OAuth 2.0 Authorization Framework Section 5.1](https://datatracker.ietf.org/doc/html/rfc6749#section-5.1)
+      states the following:
+      > The authorization server MUST include the HTTP "Cache-Control" response
+        header field with a value of
+      > "no-store" in any response containing tokens, credentials, or other
+        sensitive information, as well as the "Pragma" response header field with a value of "no-cache".
     )
     id :udap_token_exchange_response_headers
 

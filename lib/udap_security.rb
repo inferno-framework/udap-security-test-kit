@@ -7,10 +7,10 @@ module UDAPSecurity
     title 'UDAP Security'
     description %(
       The User Data Access Protocol (UDAP) Security test kit verifies that systems correctly implement the
-      [UDAP Security IG](http://hl7.org/fhir/us/udap-security/STU1/)
+      [HL7 UDAP Security IG](http://hl7.org/fhir/us/udap-security/STU1/)
       for extending OAuth 2.0 using UDAP workflows.
 
-      There are three steps to the workflow:
+      There are three steps to the UDAP workflow:
       1. Discovery
       2. Dynamic Client Registration
       3. Authorization & Authentication

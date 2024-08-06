@@ -1,53 +1,66 @@
 require_relative '../../lib/udap_security/signed_metadata_contents_test'
+require_relative '../../lib/udap_security/udap_jwt_builder'
+require_relative '../../lib/udap_security/default_cert_file_loader'
 
 RSpec.describe UDAPSecurity::SignedMetadataContentsTest do
   let(:runnable) { Inferno::Repositories::Tests.new.find('udap_signed_metadata_contents') }
   let(:session_data_repo) { Inferno::Repositories::SessionData.new }
   let(:results_repo) { Inferno::Repositories::Results.new }
   let(:test_session) { repo_create(:test_session, test_suite_id: 'udap_security') }
-  let(:udap_well_known_metadata_json) do
-    '{
-  "udap_versions_supported": [
-    "1"
-  ],
-  "udap_profiles_supported": [
-    "udap_dcr",
-    "udap_authn",
-    "udap_authz",
-    "udap_to"
-  ],
-  "udap_authorization_extensions_supported": [
-    "hl7-b2b"
-  ],
-  "udap_authorization_extensions_required": [],
-  "udap_certifications_supported": [],
-  "udap_certifications_required": [],
-  "grant_types_supported": [
-    "authorization_code",
-    "client_credentials",
-    "refresh_token"
-  ],
-  "authorization_endpoint": "https://stage.healthtogo.me:8181/oauth/stage/authz",
-  "token_endpoint": "https://stage.healthtogo.me:8181/oauth/stage/token",
-  "token_endpoint_auth_methods_supported": [
-    "private_key_jwt"
-  ],
-  "token_endpoint_auth_signing_alg_values_supported": [
-    "RS256",
-    "RS384"
-  ],
-  "registration_endpoint": "https://stage.healthtogo.me:8181/oauth/stage/register",
-  "registration_endpoint_jwt_signing_alg_values_supported": [
-    "RS256",
-    "RS384"
-  ],
-  "revocation_endpoint": "https://stage.healthtogo.me:8181/oauth/stage/revoke",
-  "signed_metadata": "eyJhbGciOiJSUzI1NiIsIng1YyI6WyJNSUlGSkRDQ0JBeWdBd0lCQWdJSUhqNFFrOVp5aStrd0RRWUpLb1pJaHZjTkFRRUxCUUF3Z2JNeEN6QUpCZ05WQkFZVEFsVlRNUk13RVFZRFZRUUlEQXBEWVd4cFptOXlibWxoTVJJd0VBWURWUVFIREFsVFlXNGdSR2xsWjI4eEV6QVJCZ05WQkFvTUNrVk5VaUJFYVhKbFkzUXhQekE5QmdOVkJBc01ObFJsYzNRZ1VFdEpJRU5sY25ScFptbGpZWFJwYjI0Z1FYVjBhRzl5YVhSNUlDaGpaWEowY3k1bGJYSmthWEpsWTNRdVkyOXRLVEVsTUNNR0ExVUVBd3djUlUxU0lFUnBjbVZqZENCVVpYTjBJRU5zYVdWdWRDQlRkV0pEUVRBZUZ3MHlOREF4TVRneE5ETTJNemRhRncweU56QXhNVGd4TkRNMk16ZGFNSUdsTVFzd0NRWURWUVFHRXdKVlV6RVRNQkVHQTFVRUNBd0tRMkZzYVdadmNtNXBZVEVUTUJFR0ExVUVDZ3dLUlUxU0lFUnBjbVZqZERFek1ERUdBMVVFQ3d3cVZVUkJVQ0JVWlhOMElFTmxjblJwWm1sallYUmxJRTVQVkNCR1QxSWdWVk5GSUZkSlZFZ2dVRWhKTVRjd05RWURWUVFEREM1b2RIUndjem92TDNOMFlXZGxMbWhsWVd4MGFIUnZaMjh1YldVNk9ERTRNUzltYUdseUwzSTBMM04wWVdkbE1JSUJJakFOQmdrcWhraUc5dzBCQVFFRkFBT0NBUThBTUlJQkNnS0NBUUVBb1duei9nUzA4cTRRUVg0WEhmQTg5cVpZL0oyU01vTGt2eFhtWDBLc1ZBOS9ZdXczdjN1bGpNUFdHY2VQZkJvR0JyZkVtVGwzMTFTSzlaWEN1TEFwVXBEV01ZV2FBK3pPQjIxSWFKc1kraU9WZXZybWZENXBqYjNIdUd1VWcxZ2RVem1QbDdCcG51dCswMlBMdThpV2NSbTVwdGdMWXpmeE05OXBCMEMrNVB2NjBWdkEzQ21zWFh6NlI0eHlzeDg1djNzRzE2Ym14eW9sajhaRm5md1VPemcxMHA5c1lkWkx3TGZRVncyck44S0VxbWNKS0VwRE16MENwQ21HTk04Nm1KRFNZTW8wQVBzTmxZWjZzeXFsOE41TjRBY3B3UDRiWWNVYytMdFkxZHlkVnhMUDJRYVZBVFB3Zjlxc2JkTlpTNjBaSWxkR2xoRVlleWdWVzFOazFRSURBUUFCbzRJQlJqQ0NBVUl3V1FZSUt3WUJCUVVIQVFFRVRUQkxNRWtHQ0NzR0FRVUZCekFDaGoxb2RIUndPaTh2WTJWeWRITXVaVzF5WkdseVpXTjBMbU52YlM5alpYSjBjeTlGVFZKRWFYSmxZM1JVWlhOMFEyeHBaVzUwVTNWaVEwRXVZM0owTUIwR0ExVWREZ1FXQkJRSHFKZlJISlhsS1piSVpOcmNnZmYvTGF2c3p6QU1CZ05WSFJNQkFmOEVBakFBTUI4R0ExVWRJd1FZTUJhQUZLT1ZiV3U5SzFITjRjL2xrRy9YSmsrLzNUN2VNRXdHQTFVZEh3UkZNRU13UWFBL29EMkdPMmgwZEhBNkx5OWpaWEowY3k1bGJYSmthWEpsWTNRdVkyOXRMMk55YkM5RlRWSkVhWEpsWTNSVVpYTjBRMnhwWlc1MFUzVmlRMEV1WTNKc01BNEdBMVVkRHdFQi93UUVBd0lIZ0RBNUJnTlZIUkVFTWpBd2hpNW9kSFJ3Y3pvdkwzTjBZV2RsTG1obFlXeDBhSFJ2WjI4dWJXVTZPREU0TVM5bWFHbHlMM0kwTDNOMFlXZGxNQTBHQ1NxR1NJYjNEUUVCQ3dVQUE0SUJBUUIrdzI1UFM1b1NNNE9UVlF6cnFHM1JFc1NXOHlITGJCcWtUMHYwazFISFBuMHVqSGtYUzNPdEpyOGRwSXhueWxrQWxWRXp3dTE0V0w3SkZoZ2w2SlVjMm9hVEJ4dkgyeGZVU3BwNzA4TW1aVHRSc2lDMWsrOVFyUEN5akFRbEU1T0JBbCtMTEZhRFM2cXN0QVpoT3VRWkFTTnVaZ29La09EeS84ZUlra1prUnd0dWVMdnNGdWdha0JXT1MxZTBkNkVSd0pFbG05OW5vWGNvSmJZQVR5K05zVUM3a01yNGxad21XQWIyaTNyczB1NnBOZzdLUmpXRDFtY1dZeFJ6a3gva0xwdkxONVExQlZKRHk2ZnNHR3Z5OFZwckFoM0s5QXVucE93ei9xS1dXWnkzSVVsU05NT2pub1pOT3dtbkNwdnNUalY2RkMyK1ZTM1o5ZmRZRXptWCJdfQ.eyJpc3MiOiJodHRwczovL3N0YWdlLmhlYWx0aHRvZ28ubWU6ODE4MS9maGlyL3I0L3N0YWdlIiwic3ViIjoiaHR0cHM6Ly9zdGFnZS5oZWFsdGh0b2dvLm1lOjgxODEvZmhpci9yNC9zdGFnZSIsImlhdCI6MTcyMTg1ODY3MSwiZXhwIjoxNzUzMzk0NjcxLCJqdGkiOiI5ZDIwZmVmOC1jZGI2LTRkNTUtYTcxMy04MDk1OTI5MTJmYmMiLCJhdXRob3JpemF0aW9uX2VuZHBvaW50IjoiaHR0cHM6Ly9zdGFnZS5oZWFsdGh0b2dvLm1lOjgxODEvb2F1dGgvc3RhZ2UvYXV0aHoiLCJ0b2tlbl9lbmRwb2ludCI6Imh0dHBzOi8vc3RhZ2UuaGVhbHRodG9nby5tZTo4MTgxL29hdXRoL3N0YWdlL3Rva2VuIiwicmVnaXN0cmF0aW9uX2VuZHBvaW50IjoiaHR0cHM6Ly9zdGFnZS5oZWFsdGh0b2dvLm1lOjgxODEvb2F1dGgvc3RhZ2UvcmVnaXN0ZXIifQ.DCN2IrblHHfSxu0btZzt5PULhqoextydM1Nw3CxX7AeRlZ15b1bHggFvAhqP_IF_0ptBB6njkf7ukyHpC3dhNH-WCWOlIL6QJT2ehZ2-83xTOAtTPZd9bKbGahVc08OMRCZshbYroF4p0NeUWHbWjSpqPZXwcykNf5jRIfeSPodDt9x85W49uyrhLeaLtzHbtMlklqGmxrg8U1wBNrpDi6En4gUtQ2vbAOQQqPZ-ktGIrHDxg8No4m5jZQlszYB662thqFecSl7hh6g1vGHmvK9k8MdhdbrPOtqVI9sMSKvDWNSMV6HJIL80jhZTeAzrqVQ8p0QOYgRbUWfedXB4cw"
-}'
+  let(:udap_well_known_metadata) do
+    {
+      'udap_versions_supported' => ['1'],
+      'udap_profiles_supported' => ['udap_dcr', 'udap_authn', 'udap_authz'],
+      'udap_authorization_extensions_supported' => ['hl7-b2b'],
+      'udap_authorization_extensions_required' => [],
+      'udap_certifications_supported' => [],
+      'udap_certifications_required' => [],
+      'grant_types_supported' => ['authorization_code', 'client_credentials', 'refresh_token'],
+      'authorization_endpoint' => 'https://inferno.com/udap_security/authz',
+      'token_endpoint' => 'https://inferno.com/udap_security/token',
+      'token_endpoint_auth_methods_supported' => ['private_key_jwt'],
+      'token_endpoint_auth_signing_alg_values_supported' => ['RS256'],
+      'registration_endpoint' => 'https://inferno.com/udap_security/registration',
+      'registration_endpoint_jwt_signing_alg_values_supported' => ['RS256'],
+      'signed_metadata' => signed_metadata_jwt
+    }
   end
+
   let(:signed_metadata_jwt) do
-    'eyJhbGciOiJSUzI1NiIsIng1YyI6WyJNSUlGSkRDQ0JBeWdBd0lCQWdJSUhqNFFrOVp5aStrd0RRWUpLb1pJaHZjTkFRRUxCUUF3Z2JNeEN6QUpCZ05WQkFZVEFsVlRNUk13RVFZRFZRUUlEQXBEWVd4cFptOXlibWxoTVJJd0VBWURWUVFIREFsVFlXNGdSR2xsWjI4eEV6QVJCZ05WQkFvTUNrVk5VaUJFYVhKbFkzUXhQekE5QmdOVkJBc01ObFJsYzNRZ1VFdEpJRU5sY25ScFptbGpZWFJwYjI0Z1FYVjBhRzl5YVhSNUlDaGpaWEowY3k1bGJYSmthWEpsWTNRdVkyOXRLVEVsTUNNR0ExVUVBd3djUlUxU0lFUnBjbVZqZENCVVpYTjBJRU5zYVdWdWRDQlRkV0pEUVRBZUZ3MHlOREF4TVRneE5ETTJNemRhRncweU56QXhNVGd4TkRNMk16ZGFNSUdsTVFzd0NRWURWUVFHRXdKVlV6RVRNQkVHQTFVRUNBd0tRMkZzYVdadmNtNXBZVEVUTUJFR0ExVUVDZ3dLUlUxU0lFUnBjbVZqZERFek1ERUdBMVVFQ3d3cVZVUkJVQ0JVWlhOMElFTmxjblJwWm1sallYUmxJRTVQVkNCR1QxSWdWVk5GSUZkSlZFZ2dVRWhKTVRjd05RWURWUVFEREM1b2RIUndjem92TDNOMFlXZGxMbWhsWVd4MGFIUnZaMjh1YldVNk9ERTRNUzltYUdseUwzSTBMM04wWVdkbE1JSUJJakFOQmdrcWhraUc5dzBCQVFFRkFBT0NBUThBTUlJQkNnS0NBUUVBb1duei9nUzA4cTRRUVg0WEhmQTg5cVpZL0oyU01vTGt2eFhtWDBLc1ZBOS9ZdXczdjN1bGpNUFdHY2VQZkJvR0JyZkVtVGwzMTFTSzlaWEN1TEFwVXBEV01ZV2FBK3pPQjIxSWFKc1kraU9WZXZybWZENXBqYjNIdUd1VWcxZ2RVem1QbDdCcG51dCswMlBMdThpV2NSbTVwdGdMWXpmeE05OXBCMEMrNVB2NjBWdkEzQ21zWFh6NlI0eHlzeDg1djNzRzE2Ym14eW9sajhaRm5md1VPemcxMHA5c1lkWkx3TGZRVncyck44S0VxbWNKS0VwRE16MENwQ21HTk04Nm1KRFNZTW8wQVBzTmxZWjZzeXFsOE41TjRBY3B3UDRiWWNVYytMdFkxZHlkVnhMUDJRYVZBVFB3Zjlxc2JkTlpTNjBaSWxkR2xoRVlleWdWVzFOazFRSURBUUFCbzRJQlJqQ0NBVUl3V1FZSUt3WUJCUVVIQVFFRVRUQkxNRWtHQ0NzR0FRVUZCekFDaGoxb2RIUndPaTh2WTJWeWRITXVaVzF5WkdseVpXTjBMbU52YlM5alpYSjBjeTlGVFZKRWFYSmxZM1JVWlhOMFEyeHBaVzUwVTNWaVEwRXVZM0owTUIwR0ExVWREZ1FXQkJRSHFKZlJISlhsS1piSVpOcmNnZmYvTGF2c3p6QU1CZ05WSFJNQkFmOEVBakFBTUI4R0ExVWRJd1FZTUJhQUZLT1ZiV3U5SzFITjRjL2xrRy9YSmsrLzNUN2VNRXdHQTFVZEh3UkZNRU13UWFBL29EMkdPMmgwZEhBNkx5OWpaWEowY3k1bGJYSmthWEpsWTNRdVkyOXRMMk55YkM5RlRWSkVhWEpsWTNSVVpYTjBRMnhwWlc1MFUzVmlRMEV1WTNKc01BNEdBMVVkRHdFQi93UUVBd0lIZ0RBNUJnTlZIUkVFTWpBd2hpNW9kSFJ3Y3pvdkwzTjBZV2RsTG1obFlXeDBhSFJ2WjI4dWJXVTZPREU0TVM5bWFHbHlMM0kwTDNOMFlXZGxNQTBHQ1NxR1NJYjNEUUVCQ3dVQUE0SUJBUUIrdzI1UFM1b1NNNE9UVlF6cnFHM1JFc1NXOHlITGJCcWtUMHYwazFISFBuMHVqSGtYUzNPdEpyOGRwSXhueWxrQWxWRXp3dTE0V0w3SkZoZ2w2SlVjMm9hVEJ4dkgyeGZVU3BwNzA4TW1aVHRSc2lDMWsrOVFyUEN5akFRbEU1T0JBbCtMTEZhRFM2cXN0QVpoT3VRWkFTTnVaZ29La09EeS84ZUlra1prUnd0dWVMdnNGdWdha0JXT1MxZTBkNkVSd0pFbG05OW5vWGNvSmJZQVR5K05zVUM3a01yNGxad21XQWIyaTNyczB1NnBOZzdLUmpXRDFtY1dZeFJ6a3gva0xwdkxONVExQlZKRHk2ZnNHR3Z5OFZwckFoM0s5QXVucE93ei9xS1dXWnkzSVVsU05NT2pub1pOT3dtbkNwdnNUalY2RkMyK1ZTM1o5ZmRZRXptWCJdfQ.eyJpc3MiOiJodHRwczovL3N0YWdlLmhlYWx0aHRvZ28ubWU6ODE4MS9maGlyL3I0L3N0YWdlIiwic3ViIjoiaHR0cHM6Ly9zdGFnZS5oZWFsdGh0b2dvLm1lOjgxODEvZmhpci9yNC9zdGFnZSIsImlhdCI6MTcyMTg1ODY3MSwiZXhwIjoxNzUzMzk0NjcxLCJqdGkiOiI5ZDIwZmVmOC1jZGI2LTRkNTUtYTcxMy04MDk1OTI5MTJmYmMiLCJhdXRob3JpemF0aW9uX2VuZHBvaW50IjoiaHR0cHM6Ly9zdGFnZS5oZWFsdGh0b2dvLm1lOjgxODEvb2F1dGgvc3RhZ2UvYXV0aHoiLCJ0b2tlbl9lbmRwb2ludCI6Imh0dHBzOi8vc3RhZ2UuaGVhbHRodG9nby5tZTo4MTgxL29hdXRoL3N0YWdlL3Rva2VuIiwicmVnaXN0cmF0aW9uX2VuZHBvaW50IjoiaHR0cHM6Ly9zdGFnZS5oZWFsdGh0b2dvLm1lOjgxODEvb2F1dGgvc3RhZ2UvcmVnaXN0ZXIifQ.DCN2IrblHHfSxu0btZzt5PULhqoextydM1Nw3CxX7AeRlZ15b1bHggFvAhqP_IF_0ptBB6njkf7ukyHpC3dhNH-WCWOlIL6QJT2ehZ2-83xTOAtTPZd9bKbGahVc08OMRCZshbYroF4p0NeUWHbWjSpqPZXwcykNf5jRIfeSPodDt9x85W49uyrhLeaLtzHbtMlklqGmxrg8U1wBNrpDi6En4gUtQ2vbAOQQqPZ-ktGIrHDxg8No4m5jZQlszYB662thqFecSl7hh6g1vGHmvK9k8MdhdbrPOtqVI9sMSKvDWNSMV6HJIL80jhZTeAzrqVQ8p0QOYgRbUWfedXB4cw'
+    UDAPSecurity::UDAPJWTBuilder.encode_jwt_with_x5c_header(
+      signed_metadata_jwt_payload,
+      client_private_key,
+      signing_algorithm,
+      [client_cert_pem, root_ca]
+    ).to_s
   end
+
+  let(:signed_metadata_jwt_payload) do
+    {
+      'iss' => 'https://inferno.com/udap_security/ac',
+      'sub' => 'https://inferno.com/udap_security/ac',
+      'exp' => 60.minutes.from_now.to_i,
+      'jti' => SecureRandom.hex(32),
+      'iat' => Time.now.to_i,
+      'authorization_endpoint' => 'https://inferno.com/udap_security/authz',
+      'token_endpoint' => 'https://inferno.com/udap_security/token',
+      'registration_endpoint' => 'https://inferno.com/udap_security/registration'
+    }
+  end
+
+  let(:client_cert_pem) do
+    UDAPSecurity::DefaultCertFileLoader.load_test_client_cert_pem_file
+  end
+
+  let(:client_private_key) do
+    UDAPSecurity::DefaultCertFileLoader.load_test_client_private_key_file
+  end
+
+  let(:root_ca) do
+    UDAPSecurity::DefaultCertFileLoader.load_default_ca_pem_file
+  end
+
+  let(:signing_algorithm) { 'RS256' }
 
   def run(runnable, inputs = {})
     test_run_params = { test_session_id: test_session.id }.merge(runnable.reference_hash)
@@ -67,13 +80,20 @@ RSpec.describe UDAPSecurity::SignedMetadataContentsTest do
     config = {}
     udap_fhir_base_url = 'http://example.fhir.com'
 
-    result = run(runnable, udap_well_known_metadata_json: config.to_json, signed_metadata_jwt: nil, udap_fhir_base_url:)
+    result = run(runnable, udap_well_known_metadata_json: config.to_json, signed_metadata_jwt: nil,
+                           udap_fhir_base_url:)
     expect(result.result).to eq('skip')
   end
 
   it 'passes with valid JWT' do
-    udap_fhir_base_url = 'https://stage.healthtogo.me:8181/fhir/r4/stage'
-    result = run(runnable, udap_well_known_metadata_json:, signed_metadata_jwt:, udap_fhir_base_url:)
+    udap_fhir_base_url = 'https://inferno.com/udap_security/ac'
+    json_string = udap_well_known_metadata.to_json
+    result = run(
+      runnable,
+      udap_well_known_metadata_json: json_string,
+      signed_metadata_jwt:,
+      udap_fhir_base_url:
+    )
     expect(result.result).to eq('pass')
   end
 end

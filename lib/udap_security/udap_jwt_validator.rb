@@ -21,8 +21,7 @@ module UDAPSecurity
       end
       crl_uris = cert_chain.map(&:crl_uris).compact
       crl_uris = crl_uris.flatten
-      crl_uris_anchors = trust_anchor_certs.map(&:crl_uris).compact
-      crl_uris_anchors = crl_uris_anchors.flatten
+      crl_uris_anchors = trust_anchor_certs.map(&:crl_uris).compact.flatten
       crl_uris.concat(crl_uris_anchors)
       crls = crl_uris.map do |uri|
         get_crl_from_uri(uri)

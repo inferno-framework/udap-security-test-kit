@@ -9,9 +9,15 @@ module UDAPSecurity
         true,
         algorithm:
       )
-      [true, nil]
+      {
+        success: true,
+        error_message: nil
+      }
     rescue JWT::DecodeError => e
-      [false, e.full_message]
+      {
+        success: false,
+        error_message: e.full_message
+      }
     end
 
     def self.validate_trust_chain(x5c_header_encoded, trust_anchor_certs)

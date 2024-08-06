@@ -103,14 +103,16 @@ RSpec.describe UDAPSecurity::UDAPJWTValidator do # rubocop:disable RSpec/FilePat
 
       cert = OpenSSL::X509::Certificate.new(Base64.urlsafe_decode64(token_header['x5c'].first))
 
-      valid_signature, error_message = described_class.validate_signature(
+      validation_result = described_class.validate_signature(
         test_jwt,
         token_header['alg'],
         cert
       )
 
-      expect(valid_signature).to be true
-      puts "JWT Signature validation error message: #{error_message}" unless valid_signature
+      expect(validation_result[:success]).to be true
+      unless validation_result[:success]
+        puts "JWT Signature validation error message: #{validation_result[:error_message]}"
+      end
     end
   end
 end

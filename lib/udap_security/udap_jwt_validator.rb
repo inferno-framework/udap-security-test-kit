@@ -25,8 +25,7 @@ module UDAPSecurity
         cert_der = Base64.urlsafe_decode64(cert)
         OpenSSL::X509::Certificate.new(cert_der)
       end
-      crl_uris = cert_chain.map(&:crl_uris).compact
-      crl_uris = crl_uris.flatten
+      crl_uris = cert_chain.map(&:crl_uris).compact.flatten
       crl_uris_anchors = trust_anchor_certs.map(&:crl_uris).compact.flatten
       crl_uris.concat(crl_uris_anchors)
       crls = crl_uris.map do |uri|

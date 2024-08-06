@@ -58,12 +58,14 @@ RSpec.describe UDAPSecurity::UDAPJWTValidator do # rubocop:disable RSpec/FilePat
       _token_body, token_header = JWT.decode(test_jwt, nil, false)
       trust_anchor_certs = [emr_root_ca]
 
-      valid_trust_chain, error_message = described_class.validate_trust_chain(
+      validation_result = described_class.validate_trust_chain(
         token_header['x5c'],
         trust_anchor_certs
       )
-      expect(valid_trust_chain).to be true
-      puts "Trust chain validation error message: #{error_message}" unless valid_trust_chain
+      expect(validation_result[:success]).to be true
+      unless validation_result[:success]
+        puts "Trust chain validation error message: #{validation_result[:error_message]}"
+      end
     end
 
     it 'returns that trust chain cannot be verified with invalid certs' do
@@ -79,13 +81,13 @@ RSpec.describe UDAPSecurity::UDAPJWTValidator do # rubocop:disable RSpec/FilePat
 
       trust_anchor_certs = [OpenSSL::X509::Certificate.new(inferno_root_ca)]
 
-      valid_trust_chain, error_message = described_class.validate_trust_chain(
+      validation_result = described_class.validate_trust_chain(
         token_header['x5c'],
         trust_anchor_certs
       )
 
-      expect(valid_trust_chain).to be false
-      expect(error_message).to match(/unable to get certificate CRL/)
+      expect(validation_result[:success]).to be false
+      expect(validation_result[:error_message]).to match(/unable to get certificate CRL/)
     end
   end
 

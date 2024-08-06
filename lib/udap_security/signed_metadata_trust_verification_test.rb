@@ -40,13 +40,13 @@ module UDAPSecurity
         OpenSSL::X509::Certificate.new(cert_pem)
       end
 
-      trust_chain_valid, error_message = UDAPJWTValidator.validate_trust_chain(
+      validation_result = UDAPJWTValidator.validate_trust_chain(
         token_header['x5c'],
         trust_anchor_certs
       )
 
-      assert trust_chain_valid,
-             "Trust could not be established with server certificates, error message: #{error_message}"
+      assert validation_result[:success],
+             "Trust could not be established with server certificates, error message: #{validation_result[:error_message]}"
     end
   end
 end

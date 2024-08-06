@@ -38,9 +38,15 @@ module UDAPSecurity
         # As a result, these capabilities are decoupled for testing purposes
         JWT::X5cKeyFinder.new(trust_anchor_certs,
                               crls).from(x5c_header_encoded)
-        [true, nil]
+        {
+          success: true,
+          error_message: nil
+        }
       rescue JWT::VerificationError => e
-        [false, e.message]
+        {
+          success: false,
+          error_message: e.full_message
+        }
       end
     end
 

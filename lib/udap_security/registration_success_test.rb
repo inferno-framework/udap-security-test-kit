@@ -40,7 +40,7 @@ module UDAPSecurity
 
       output udap_software_statement_json: software_statement_payload.to_json
 
-      x5c_certs = UDAPSecurity::UDAPJWTBuilder.parse_cert_strings_from_user_input(
+      x5c_certs = UDAPSecurity::UDAPJWTBuilder.split_user_input_cert_string(
         udap_client_cert_pem
       )
 

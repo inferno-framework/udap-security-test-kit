@@ -7,7 +7,7 @@ module UDAPSecurity
       OpenSSL::PKey.read(pkey_string)
     end
 
-    def self.parse_cert_strings_from_user_input(user_input_string)
+    def self.split_user_input_cert_string(user_input_string)
       x5c_certs = user_input_string.split(',')
       x5c_certs.each_with_index do |cert, index|
         cleaned_input = cert.chomp.strip

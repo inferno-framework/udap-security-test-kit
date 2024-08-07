@@ -15,9 +15,9 @@ RSpec.describe UDAPSecurity::UDAPJWTBuilder do # rubocop:disable RSpec/FilePath,
     UDAPSecurity::DefaultCertFileLoader.load_default_ca_pem_file
   end
 
-  def validate_parsed_certs(parsed_contents, expected_length)
-    expect(parsed_contents.length).to eq(expected_length)
-    parsed_contents.each do |cert|
+  def validate_cert_array(contents, expected_length)
+    expect(contents.length).to eq(expected_length)
+    contents.each do |cert|
       # verify we can create a valid certificate object from contents
       OpenSSL::X509::Certificate.new(cert)
     end
@@ -121,34 +121,34 @@ RSpec.describe UDAPSecurity::UDAPJWTBuilder do # rubocop:disable RSpec/FilePath,
     end
   end
 
-  describe 'parse_cert_strings_from_user_input' do
+  describe 'split_user_input_cert_string' do
     context 'when inputs have no leading or trailing whitespaces' do
-      it 'correctly parses single certificate' do
-        parsed_input = described_class.parse_cert_strings_from_user_input(client_cert_string)
+      it 'correctly splits single certificate' do
+        cert_array = described_class.split_user_input_cert_string(client_cert_string)
 
-        validate_parsed_certs(parsed_input, 1)
+        validate_cert_array(cert_array, 1)
       end
 
-      it 'correctly parses multiple certificates' do
+      it 'correctly splits multiple certificates' do
         cert_input = "#{client_cert_string},#{ca_cert_string}"
-        parsed_input = described_class.parse_cert_strings_from_user_input(cert_input)
+        cert_array = described_class.split_user_input_cert_string(cert_input)
 
-        validate_parsed_certs(parsed_input, 2)
+        validate_cert_array(cert_array, 2)
       end
     end
 
     context 'when inputs have leading and trailing whitespaces' do
-      it 'correctly parses single certificate' do
+      it 'correctly splits single certificate' do
         cert_input = " #{client_cert_string} "
-        parsed_input = described_class.parse_cert_strings_from_user_input(cert_input)
-        validate_parsed_certs(parsed_input, 1)
+        cert_array = described_class.split_user_input_cert_string(cert_input)
+        validate_cert_array(cert_array, 1)
       end
 
-      it 'correctly parses multiple certificates' do
+      it 'correctly splits multiple certificates' do
         cert_input = " #{client_cert_string}, \n#{ca_cert_string} \n "
-        parsed_input = described_class.parse_cert_strings_from_user_input(cert_input)
+        cert_array = described_class.split_user_input_cert_string(cert_input)
 
-        validate_parsed_certs(parsed_input, 2)
+        validate_cert_array(cert_array, 2)
       end
     end
   end

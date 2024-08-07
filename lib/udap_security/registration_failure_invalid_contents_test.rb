@@ -43,7 +43,7 @@ module UDAPSecurity
         udap_registration_requested_scope
       )
 
-      x5c_certs = UDAPSecurity::UDAPJWTBuilder.parse_cert_strings_from_user_input(
+      x5c_certs = UDAPSecurity::UDAPJWTBuilder.split_user_input_cert_string(
         udap_client_cert_pem
       )
 

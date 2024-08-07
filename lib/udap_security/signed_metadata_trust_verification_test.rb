@@ -36,7 +36,7 @@ module UDAPSecurity
       assert token_header.key?('x5c'), 'JWT header does not contain `x5c` field'
       assert token_header.key?('alg'), 'JWT header does not contain `alg` field'
 
-      trust_anchor_certs = udap_server_trust_anchor_certs.split(',').map do |cert_pem|
+      trust_anchor_certs = UDAPJWTBuilder.split_user_input_cert_string(udap_server_trust_anchor_certs).map do |cert_pem|
         OpenSSL::X509::Certificate.new(cert_pem)
       end
 

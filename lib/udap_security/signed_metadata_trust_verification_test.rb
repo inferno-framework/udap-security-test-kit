@@ -24,7 +24,8 @@ module UDAPSecurity
     input :udap_server_trust_anchor_certs,
           title: 'Auth Server Trust Anchor X509 Certificate(s) (PEM Format)',
           description: %(
-            A comma-separated list of one or more trust anchor root CA X.509 certificates Inferno will use to establish
+            A list of one or more trust anchor root CA X.509 certificates, separated by a newline. Inferno will use
+            these to establish
             trust with the authorization server's certificates provided in the discovery response signed_metadata JWT.
           ),
           type: 'textarea'

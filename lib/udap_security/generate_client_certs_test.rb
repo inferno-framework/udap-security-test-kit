@@ -13,8 +13,8 @@ module UDAPSecurity
     input :udap_client_cert_pem,
           title: 'X.509 Client Certificate(s) (PEM Format)',
           description: %(
-            A comma-separted list of one or more X.509 certificates in PEM format. The first (leaf) certificate MUST
-            represent the client entity and the certificate chain must resolve to a CA trusted by the authorization
+            A list of one or more X.509 certificates in PEM format separated by a newline. The first (leaf) certificate
+            MUST represent the client entity and the certificate chain must resolve to a CA trusted by the authorization
             server under test.
             Will be auto-generated if left blank.
           ),

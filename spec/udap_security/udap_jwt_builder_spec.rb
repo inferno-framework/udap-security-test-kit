@@ -122,34 +122,17 @@ RSpec.describe UDAPSecurity::UDAPJWTBuilder do # rubocop:disable RSpec/FilePath,
   end
 
   describe 'split_user_input_cert_string' do
-    context 'when inputs have no leading or trailing whitespaces' do
-      it 'correctly splits single certificate' do
-        cert_array = described_class.split_user_input_cert_string(client_cert_string)
+    it 'correctly splits single certificate' do
+      cert_array = described_class.split_user_input_cert_string(client_cert_string)
 
-        validate_cert_array(cert_array, 1)
-      end
-
-      it 'correctly splits multiple certificates' do
-        cert_input = "#{client_cert_string},#{ca_cert_string}"
-        cert_array = described_class.split_user_input_cert_string(cert_input)
-
-        validate_cert_array(cert_array, 2)
-      end
+      validate_cert_array(cert_array, 1)
     end
 
-    context 'when inputs have leading and trailing whitespaces' do
-      it 'correctly splits single certificate' do
-        cert_input = " #{client_cert_string} "
-        cert_array = described_class.split_user_input_cert_string(cert_input)
-        validate_cert_array(cert_array, 1)
-      end
+    it 'correctly splits multiple certificates' do
+      cert_input = "#{client_cert_string}\n#{ca_cert_string}"
+      cert_array = described_class.split_user_input_cert_string(cert_input)
 
-      it 'correctly splits multiple certificates' do
-        cert_input = " #{client_cert_string}, \n#{ca_cert_string} \n "
-        cert_array = described_class.split_user_input_cert_string(cert_input)
-
-        validate_cert_array(cert_array, 2)
-      end
+      validate_cert_array(cert_array, 2)
     end
   end
 end

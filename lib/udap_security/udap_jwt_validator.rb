@@ -9,9 +9,15 @@ module UDAPSecurity
         true,
         algorithm:
       )
-      [true, nil]
+      {
+        success: true,
+        error_message: nil
+      }
     rescue JWT::DecodeError => e
-      [false, e.full_message]
+      {
+        success: false,
+        error_message: e.full_message
+      }
     end
 
     def self.validate_trust_chain(x5c_header_encoded, trust_anchor_certs)
@@ -19,10 +25,8 @@ module UDAPSecurity
         cert_der = Base64.urlsafe_decode64(cert)
         OpenSSL::X509::Certificate.new(cert_der)
       end
-      crl_uris = cert_chain.map(&:crl_uris).compact
-      crl_uris = crl_uris.flatten
-      crl_uris_anchors = trust_anchor_certs.map(&:crl_uris).compact
-      crl_uris_anchors = crl_uris_anchors.flatten
+      crl_uris = cert_chain.map(&:crl_uris).compact.flatten
+      crl_uris_anchors = trust_anchor_certs.map(&:crl_uris).compact.flatten
       crl_uris.concat(crl_uris_anchors)
       crls = crl_uris.map do |uri|
         get_crl_from_uri(uri)
@@ -39,9 +43,15 @@ module UDAPSecurity
         # As a result, these capabilities are decoupled for testing purposes
         JWT::X5cKeyFinder.new(trust_anchor_certs,
                               crls).from(x5c_header_encoded)
-        [true, nil]
+        {
+          success: true,
+          error_message: nil
+        }
       rescue JWT::VerificationError => e
-        [false, e.message]
+        {
+          success: false,
+          error_message: e.full_message
+        }
       end
     end
 

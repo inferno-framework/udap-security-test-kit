@@ -24,7 +24,8 @@ module UDAPSecurity
     input :udap_server_trust_anchor_certs,
           title: 'Auth Server Trust Anchor X509 Certificate(s) (PEM Format)',
           description: %(
-            A comma-separated list of one or more trust anchor root CA X.509 certificates Inferno will use to establish
+            A list of one or more trust anchor root CA X.509 certificates, separated by a newline. Inferno will use
+            these to establish
             trust with the authorization server's certificates provided in the discovery response signed_metadata JWT.
           ),
           type: 'textarea'
@@ -36,18 +37,17 @@ module UDAPSecurity
       assert token_header.key?('x5c'), 'JWT header does not contain `x5c` field'
       assert token_header.key?('alg'), 'JWT header does not contain `alg` field'
 
-      anchor_certs_parsed = udap_server_trust_anchor_certs.split(',')
-      trust_anchor_certs = anchor_certs_parsed.map do |cert_pem|
+      trust_anchor_certs = UDAPJWTBuilder.split_user_input_cert_string(udap_server_trust_anchor_certs).map do |cert_pem|
         OpenSSL::X509::Certificate.new(cert_pem)
       end
 
-      trust_chain_valid, error_message = UDAPJWTValidator.validate_trust_chain(
+      validation_result = UDAPJWTValidator.validate_trust_chain(
         token_header['x5c'],
         trust_anchor_certs
       )
 
-      assert trust_chain_valid,
-             "Trust could not be established with server certificates, error message: #{error_message}"
+      assert validation_result[:success],
+             "Trust could not be established with server certificates, error message: #{validation_result[:error_message]}"
     end
   end
 end

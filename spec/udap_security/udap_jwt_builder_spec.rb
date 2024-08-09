@@ -125,14 +125,19 @@ RSpec.describe UDAPSecurity::UDAPJWTBuilder do # rubocop:disable RSpec/FilePath,
     it 'correctly splits single certificate' do
       cert_array = described_class.split_user_input_cert_string(client_cert_string)
 
-      validate_cert_array(cert_array, 1)
+      expect(cert_array.length).to eq(1)
+      OpenSSL::X509::Certificate.new(cert_array[0])
     end
 
     it 'correctly splits multiple certificates' do
       cert_input = "#{client_cert_string}\n#{ca_cert_string}"
       cert_array = described_class.split_user_input_cert_string(cert_input)
 
-      validate_cert_array(cert_array, 2)
+      expect(cert_array.length).to eq(2)
+      cert_array.each do |cert|
+        # verify we can create a valid certificate object from contents
+        OpenSSL::X509::Certificate.new(cert)
+      end
     end
   end
 end

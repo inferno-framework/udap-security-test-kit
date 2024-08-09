@@ -4,7 +4,7 @@ require_relative '../../lib/udap_security/udap_x509_certificate'
 require_relative '../../lib/udap_security/default_cert_file_loader'
 require 'pry'
 
-RSpec.describe UDAPSecurity::UDAPJWTValidator do # rubocop:disable RSpec/FilePath,
+RSpec.describe UDAPSecurity::UDAPJWTValidator do # rubocop:disable RSpec/FilePath,RSpec/SpecFilePathFormat
   # Two sets of test certs - EMR certs for trust chain validation, since they
   # have a legitimate trust chain
   # Inferno self-generated certs for JWT signature validation, since we have

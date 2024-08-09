@@ -47,7 +47,8 @@ module UDAPSecurity
       )
 
       assert validation_result[:success],
-             "Trust could not be established with server certificates, error message: #{validation_result[:error_message]}"
+             "Trust could not be established with server certificates, /
+             error message: #{validation_result[:error_message]}"
     end
   end
 end

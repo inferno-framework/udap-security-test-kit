@@ -60,7 +60,7 @@ module UDAPSecurity
         nil
       )
 
-      x5c_certs = UDAPSecurity::UDAPJWTBuilder.split_user_input_cert_string(udap_client_cert_pem_auth_code_flow)
+      UDAPSecurity::UDAPJWTBuilder.split_user_input_cert_string(udap_client_cert_pem_auth_code_flow)
 
       client_assertion_jwt = UDAPSecurity::UDAPJWTBuilder.encode_jwt_with_x5c_header(
         client_assertion_payload,

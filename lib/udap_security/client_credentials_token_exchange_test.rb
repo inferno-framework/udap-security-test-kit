@@ -42,8 +42,8 @@ module UDAPSecurity
           title: 'X.509 Client Certificate(s) (PEM Format)',
           type: 'textarea',
           description: %(
-            A list of one or more X.509 certificates in PEM format separated by a newline. The first (leaf) certificate MUST
-            represent the client entity Inferno registered as,
+            A list of one or more X.509 certificates in PEM format separated by a newline. The first (leaf) certificate
+            MUST represent the client entity Inferno registered as,
             and the trust chain that will be built from the provided certificate(s) must resolve to a CA trusted by the
             authorization server under test.
           )
@@ -96,7 +96,7 @@ module UDAPSecurity
         extensions.to_json
       )
 
-      UDAPSecurity::UDAPJWTBuilder.split_user_input_cert_string(
+      x5c_certs = UDAPSecurity::UDAPJWTBuilder.split_user_input_cert_string(
         udap_client_cert_pem_client_creds_flow
       )
 

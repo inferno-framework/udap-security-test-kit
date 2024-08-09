@@ -36,20 +36,20 @@ RSpec.describe UDAPSecurity::SignedMetadataTrustVerificationTest do
   # set as a trust anchor
   # Algorithm encounters a self-signed cert (the root CA), ending the chain,
   # but no certs have matched a trusted source yet
-  let(:self_signed_cert_error) { 'self-signed certificate in certificate chain' }
+  let(:self_signed_cert_error) { /self.signed certificate in certificate chain/ }
 
   # Occurs when the issuing cert of a cert in the chain being verified is not
   # on hand
   # E.g., client cert is in chain but system does not have access to
   # intermediate CA
   # Or, intermediate CA is in chain but system does not have access to root CA
-  let(:missing_cert_error) { 'unable to get local issuer certificate' }
+  let(:missing_cert_error) { /unable to get local issuer certificate/ }
 
   # Occurs when intermediate CA is set as trust anchor but not root CA
   # Since intermediate CA is not self-signed, it cannot be true trust anchor and
   # algorithm must verify its issuer (the root CA) but it does not have access
   # to root CA
-  let(:missing_trust_anchor_error) { 'unable to get issuer certificate' }
+  let(:missing_trust_anchor_error) { /unable to get issuer certificate/ }
 
   def run(runnable, inputs = {})
     test_run_params = { test_session_id: test_session.id }.merge(runnable.reference_hash)

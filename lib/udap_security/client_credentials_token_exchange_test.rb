@@ -96,7 +96,7 @@ module UDAPSecurity
         extensions.to_json
       )
 
-      x5c_certs = UDAPSecurity::UDAPJWTBuilder.split_user_input_cert_string(
+      UDAPSecurity::UDAPJWTBuilder.split_user_input_cert_string(
         udap_client_cert_pem_client_creds_flow
       )
 

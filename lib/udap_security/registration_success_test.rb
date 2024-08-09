@@ -40,11 +40,15 @@ module UDAPSecurity
 
       output udap_software_statement_json: software_statement_payload.to_json
 
+      x5c_certs = UDAPSecurity::UDAPJWTBuilder.split_user_input_cert_string(
+        udap_client_cert_pem
+      )
+
       signed_jwt = UDAPSecurity::UDAPJWTBuilder.encode_jwt_with_x5c_header(
         software_statement_payload,
         udap_client_private_key_pem,
         udap_jwt_signing_alg,
-        udap_client_cert_pem
+        x5c_certs
       )
 
       output udap_software_statement_jwt: signed_jwt

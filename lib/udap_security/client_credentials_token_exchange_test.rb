@@ -89,11 +89,15 @@ module UDAPSecurity
         extensions.to_json
       )
 
+      UDAPSecurity::UDAPJWTBuilder.split_user_input_cert_string(
+        udap_client_cert_pem_client_creds_flow
+      )
+
       client_assertion_jwt = UDAPSecurity::UDAPJWTBuilder.encode_jwt_with_x5c_header(
         client_assertion_payload,
         udap_client_private_key_client_creds_flow,
         udap_jwt_signing_alg,
-        udap_client_cert_pem_client_creds_flow
+        [udap_client_cert_pem_client_creds_flow]
       )
 
       token_exchange_headers, token_exchange_body = UDAPSecurity::UDAPRequestBuilder.build_token_exchange_request(

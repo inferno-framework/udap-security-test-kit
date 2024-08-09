@@ -16,6 +16,7 @@ require_relative 'udap_certifications_supported_field_test'
 require_relative 'udap_profiles_supported_field_test'
 require_relative 'udap_versions_supported_field_test'
 require_relative 'well_known_endpoint_test'
+require_relative 'signed_metadata_trust_verification_test'
 module UDAPSecurity
   class DiscoveryGroup < Inferno::TestGroup
     include Inferno::DSL::Assertions
@@ -46,11 +47,22 @@ module UDAPSecurity
             ]
           }
 
-    input_instructions %(
+    # TODO: sort out input instructions for final release (this was just an
+    # experiment in figuring out how to reuse input instructions when running
+    # tests at different group levels
+    def self.discovery_group_input_instructions
+      %(
       If Discovery Tests are being not being run as part of a larger OAuth workflow and/or a the server is not required
-       to support a specific OAuth flow, select Either for Required OAuth2.0 Flow Type. Otherwise, Discovery Tests will
-       verify that the metadata returned by the server supports the designated flow.
+      to support a specific OAuth flow, select Either for Required OAuth2.0 Flow Type. Otherwise, Discovery Tests will
+      verify that the metadata returned by the server supports the designated flow.
+
+      Inferno currently does not support the use of the Authority Information Access (AIA) extension to access issuing
+      certificates.  As such, Inferno must be provided any intermediate server certificates needed to establish a
+      trust chain.  If the intermediate CAs are not included in the x5c header of the server's signed metadata JWT,
+      testers may include them along with the root CA as a trust anchor input.
     )
+    end
+    input_instructions discovery_group_input_instructions
 
     output :udap_registration_certficiations_required
     output :udap_registration_endpoint
@@ -75,5 +87,13 @@ module UDAPSecurity
     test from: :udap_reg_endpoint_jwt_signing_alg_values_supported_field
     test from: :udap_signed_metadata_field
     test from: :udap_signed_metadata_contents
+    test from: :udap_signed_metadata_trust_verification, optional: true,
+         config: {
+           inputs: {
+             udap_server_trust_anchor_certs: {
+               optional: true
+             }
+           }
+         }
   end
 end

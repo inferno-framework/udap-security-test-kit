@@ -15,8 +15,7 @@ module UDAPSecurity
     def self.dynamic_client_registration_input_instructions
       %(
       Testers must provide a client certificate and any additional CAs needed for the authorization server under test to
-      establish a trust chain.  Certs must be in string (PEM) format and separated by a single comma (no spaces) if
-      entering more than one.
+      establish a trust chain.
 
       Cancelling a UDAP client's registration is not a required server capability and as such the Inferno client has no
       way of resetting state on the authorization server after a successful registration attempt.  Testers wishing to
@@ -60,8 +59,8 @@ module UDAPSecurity
     input :udap_client_cert_pem,
           title: 'X.509 Client Certificate(s) (PEM Format)',
           description: %(
-            A comma-separted list of one or more X.509 certificates in PEM format. The first (leaf) certificate MUST
-            represent the client entity Inferno will register as,
+            A list of one or more X.509 certificates in PEM format separated by a newline. The first (leaf) certificate
+            MUST represent the client entity Inferno will register as,
             and the trust chain that will be built from the provided certificate(s) must resolve to a CA trusted by the
             authorization server under test.
           ),

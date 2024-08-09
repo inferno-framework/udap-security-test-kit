@@ -7,7 +7,8 @@ module UDAPSecurity
     title 'UDAP Client Credentials Authorization & Authentication'
     description %(
       This group tests the use of the client_credentials grant type to authenticate to an authorization server and
-      receive an access token.
+      receive an access token, as described
+      in the [business-to-business (B2B) profile requirements](https://hl7.org/fhir/us/udap-security/STU1/b2b.html).
     )
     id :udap_client_credentials_authentication_group
 

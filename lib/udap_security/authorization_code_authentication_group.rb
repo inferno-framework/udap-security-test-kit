@@ -8,7 +8,9 @@ module UDAPSecurity
     title 'UDAP Authorization Code Authorization & Authentication'
     description %(
       This group tests the use of the authorization_code grant type to receive an authorization code from the
-      authorization server and exchange it for an access token.
+      authorization server and exchange it for an access token, as described
+      in the [consumer-facing](https://hl7.org/fhir/us/udap-security/STU1/consumer.html) and
+      [business-to-business (B2B)](https://hl7.org/fhir/us/udap-security/STU1/b2b.html) profiles requirements.
     )
     id :udap_authorization_code_authentication_group
 

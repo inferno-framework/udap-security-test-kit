@@ -7,8 +7,8 @@ module UDAPSecurity
   class DynamicClientRegistrationGroup < Inferno::TestGroup
     title 'UDAP Dynamic Client Registration'
     description %(
-     Generate and sign a software statement to register the client with the authorization server.  Auto-generates a new
-     client certificate for each run of the test group if custom certs are not provided.
+     Generate and sign a software statement to register the client with the authorization server as described in the
+     [dynamic client registration requirements](https://hl7.org/fhir/us/udap-security/STU1/registration.html).
     )
     id :udap_dynamic_client_registration_group
 

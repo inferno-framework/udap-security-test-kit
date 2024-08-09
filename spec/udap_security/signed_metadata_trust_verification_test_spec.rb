@@ -10,7 +10,7 @@ RSpec.describe UDAPSecurity::SignedMetadataTrustVerificationTest do
 
   let(:client_cert) do
     raw_cert = File.read(File.join(File.dirname(__FILE__),
-                                   '../fixtures/EMRDirectTestClient.pem'))
+                                   '../fixtures/EMRDirectTestServerCert.pem'))
     OpenSSL::X509::Certificate.new raw_cert
   end
 

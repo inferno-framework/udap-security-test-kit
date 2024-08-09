@@ -11,7 +11,7 @@ RSpec.describe UDAPSecurity::UDAPJWTValidator do # rubocop:disable RSpec/FilePat
   # access to private key and can generate signed JWTs as a result
   let(:emr_client_cert) do
     raw_cert = File.read(File.join(File.dirname(__FILE__),
-                                   '../fixtures/EMRDirectTestClient.pem'))
+                                   '../fixtures/EMRDirectTestServerCert.pem'))
     OpenSSL::X509::Certificate.new raw_cert
   end
 

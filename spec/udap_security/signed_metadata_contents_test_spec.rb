@@ -38,16 +38,18 @@ RSpec.describe UDAPSecurity::SignedMetadataContentsTest do
 
   let(:signed_metadata_jwt_payload) do
     {
-      'iss' => 'https://inferno.com/udap_security/ac',
-      'sub' => 'https://inferno.com/udap_security/ac',
+      'iss' => udap_fhir_base_url,
+      'sub' => udap_fhir_base_url,
       'exp' => 60.minutes.from_now.to_i,
       'jti' => SecureRandom.hex(32),
       'iat' => Time.now.to_i,
-      'authorization_endpoint' => 'https://inferno.com/udap_security/authz',
-      'token_endpoint' => 'https://inferno.com/udap_security/token',
-      'registration_endpoint' => 'https://inferno.com/udap_security/registration'
+      'authorization_endpoint' => "#{udap_fhir_base_url}/authz",
+      'token_endpoint' => "#{udap_fhir_base_url}/token",
+      'registration_endpoint' => "#{udap_fhir_base_url}/register"
     }
   end
+
+  let(:udap_fhir_base_url) { 'https://inferno.com/udap_security/ac' }
 
   let(:client_cert_pem) do
     UDAPSecurity::DefaultCertFileLoader.load_test_client_cert_pem_file
@@ -86,8 +88,7 @@ RSpec.describe UDAPSecurity::SignedMetadataContentsTest do
     expect(result.result).to eq('skip')
   end
 
-  it 'passes with valid JWT whose leaf cert has one SAN extension' do
-    udap_fhir_base_url = 'https://inferno.com/udap_security/ac'
+  it 'passes with valid JWT whose leaf cert has one SAN extension value' do
     json_string = udap_well_known_metadata.to_json
     result = run(
       runnable,
@@ -95,6 +96,35 @@ RSpec.describe UDAPSecurity::SignedMetadataContentsTest do
       signed_metadata_jwt:,
       udap_fhir_base_url:
     )
+    expect(result.result).to eq('pass')
+  end
+
+  it 'passes with valid JWT whose leaf cert has two SAN extension values' do
+    signing_key = UDAPSecurity::DefaultCertFileLoader.load_default_ca_private_key_file
+    udap_cert = UDAPSecurity::UDAPX509Certificate.new(root_ca, signing_key, include_san_extension: false)
+
+    # Manually add two SAN entries to OpenSSL cert
+    extension_factory = OpenSSL::X509::ExtensionFactory.new
+    san_entries = "URI:#{udap_fhir_base_url}, URI:https://example.com"
+    udap_cert.cert.add_extension(extension_factory.create_extension('subjectAltName', san_entries, false))
+
+    jwt = UDAPSecurity::UDAPJWTBuilder.encode_jwt_with_x5c_header(
+      signed_metadata_jwt_payload,
+      udap_cert.cert_private_key.to_pem,
+      signing_algorithm,
+      [udap_cert.cert.to_pem, root_ca]
+    ).to_s
+
+    udap_well_known_metadata['signed_metadata'] = jwt
+
+    json_string = udap_well_known_metadata.to_json
+    result = run(
+      runnable,
+      udap_well_known_metadata_json: json_string,
+      signed_metadata_jwt: jwt,
+      udap_fhir_base_url:
+    )
+
     expect(result.result).to eq('pass')
   end
 
@@ -111,7 +141,6 @@ RSpec.describe UDAPSecurity::SignedMetadataContentsTest do
 
     udap_well_known_metadata['signed_metadata'] = jwt
 
-    udap_fhir_base_url = 'https://inferno.com/udap_security/ac'
     json_string = udap_well_known_metadata.to_json
     result = run(
       runnable,

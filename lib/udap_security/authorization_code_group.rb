@@ -87,7 +87,9 @@ module UDAPSecurity
                 name: :udap_cert_iss_auth_code_flow
               }
             }
-          }
+          } do
+      # TODO: input_order :url, etc.
+    end
 
     group from: :udap_authorization_code_authentication_group,
           run_as_group: true

@@ -89,7 +89,9 @@ module UDAPSecurity
                 name: :udap_cert_iss_client_creds_flow
               }
             }
-          }
+          } do
+      # TODO: input_order :url, etc.
+    end
 
     group from: :udap_client_credentials_authentication_group,
           run_as_group: true

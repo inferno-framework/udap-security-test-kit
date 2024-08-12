@@ -1,7 +1,7 @@
 Gem::Specification.new do |spec|
   spec.name          = 'udap_security_test_kit'
-  spec.version       = '0.1.1'
-  spec.authors       = ['Stephen MacVicar']
+  spec.version       = '0.9.0'
+  spec.authors       = ['Stephen MacVicar', 'Alisa Wallace']
   spec.email         = ['inferno@groups.mitre.org']
   spec.summary       = 'UDAP Security IG Test Kit'
   spec.description   = 'UDAP Security IG Test Kit'

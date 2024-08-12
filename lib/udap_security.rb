@@ -1,10 +1,12 @@
 require_relative 'udap_security/authorization_code_group'
 require_relative 'udap_security/client_credentials_group'
+require_relative 'udap_security/version'
 
 module UDAPSecurity
   class Suite < Inferno::TestSuite
     id :udap_security
     title 'UDAP Security'
+    version VERSION
     description %(
       The User Data Access Protocol (UDAP) Security test kit verifies that systems correctly implement the
       [HL7 UDAP Security IG](http://hl7.org/fhir/us/udap-security/STU1/)

@@ -2,7 +2,7 @@ module UDAPSecurity
   class UDAPX509Certificate
     attr_reader :san, :cert_private_key, :cert
 
-    def initialize(issuer_cert_pem_string, issuer_private_key_pem_string)
+    def initialize(issuer_cert_pem_string, issuer_private_key_pem_string, include_san_extension: true)
       issuer_private_key = OpenSSL::PKey.read(issuer_private_key_pem_string)
       issuer_cert = OpenSSL::X509::Certificate.new(issuer_cert_pem_string)
 
@@ -24,14 +24,16 @@ module UDAPSecurity
       ef.subject_certificate = cert
       ef.issuer_certificate = issuer_cert
 
-      # SAN must be unique for each cert
-      @san = "https://inferno.org/udap_security/#{cert.serial}"
-      unique_uri_entry = "URI:#{@san}"
+      if include_san_extension
+        # SAN must be unique for each cert
+        @san = "https://inferno.org/udap_security/#{cert.serial}"
+        unique_uri_entry = "URI:#{@san}"
+        cert.add_extension(ef.create_extension('subjectAltName', unique_uri_entry, false))
+      end
 
       # TODO: add in any other relevant extensions?
       cert.add_extension(ef.create_extension('keyUsage', 'digitalSignature, nonRepudiation', true))
       cert.add_extension(ef.create_extension('subjectKeyIdentifier', 'hash', false))
-      cert.add_extension(ef.create_extension('subjectAltName', unique_uri_entry, false))
       cert.sign(issuer_private_key, OpenSSL::Digest.new('SHA256'))
 
       @cert = cert

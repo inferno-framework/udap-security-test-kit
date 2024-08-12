@@ -1,6 +1,7 @@
 require_relative '../../lib/udap_security/signed_metadata_contents_test'
 require_relative '../../lib/udap_security/udap_jwt_builder'
 require_relative '../../lib/udap_security/default_cert_file_loader'
+require_relative '../../lib/udap_security/udap_x509_certificate'
 
 RSpec.describe UDAPSecurity::SignedMetadataContentsTest do
   let(:runnable) { Inferno::Repositories::Tests.new.find('udap_signed_metadata_contents') }
@@ -85,7 +86,7 @@ RSpec.describe UDAPSecurity::SignedMetadataContentsTest do
     expect(result.result).to eq('skip')
   end
 
-  it 'passes with valid JWT' do
+  it 'passes with valid JWT whose leaf cert has one SAN extension' do
     udap_fhir_base_url = 'https://inferno.com/udap_security/ac'
     json_string = udap_well_known_metadata.to_json
     result = run(
@@ -95,5 +96,31 @@ RSpec.describe UDAPSecurity::SignedMetadataContentsTest do
       udap_fhir_base_url:
     )
     expect(result.result).to eq('pass')
+  end
+
+  it 'fails when JWT leaf cert does not have SAN extension' do
+    signing_key = UDAPSecurity::DefaultCertFileLoader.load_default_ca_private_key_file
+    udap_cert = UDAPSecurity::UDAPX509Certificate.new(root_ca, signing_key, include_san_extension: false)
+
+    jwt = UDAPSecurity::UDAPJWTBuilder.encode_jwt_with_x5c_header(
+      signed_metadata_jwt_payload,
+      udap_cert.cert_private_key.to_pem,
+      signing_algorithm,
+      [udap_cert.cert.to_pem, root_ca]
+    ).to_s
+
+    udap_well_known_metadata['signed_metadata'] = jwt
+
+    udap_fhir_base_url = 'https://inferno.com/udap_security/ac'
+    json_string = udap_well_known_metadata.to_json
+    result = run(
+      runnable,
+      udap_well_known_metadata_json: json_string,
+      signed_metadata_jwt: jwt,
+      udap_fhir_base_url:
+    )
+
+    expect(result.result).to eq('fail')
+    expect(result.result_message).to match(/Could not find Subject Alternative Name extension/)
   end
 end

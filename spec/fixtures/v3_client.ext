@@ -1,4 +1,5 @@
 subjectAltName = URI:https://inferno.com/udap_security/ac
 extendedKeyUsage = serverAuth, clientAuth, codeSigning, emailProtection
+crlDistributionPoints=URI:https://inferno.com/mock_crl_endpoint.crl
 basicConstraints = CA:FALSE
 keyUsage = digitalSignature

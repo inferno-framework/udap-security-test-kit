@@ -54,10 +54,14 @@ module UDAPSecurity
         assert token_body['iss'] == udap_fhir_base_url,
                "`iss` claim `#{token_body['iss']}` is not the same as server base url `#{udap_fhir_base_url}`"
 
-        alt_names =
-          leaf_cert.extensions
-            .find { |extension| extension.oid == 'subjectAltName' }
-            .value
+        begin
+          alt_names =
+            leaf_cert.extensions
+              .find { |extension| extension.oid == 'subjectAltName' }
+              .value
+        rescue NoMethodError => e
+          assert false, 'Could not find Subject Alternative Name extension in leaf certificate'
+        end
 
         # Certification may have more than one SAN value
         assert alt_names.include?("URI:#{token_body['iss']}"),

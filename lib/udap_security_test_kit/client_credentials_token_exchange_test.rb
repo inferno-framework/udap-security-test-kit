@@ -96,18 +96,18 @@ module UDAPSecurityTestKit
         extensions.to_json
       )
 
-      x5c_certs = UDAPSecurityTestKit::UDAPJWTBuilder.split_user_input_cert_string(
+      x5c_certs = UDAPJWTBuilder.split_user_input_cert_string(
         udap_client_cert_pem_client_creds_flow
       )
 
-      client_assertion_jwt = UDAPSecurityTestKit::UDAPJWTBuilder.encode_jwt_with_x5c_header(
+      client_assertion_jwt = UDAPJWTBuilder.encode_jwt_with_x5c_header(
         client_assertion_payload,
         udap_client_private_key_client_creds_flow,
         udap_jwt_signing_alg,
         x5c_certs
       )
 
-      token_exchange_headers, token_exchange_body = UDAPSecurityTestKit::UDAPRequestBuilder.build_token_exchange_request(
+      token_exchange_headers, token_exchange_body = UDAPRequestBuilder.build_token_exchange_request(
         client_assertion_jwt,
         'client_credentials',
         nil,

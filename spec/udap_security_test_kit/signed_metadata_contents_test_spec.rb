@@ -17,11 +17,11 @@ RSpec.describe UDAPSecurityTestKit::SignedMetadataContentsTest do
       'udap_certifications_supported' => [],
       'udap_certifications_required' => [],
       'grant_types_supported' => ['authorization_code', 'client_credentials', 'refresh_token'],
-      'authorization_endpoint' => 'https://inferno.com/udap_security_test_kit/authz',
-      'token_endpoint' => 'https://inferno.com/udap_security_test_kit/token',
+      'authorization_endpoint' => 'https://inferno.com/udap_security/authz',
+      'token_endpoint' => 'https://inferno.com/udap_security/token',
       'token_endpoint_auth_methods_supported' => ['private_key_jwt'],
       'token_endpoint_auth_signing_alg_values_supported' => ['RS256'],
-      'registration_endpoint' => 'https://inferno.com/udap_security_test_kit/registration',
+      'registration_endpoint' => 'https://inferno.com/udap_security/registration',
       'registration_endpoint_jwt_signing_alg_values_supported' => ['RS256'],
       'signed_metadata' => signed_metadata_jwt
     }
@@ -49,7 +49,7 @@ RSpec.describe UDAPSecurityTestKit::SignedMetadataContentsTest do
     }
   end
 
-  let(:udap_fhir_base_url) { 'https://inferno.com/udap_security_test_kit/ac' }
+  let(:udap_fhir_base_url) { 'https://inferno.com/udap_security/ac' }
 
   let(:client_cert_pem) do
     UDAPSecurityTestKit::DefaultCertFileLoader.load_test_client_cert_pem_file

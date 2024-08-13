@@ -70,21 +70,22 @@ module UDAPSecurityTestKit
         nil
       )
 
-      x5c_certs = UDAPSecurityTestKit::UDAPJWTBuilder.split_user_input_cert_string(udap_client_cert_pem_auth_code_flow)
+      x5c_certs = UDAPJWTBuilder.split_user_input_cert_string(udap_client_cert_pem_auth_code_flow)
 
-      client_assertion_jwt = UDAPSecurityTestKit::UDAPJWTBuilder.encode_jwt_with_x5c_header(
+      client_assertion_jwt = UDAPJWTBuilder.encode_jwt_with_x5c_header(
         client_assertion_payload,
         udap_client_private_key_auth_code_flow,
         udap_jwt_signing_alg,
         x5c_certs
       )
 
-      token_exchange_headers, token_exchange_body = UDAPSecurityTestKit::UDAPRequestBuilder.build_token_exchange_request(
-        client_assertion_jwt,
-        'authorization_code',
-        udap_authorization_code,
-        config.options[:redirect_uri]
-      )
+      token_exchange_headers, token_exchange_body =
+        UDAPRequestBuilder.build_token_exchange_request(
+          client_assertion_jwt,
+          'authorization_code',
+          udap_authorization_code,
+          config.options[:redirect_uri]
+        )
 
       post(udap_token_endpoint,
            body: token_exchange_body,

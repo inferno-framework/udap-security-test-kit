@@ -1,4 +1,4 @@
-require_relative './lib/udap_security/version'
+require_relative 'lib/udap_security/version'
 
 Gem::Specification.new do |spec|
   spec.name          = 'udap_security_test_kit'
@@ -17,6 +17,8 @@ Gem::Specification.new do |spec|
   spec.files = [
     Dir['lib/**/*.rb'],
     Dir['lib/**/*.json'],
+    Dir['lib/**/*.pem'],
+    Dir['lib/**/*.key'],
     'LICENSE'
   ].flatten
 

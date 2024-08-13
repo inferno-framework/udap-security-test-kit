@@ -9,28 +9,41 @@ RSpec.describe UDAPSecurity::SignedMetadataTrustVerificationTest do
   let(:test_session) { repo_create(:test_session, test_suite_id: 'udap_security') }
 
   let(:client_cert) do
-    raw_cert = File.read(File.join(File.dirname(__FILE__),
-                                   '../fixtures/EMRDirectTestServerCert.pem'))
-    OpenSSL::X509::Certificate.new raw_cert
-  end
-
-  let(:intermediate_ca) do
-    raw_cert = File.read(File.join(File.dirname(__FILE__),
-                                   '../fixtures/EMRDirectTestIntermediateCA.pem'))
-    OpenSSL::X509::Certificate.new raw_cert
+    UDAPSecurity::DefaultCertFileLoader.load_test_client_cert_pem_file
   end
 
   let(:root_ca) do
-    raw_cert = File.read(File.join(File.dirname(__FILE__),
-                                   '../fixtures/EMRDirectTestRootCA.pem'))
-    OpenSSL::X509::Certificate.new raw_cert
-  end
-
-  let(:invalid_trust_anchor) do
     UDAPSecurity::DefaultCertFileLoader.load_default_ca_pem_file
   end
 
+  let(:invalid_trust_anchor) do
+    root_key = OpenSSL::PKey::RSA.new 2048
+    root_ca = OpenSSL::X509::Certificate.new
+    root_ca.version = 2
+    root_ca.serial = 1
+    root_ca.subject = OpenSSL::X509::Name.parse 'C=US/ST=MA/L=Bedford/O=Inferno/CN=Inferno-Invalid-UDAP-Test-CA/'
+    root_ca.issuer = root_ca.subject
+    root_ca.public_key = root_key.public_key
+    root_ca.not_before = Time.now
+    root_ca.not_after = root_ca.not_before + (2 * 365 * 24 * 60 * 60)
+    ef = OpenSSL::X509::ExtensionFactory.new
+    ef.subject_certificate = root_ca
+    ef.issuer_certificate = root_ca
+    root_ca.add_extension(ef.create_extension('basicConstraints', 'CA:TRUE', true))
+    root_ca.add_extension(ef.create_extension('keyUsage', 'keyCertSign, cRLSign', true))
+    root_ca.add_extension(ef.create_extension('subjectKeyIdentifier', 'hash', false))
+    root_ca.add_extension(ef.create_extension('authorityKeyIdentifier', 'keyid:always', false))
+    root_ca.sign(root_key, OpenSSL::Digest.new('SHA256'))
+    root_ca.to_pem
+  end
+
   let(:signing_algorithm) { 'RS256' }
+
+  let(:mock_crl_endpoint) { 'https://inferno.com/mock_crl_endpoint.crl' }
+
+  let(:inferno_crl) do
+    File.read(File.join(File.dirname(__FILE__), '../../spec/fixtures/crl/InfernoCA_CRL.pem'))
+  end
 
   # Occurs when full cert chain provided in x5c header but chain's root CA not
   # set as a trust anchor
@@ -44,12 +57,6 @@ RSpec.describe UDAPSecurity::SignedMetadataTrustVerificationTest do
   # intermediate CA
   # Or, intermediate CA is in chain but system does not have access to root CA
   let(:missing_cert_error) { /unable to get local issuer certificate/ }
-
-  # Occurs when intermediate CA is set as trust anchor but not root CA
-  # Since intermediate CA is not self-signed, it cannot be true trust anchor and
-  # algorithm must verify its issuer (the root CA) but it does not have access
-  # to root CA
-  let(:missing_trust_anchor_error) { /unable to get issuer certificate/ }
 
   def run(runnable, inputs = {})
     test_run_params = { test_session_id: test_session.id }.merge(runnable.reference_hash)
@@ -65,11 +72,10 @@ RSpec.describe UDAPSecurity::SignedMetadataTrustVerificationTest do
     Inferno::TestRunner.new(test_session:, test_run:).run(runnable)
   end
 
-  def create_test_jwt(include_intermediate_ca: true, include_root_ca: true)
+  def create_test_jwt(include_root_ca: true)
     rsa_private = OpenSSL::PKey::RSA.generate 2048
-    x5c_certs = [client_cert.to_pem]
-    x5c_certs.append(intermediate_ca.to_pem) if include_intermediate_ca
-    x5c_certs.append(root_ca.to_pem) if include_root_ca
+    x5c_certs = [client_cert]
+    x5c_certs.append(root_ca) if include_root_ca
     UDAPSecurity::UDAPJWTBuilder.encode_jwt_with_x5c_header(
       {},
       rsa_private.to_pem,
@@ -86,36 +92,40 @@ RSpec.describe UDAPSecurity::SignedMetadataTrustVerificationTest do
     end
   end
 
-  context 'when JWT includes client, intermediate, and root certs' do
+  context 'when JWT includes client and root certs' do
     it 'passes when only root CA provided as trust anchor' do
-      WebMock.allow_net_connect!
+      stub_request(:get, mock_crl_endpoint)
+        .to_return(status: 200, body: inferno_crl)
 
       result = run(runnable, signed_metadata_jwt: create_test_jwt,
-                             udap_server_trust_anchor_certs: root_ca.to_pem)
+                             udap_server_trust_anchor_certs: root_ca)
       expect(result.result).to eq('pass')
     end
 
-    it 'passes when both intermediate and root CAs provided as trust anchor' do
-      WebMock.allow_net_connect!
+    it 'passes when both client and root CAs provided as trust anchor' do
+      stub_request(:get, mock_crl_endpoint)
+        .to_return(status: 200, body: inferno_crl)
 
-      trust_anchors = "#{root_ca.to_pem},#{intermediate_ca.to_pem}"
+      trust_anchors = "#{root_ca},#{client_cert}"
       result = run(runnable, signed_metadata_jwt: create_test_jwt,
                              udap_server_trust_anchor_certs: trust_anchors)
       expect(result.result).to eq('pass')
     end
 
-    it 'fails when intermediate CA but not root CA is provided as trust anchor' do
-      WebMock.allow_net_connect!
+    it 'fails when client cert not root CA is provided as trust anchor' do
+      stub_request(:get, mock_crl_endpoint)
+        .to_return(status: 200, body: inferno_crl)
 
       result = run(runnable, signed_metadata_jwt: create_test_jwt,
-                             udap_server_trust_anchor_certs: intermediate_ca.to_pem)
+                             udap_server_trust_anchor_certs: client_cert)
 
       expect(result.result).to eq('fail')
-      expect(result.result_message).to match(missing_trust_anchor_error)
+      expect(result.result_message).to match(self_signed_cert_error)
     end
 
     it 'fails when incorrect root CA is provided as trust anchor' do
-      WebMock.allow_net_connect!
+      stub_request(:get, mock_crl_endpoint)
+        .to_return(status: 200, body: inferno_crl)
 
       result = run(runnable, signed_metadata_jwt: create_test_jwt,
                              udap_server_trust_anchor_certs: invalid_trust_anchor)
@@ -124,88 +134,25 @@ RSpec.describe UDAPSecurity::SignedMetadataTrustVerificationTest do
     end
   end
 
-  context 'when JWT includes client and intermediate certs' do
-    it 'passes when only root CA provided as trust anchor' do
-      WebMock.allow_net_connect!
-
-      result = run(runnable,
-                   signed_metadata_jwt: create_test_jwt(include_root_ca: false),
-                   udap_server_trust_anchor_certs: root_ca.to_pem)
-      expect(result.result).to eq('pass')
-    end
-
-    it 'passes when both intermediate and root CAs provided as trust anchor' do
-      WebMock.allow_net_connect!
-
-      trust_anchors = "#{root_ca.to_pem},#{intermediate_ca.to_pem}"
-      result = run(runnable,
-                   signed_metadata_jwt: create_test_jwt(include_root_ca: false),
-                   udap_server_trust_anchor_certs: trust_anchors)
-      expect(result.result).to eq('pass')
-    end
-
-    it 'fails when intermediate CA but not root CA is provided as trust anchor' do
-      WebMock.allow_net_connect!
-
-      result = run(runnable,
-                   signed_metadata_jwt: create_test_jwt(include_root_ca: false),
-                   udap_server_trust_anchor_certs: intermediate_ca.to_pem)
-
-      expect(result.result).to eq('fail')
-      expect(result.result_message).to match(missing_trust_anchor_error)
-    end
-
-    it 'fails when incorrect root CA is provided as trust anchor' do
-      WebMock.allow_net_connect!
-
-      result = run(runnable,
-                   signed_metadata_jwt: create_test_jwt(include_root_ca: false),
-                   udap_server_trust_anchor_certs: invalid_trust_anchor)
-      expect(result.result).to eq('fail')
-      expect(result.result_message).to match(missing_cert_error)
-    end
-  end
-
   context 'when JWT includes only client cert' do
-    it 'fails when only root CA but not intermediate CA provided as trust anchor' do
-      WebMock.allow_net_connect!
-
-      result = run(runnable,
-                   signed_metadata_jwt: create_test_jwt(include_root_ca: false, include_intermediate_ca: false),
-                   udap_server_trust_anchor_certs: root_ca.to_pem)
-      expect(result.result).to eq('fail')
-      expect(result.result_message).to match(missing_cert_error)
-    end
-
-    it 'passes when both intermediate and root CAs provided as trust anchors' do
-      WebMock.allow_net_connect!
-
-      trust_anchors = "#{root_ca.to_pem},#{intermediate_ca.to_pem}"
-      result = run(runnable,
-                   signed_metadata_jwt: create_test_jwt(include_root_ca: false, include_intermediate_ca: false),
-                   udap_server_trust_anchor_certs: trust_anchors)
-      expect(result.result).to eq('pass')
-    end
-
-    it 'fails when intermediate CA but not root CA is provided as trust anchor' do
-      WebMock.allow_net_connect!
-
-      result = run(runnable,
-                   signed_metadata_jwt: create_test_jwt(include_root_ca: false, include_intermediate_ca: false),
-                   udap_server_trust_anchor_certs: intermediate_ca.to_pem)
-
-      expect(result.result).to eq('fail')
-      expect(result.result_message).to match(missing_trust_anchor_error)
-    end
-
     it 'fails when incorrect root CA is provided as trust anchor' do
-      WebMock.allow_net_connect!
+      stub_request(:get, mock_crl_endpoint)
+        .to_return(status: 200, body: inferno_crl)
 
       result = run(runnable,
-                   signed_metadata_jwt: create_test_jwt(include_root_ca: false, include_intermediate_ca: false),
+                   signed_metadata_jwt: create_test_jwt(include_root_ca: false),
                    udap_server_trust_anchor_certs: invalid_trust_anchor)
       expect(result.result).to eq('fail')
       expect(result.result_message).to match(missing_cert_error)
+    end
+
+    it 'passes when only root CA provided as trust anchor' do
+      stub_request(:get, mock_crl_endpoint)
+        .to_return(status: 200, body: inferno_crl)
+
+      result = run(runnable, signed_metadata_jwt: create_test_jwt,
+                             udap_server_trust_anchor_certs: root_ca)
+      expect(result.result).to eq('pass')
     end
   end
 end

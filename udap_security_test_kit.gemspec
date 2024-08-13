@@ -1,6 +1,8 @@
+require_relative './lib/udap_security/version'
+
 Gem::Specification.new do |spec|
   spec.name          = 'udap_security_test_kit'
-  spec.version       = '0.9.0'
+  spec.version       = UDAPSecurity::VERSION
   spec.authors       = ['Stephen MacVicar', 'Alisa Wallace']
   spec.email         = ['inferno@groups.mitre.org']
   spec.summary       = 'UDAP Security IG Test Kit'

@@ -3,7 +3,7 @@ require_relative '../../lib/udap_security/udap_jwt_builder'
 require_relative '../../lib/udap_security/default_cert_file_loader'
 require_relative '../../lib/udap_security/udap_x509_certificate'
 
-RSpec.describe UDAPSecurity::SignedMetadataContentsTest do
+RSpec.describe UDAPSecurityTestKit::SignedMetadataContentsTest do
   let(:runnable) { Inferno::Repositories::Tests.new.find('udap_signed_metadata_contents') }
   let(:session_data_repo) { Inferno::Repositories::SessionData.new }
   let(:results_repo) { Inferno::Repositories::Results.new }
@@ -28,7 +28,7 @@ RSpec.describe UDAPSecurity::SignedMetadataContentsTest do
   end
 
   let(:signed_metadata_jwt) do
-    UDAPSecurity::UDAPJWTBuilder.encode_jwt_with_x5c_header(
+    UDAPSecurityTestKit::UDAPJWTBuilder.encode_jwt_with_x5c_header(
       signed_metadata_jwt_payload,
       client_private_key,
       signing_algorithm,
@@ -52,15 +52,15 @@ RSpec.describe UDAPSecurity::SignedMetadataContentsTest do
   let(:udap_fhir_base_url) { 'https://inferno.com/udap_security/ac' }
 
   let(:client_cert_pem) do
-    UDAPSecurity::DefaultCertFileLoader.load_test_client_cert_pem_file
+    UDAPSecurityTestKit::DefaultCertFileLoader.load_test_client_cert_pem_file
   end
 
   let(:client_private_key) do
-    UDAPSecurity::DefaultCertFileLoader.load_test_client_private_key_file
+    UDAPSecurityTestKit::DefaultCertFileLoader.load_test_client_private_key_file
   end
 
   let(:root_ca) do
-    UDAPSecurity::DefaultCertFileLoader.load_default_ca_pem_file
+    UDAPSecurityTestKit::DefaultCertFileLoader.load_default_ca_pem_file
   end
 
   let(:signing_algorithm) { 'RS256' }
@@ -100,15 +100,15 @@ RSpec.describe UDAPSecurity::SignedMetadataContentsTest do
   end
 
   it 'passes with valid JWT whose leaf cert has two SAN extension values' do
-    signing_key = UDAPSecurity::DefaultCertFileLoader.load_default_ca_private_key_file
-    udap_cert = UDAPSecurity::UDAPX509Certificate.new(root_ca, signing_key, include_san_extension: false)
+    signing_key = UDAPSecurityTestKit::DefaultCertFileLoader.load_default_ca_private_key_file
+    udap_cert = UDAPSecurityTestKit::UDAPX509Certificate.new(root_ca, signing_key, include_san_extension: false)
 
     # Manually add two SAN entries to OpenSSL cert
     extension_factory = OpenSSL::X509::ExtensionFactory.new
     san_entries = "URI:#{udap_fhir_base_url}, URI:https://example.com"
     udap_cert.cert.add_extension(extension_factory.create_extension('subjectAltName', san_entries, false))
 
-    jwt = UDAPSecurity::UDAPJWTBuilder.encode_jwt_with_x5c_header(
+    jwt = UDAPSecurityTestKit::UDAPJWTBuilder.encode_jwt_with_x5c_header(
       signed_metadata_jwt_payload,
       udap_cert.cert_private_key.to_pem,
       signing_algorithm,
@@ -129,10 +129,10 @@ RSpec.describe UDAPSecurity::SignedMetadataContentsTest do
   end
 
   it 'fails when JWT leaf cert does not have SAN extension' do
-    signing_key = UDAPSecurity::DefaultCertFileLoader.load_default_ca_private_key_file
-    udap_cert = UDAPSecurity::UDAPX509Certificate.new(root_ca, signing_key, include_san_extension: false)
+    signing_key = UDAPSecurityTestKit::DefaultCertFileLoader.load_default_ca_private_key_file
+    udap_cert = UDAPSecurityTestKit::UDAPX509Certificate.new(root_ca, signing_key, include_san_extension: false)
 
-    jwt = UDAPSecurity::UDAPJWTBuilder.encode_jwt_with_x5c_header(
+    jwt = UDAPSecurityTestKit::UDAPJWTBuilder.encode_jwt_with_x5c_header(
       signed_metadata_jwt_payload,
       udap_cert.cert_private_key.to_pem,
       signing_algorithm,

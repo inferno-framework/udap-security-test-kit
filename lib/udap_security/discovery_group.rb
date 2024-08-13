@@ -17,7 +17,7 @@ require_relative 'udap_profiles_supported_field_test'
 require_relative 'udap_versions_supported_field_test'
 require_relative 'well_known_endpoint_test'
 require_relative 'signed_metadata_trust_verification_test'
-module UDAPSecurity
+module UDAPSecurityTestKit
   class DiscoveryGroup < Inferno::TestGroup
     include Inferno::DSL::Assertions
 

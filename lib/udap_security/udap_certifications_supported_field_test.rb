@@ -1,5 +1,5 @@
 require_relative 'common_assertions'
-module UDAPSecurity
+module UDAPSecurityTestKit
   extend CommonAssertions
   class UDAPCertificationsSupportedFieldTest < Inferno::Test
     include Inferno::DSL::Assertions

@@ -1,6 +1,6 @@
 require_relative 'common_assertions'
 
-module UDAPSecurity
+module UDAPSecurityTestKit
   extend CommonAssertions
   class GrantTypesSupportedFieldTest < Inferno::Test
     title 'grant_types_supported field'

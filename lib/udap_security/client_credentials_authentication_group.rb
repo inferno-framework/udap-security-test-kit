@@ -2,7 +2,7 @@ require_relative 'client_credentials_token_exchange_test'
 require_relative 'token_exchange_response_body_test'
 require_relative 'token_exchange_response_headers_test'
 
-module UDAPSecurity
+module UDAPSecurityTestKit
   class ClientCredentialsAuthenticationGroup < Inferno::TestGroup
     title 'UDAP Client Credentials Authorization & Authentication'
     description %(

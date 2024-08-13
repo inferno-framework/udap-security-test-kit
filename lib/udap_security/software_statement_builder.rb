@@ -1,6 +1,6 @@
 require 'jwt'
 
-module UDAPSecurity
+module UDAPSecurityTestKit
   class SoftwareStatementBuilder
     def self.build_payload(iss, aud, grant_type, scope)
       if grant_type == 'authorization_code'

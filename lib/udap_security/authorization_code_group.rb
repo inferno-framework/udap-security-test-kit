@@ -1,7 +1,7 @@
 require_relative 'dynamic_client_registration_group'
 require_relative 'discovery_group'
 require_relative 'authorization_code_authentication_group'
-module UDAPSecurity
+module UDAPSecurityTestKit
   class AuthorizationCodeGroup < Inferno::TestGroup
     title 'UDAP Authorization Code Flow'
     description %(

@@ -1,17 +1,17 @@
 require_relative '../../lib/udap_security/registration_success_test'
 require_relative '../../lib/udap_security/default_cert_file_loader'
 
-RSpec.describe UDAPSecurity::RegistrationSuccessTest do
+RSpec.describe UDAPSecurityTestKit::RegistrationSuccessTest do
   let(:runnable) { Inferno::Repositories::Tests.new.find('udap_registration_success') }
   let(:session_data_repo) { Inferno::Repositories::SessionData.new }
   let(:results_repo) { Inferno::Repositories::Results.new }
   let(:test_session) { repo_create(:test_session, test_suite_id: 'udap_security') }
   let(:udap_client_cert_pem) do
-    UDAPSecurity::DefaultCertFileLoader.load_test_client_cert_pem_file
+    UDAPSecurityTestKit::DefaultCertFileLoader.load_test_client_cert_pem_file
   end
 
   let(:udap_client_private_key_pem) do
-    UDAPSecurity::DefaultCertFileLoader.load_test_client_private_key_file
+    UDAPSecurityTestKit::DefaultCertFileLoader.load_test_client_private_key_file
   end
 
   let(:udap_cert_iss) { 'https://inferno.org/udap_security/1716935719' }

@@ -1,4 +1,4 @@
-module UDAPSecurity
+module UDAPSecurityTestKit
   class AuthorizationCodeReceivedTest < Inferno::Test
     title 'Authorization server sends code parameter'
     description %(

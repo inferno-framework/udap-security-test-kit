@@ -2,7 +2,7 @@ require_relative 'dynamic_client_registration_group'
 require_relative 'discovery_group'
 require_relative 'client_credentials_authentication_group'
 
-module UDAPSecurity
+module UDAPSecurityTestKit
   class ClientCredentialsGroup < Inferno::TestGroup
     title 'UDAP Client Credentials Flow'
     description %(

@@ -1,4 +1,4 @@
-module UDAPSecurity
+module UDAPSecurityTestKit
   class DefaultCertFileLoader
     def self.load_default_ca_pem_file
       raw_cert = File.read(File.join(File.dirname(__FILE__), 'certs/InfernoCA.pem'))

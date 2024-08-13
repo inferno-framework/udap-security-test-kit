@@ -1,7 +1,7 @@
 require 'jwt'
 require 'base64'
 
-module UDAPSecurity
+module UDAPSecurityTestKit
   class UDAPJWTBuilder
     def self.generate_private_key(pkey_string)
       OpenSSL::PKey.read(pkey_string)

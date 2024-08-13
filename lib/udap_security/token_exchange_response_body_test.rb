@@ -1,4 +1,4 @@
-module UDAPSecurity
+module UDAPSecurityTestKit
   class TokenExchangeResponseBodyTest < Inferno::Test
     title 'Token exchange response body contains required information encoded in JSON'
     description %(

@@ -1,6 +1,6 @@
 require_relative '../../lib/udap_security/registration_endpoint_field_test'
 
-RSpec.describe UDAPSecurity::RegistrationEndpointFieldTest do
+RSpec.describe UDAPSecurityTestKit::RegistrationEndpointFieldTest do
   let(:runnable) { Inferno::Repositories::Tests.new.find('udap_registration_endpoint_field') }
   let(:session_data_repo) { Inferno::Repositories::SessionData.new }
   let(:results_repo) { Inferno::Repositories::Results.new }

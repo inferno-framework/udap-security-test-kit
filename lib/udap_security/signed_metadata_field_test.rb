@@ -1,6 +1,6 @@
 require 'jwt'
 
-module UDAPSecurity
+module UDAPSecurityTestKit
   class SignedMetadataFieldTest < Inferno::Test
     include Inferno::DSL::Assertions
 

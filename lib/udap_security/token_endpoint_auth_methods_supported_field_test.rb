@@ -1,4 +1,4 @@
-module UDAPSecurity
+module UDAPSecurityTestKit
   class TokenEndpointAuthMethodsSupportedFieldTest < Inferno::Test
     include Inferno::DSL::Assertions
 

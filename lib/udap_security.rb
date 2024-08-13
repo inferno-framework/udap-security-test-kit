@@ -2,7 +2,7 @@ require_relative 'udap_security/authorization_code_group'
 require_relative 'udap_security/client_credentials_group'
 require_relative 'udap_security/version'
 
-module UDAPSecurity
+module UDAPSecurityTestKit
   class Suite < Inferno::TestSuite
     id :udap_security
     title 'UDAP Security'

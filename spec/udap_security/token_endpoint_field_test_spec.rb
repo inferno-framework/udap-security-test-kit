@@ -1,6 +1,6 @@
 require_relative '../../lib/udap_security/token_endpoint_field_test'
 
-RSpec.describe UDAPSecurity::TokenEndpointFieldTest do
+RSpec.describe UDAPSecurityTestKit::TokenEndpointFieldTest do
   let(:runnable) { Inferno::Repositories::Tests.new.find('udap_token_endpoint_field') }
   let(:session_data_repo) { Inferno::Repositories::SessionData.new }
   let(:results_repo) { Inferno::Repositories::Results.new }

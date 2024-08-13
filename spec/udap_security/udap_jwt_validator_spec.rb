@@ -4,17 +4,17 @@ require_relative '../../lib/udap_security/udap_x509_certificate'
 require_relative '../../lib/udap_security/default_cert_file_loader'
 require 'pry'
 
-RSpec.describe UDAPSecurity::UDAPJWTValidator do # rubocop:disable RSpec/FilePath,RSpec/SpecFilePathFormat
+RSpec.describe UDAPSecurityTestKit::UDAPJWTValidator do # rubocop:disable RSpec/FilePath,RSpec/SpecFilePathFormat
   let(:inferno_client_cert) do
-    UDAPSecurity::DefaultCertFileLoader.load_test_client_cert_pem_file
+    UDAPSecurityTestKit::DefaultCertFileLoader.load_test_client_cert_pem_file
   end
 
   let(:inferno_client_private_key) do
-    UDAPSecurity::DefaultCertFileLoader.load_test_client_private_key_file
+    UDAPSecurityTestKit::DefaultCertFileLoader.load_test_client_private_key_file
   end
 
   let(:inferno_root_ca) do
-    UDAPSecurity::DefaultCertFileLoader.load_default_ca_pem_file
+    UDAPSecurityTestKit::DefaultCertFileLoader.load_default_ca_pem_file
   end
 
   let(:signing_algorithm) { 'RS256' }
@@ -30,7 +30,7 @@ RSpec.describe UDAPSecurity::UDAPJWTValidator do # rubocop:disable RSpec/FilePat
       stub_request(:get, mock_crl_endpoint)
         .to_return(status: 200, body: inferno_crl)
 
-      test_jwt = UDAPSecurity::UDAPJWTBuilder.encode_jwt_with_x5c_header(
+      test_jwt = UDAPSecurityTestKit::UDAPJWTBuilder.encode_jwt_with_x5c_header(
         {},
         inferno_client_private_key,
         signing_algorithm,
@@ -54,7 +54,7 @@ RSpec.describe UDAPSecurity::UDAPJWTValidator do # rubocop:disable RSpec/FilePat
       stub_request(:get, mock_crl_endpoint)
         .to_return(status: 503, body: {}.to_json)
 
-      test_jwt = UDAPSecurity::UDAPJWTBuilder.encode_jwt_with_x5c_header(
+      test_jwt = UDAPSecurityTestKit::UDAPJWTBuilder.encode_jwt_with_x5c_header(
         {},
         inferno_client_private_key,
         signing_algorithm,
@@ -75,7 +75,7 @@ RSpec.describe UDAPSecurity::UDAPJWTValidator do # rubocop:disable RSpec/FilePat
 
   describe 'validate_signature' do
     it 'returns that signature is valid with correct inputs' do
-      test_jwt = UDAPSecurity::UDAPJWTBuilder.encode_jwt_with_x5c_header(
+      test_jwt = UDAPSecurityTestKit::UDAPJWTBuilder.encode_jwt_with_x5c_header(
         {},
         inferno_client_private_key,
         signing_algorithm,

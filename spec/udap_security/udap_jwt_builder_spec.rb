@@ -1,18 +1,18 @@
 require_relative '../../lib/udap_security/udap_jwt_builder'
 require_relative '../../lib/udap_security/default_cert_file_loader'
 
-RSpec.describe UDAPSecurity::UDAPJWTBuilder do # rubocop:disable RSpec/FilePath,RSpec/SpecFilePathFormat
+RSpec.describe UDAPSecurityTestKit::UDAPJWTBuilder do # rubocop:disable RSpec/FilePath,RSpec/SpecFilePathFormat
   let(:jwt_alg) { 'RS256' }
   let(:rsa_private_string) do
-    UDAPSecurity::DefaultCertFileLoader.load_test_client_private_key_file
+    UDAPSecurityTestKit::DefaultCertFileLoader.load_test_client_private_key_file
   end
 
   let(:client_cert_string) do
-    UDAPSecurity::DefaultCertFileLoader.load_test_client_cert_pem_file
+    UDAPSecurityTestKit::DefaultCertFileLoader.load_test_client_cert_pem_file
   end
 
   let(:ca_cert_string) do
-    UDAPSecurity::DefaultCertFileLoader.load_default_ca_pem_file
+    UDAPSecurityTestKit::DefaultCertFileLoader.load_default_ca_pem_file
   end
 
   def validate_cert_array(contents, expected_length)

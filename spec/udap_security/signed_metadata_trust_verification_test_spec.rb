@@ -2,18 +2,18 @@ require_relative '../../lib/udap_security/signed_metadata_trust_verification_tes
 require_relative '../../lib/udap_security/udap_jwt_builder'
 require_relative '../../lib/udap_security/default_cert_file_loader'
 
-RSpec.describe UDAPSecurity::SignedMetadataTrustVerificationTest do
+RSpec.describe UDAPSecurityTestKit::SignedMetadataTrustVerificationTest do
   let(:runnable) { Inferno::Repositories::Tests.new.find('udap_signed_metadata_trust_verification') }
   let(:session_data_repo) { Inferno::Repositories::SessionData.new }
   let(:results_repo) { Inferno::Repositories::Results.new }
   let(:test_session) { repo_create(:test_session, test_suite_id: 'udap_security') }
 
   let(:client_cert) do
-    UDAPSecurity::DefaultCertFileLoader.load_test_client_cert_pem_file
+    UDAPSecurityTestKit::DefaultCertFileLoader.load_test_client_cert_pem_file
   end
 
   let(:root_ca) do
-    UDAPSecurity::DefaultCertFileLoader.load_default_ca_pem_file
+    UDAPSecurityTestKit::DefaultCertFileLoader.load_default_ca_pem_file
   end
 
   let(:invalid_trust_anchor) do
@@ -76,7 +76,7 @@ RSpec.describe UDAPSecurity::SignedMetadataTrustVerificationTest do
     rsa_private = OpenSSL::PKey::RSA.generate 2048
     x5c_certs = [client_cert]
     x5c_certs.append(root_ca) if include_root_ca
-    UDAPSecurity::UDAPJWTBuilder.encode_jwt_with_x5c_header(
+    UDAPSecurityTestKit::UDAPJWTBuilder.encode_jwt_with_x5c_header(
       {},
       rsa_private.to_pem,
       signing_algorithm,

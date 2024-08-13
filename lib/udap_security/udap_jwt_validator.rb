@@ -1,6 +1,6 @@
 require 'jwt'
 
-module UDAPSecurity
+module UDAPSecurityTestKit
   class UDAPJWTValidator
     def self.validate_signature(signed_metadata_jwt, algorithm, cert)
       JWT.decode(

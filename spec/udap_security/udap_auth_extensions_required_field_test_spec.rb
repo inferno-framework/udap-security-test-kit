@@ -1,6 +1,6 @@
 require_relative '../../lib/udap_security/udap_auth_extensions_required_field_test'
 
-RSpec.describe UDAPSecurity::UDAPAuthExtensionsRequiredFieldTest do
+RSpec.describe UDAPSecurityTestKit::UDAPAuthExtensionsRequiredFieldTest do
   let(:runnable) { Inferno::Repositories::Tests.new.find('udap_auth_extensions_required_field') }
   let(:session_data_repo) { Inferno::Repositories::SessionData.new }
   let(:results_repo) { Inferno::Repositories::Results.new }

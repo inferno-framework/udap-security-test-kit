@@ -1,4 +1,4 @@
-module UDAPSecurity
+module UDAPSecurityTestKit
   class UDAPX509Certificate
     attr_reader :san, :cert_private_key, :cert
 

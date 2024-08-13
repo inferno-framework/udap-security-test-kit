@@ -3,7 +3,7 @@ require_relative 'registration_failure_invalid_jwt_signature_test'
 require_relative 'registration_success_test'
 require_relative 'registration_success_contents_test'
 
-module UDAPSecurity
+module UDAPSecurityTestKit
   class DynamicClientRegistrationGroup < Inferno::TestGroup
     title 'UDAP Dynamic Client Registration'
     description %(

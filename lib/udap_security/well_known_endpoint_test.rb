@@ -1,4 +1,4 @@
-module UDAPSecurity
+module UDAPSecurityTestKit
   class WellKnownEndpointTest < Inferno::Test
     include Inferno::DSL::Assertions
 

@@ -1,7 +1,7 @@
 require_relative 'software_statement_builder'
 require_relative 'udap_jwt_builder'
 
-module UDAPSecurity
+module UDAPSecurityTestKit
   class RegistrationFailureInvalidContentsTest < Inferno::Test
     title 'Dynamic Client Registration request fails with improper software statement contents'
     id :udap_registration_failure_invalid_contents
@@ -43,18 +43,18 @@ module UDAPSecurity
         udap_registration_requested_scope
       )
 
-      x5c_certs = UDAPSecurity::UDAPJWTBuilder.split_user_input_cert_string(
+      x5c_certs = UDAPSecurityTestKit::UDAPJWTBuilder.split_user_input_cert_string(
         udap_client_cert_pem
       )
 
-      signed_jwt = UDAPSecurity::UDAPJWTBuilder.encode_jwt_with_x5c_header(
+      signed_jwt = UDAPSecurityTestKit::UDAPJWTBuilder.encode_jwt_with_x5c_header(
         software_statement_payload,
         udap_client_private_key_pem,
         udap_jwt_signing_alg,
         x5c_certs
       )
 
-      registration_headers, registration_body = UDAPSecurity::UDAPRequestBuilder.build_registration_request(
+      registration_headers, registration_body = UDAPSecurityTestKit::UDAPRequestBuilder.build_registration_request(
         signed_jwt,
         udap_registration_certifications
       )

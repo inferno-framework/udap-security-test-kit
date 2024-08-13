@@ -1,5 +1,5 @@
 require 'uri'
-module UDAPSecurity
+module UDAPSecurityTestKit
   class UDAPRequestBuilder
     def self.build_registration_request(software_statement_jwt, certifications_jwt)
       registration_headers = {

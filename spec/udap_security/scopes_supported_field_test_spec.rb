@@ -1,6 +1,6 @@
 require_relative '../../lib/udap_security/scopes_supported_field_test'
 
-RSpec.describe UDAPSecurity::ScopesSupportedFieldTest do
+RSpec.describe UDAPSecurityTestKit::ScopesSupportedFieldTest do
   let(:runnable) { Inferno::Repositories::Tests.new.find('udap_scopes_supported_field') }
   let(:session_data_repo) { Inferno::Repositories::SessionData.new }
   let(:results_repo) { Inferno::Repositories::Results.new }

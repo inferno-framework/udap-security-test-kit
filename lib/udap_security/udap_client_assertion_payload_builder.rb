@@ -1,4 +1,4 @@
-module UDAPSecurity
+module UDAPSecurityTestKit
   class UDAPClientAssertionPayloadBuilder
     def self.build(iss, aud, extensions)
       {

@@ -1,6 +1,6 @@
 require_relative 'udap_client_assertion_payload_builder'
 
-module UDAPSecurity
+module UDAPSecurityTestKit
   class AuthorizationCodeTokenExchangeTest < Inferno::Test
     title 'OAuth token exchange request succeeds when supplied correct information'
     description %(
@@ -70,16 +70,16 @@ module UDAPSecurity
         nil
       )
 
-      x5c_certs = UDAPSecurity::UDAPJWTBuilder.split_user_input_cert_string(udap_client_cert_pem_auth_code_flow)
+      x5c_certs = UDAPSecurityTestKit::UDAPJWTBuilder.split_user_input_cert_string(udap_client_cert_pem_auth_code_flow)
 
-      client_assertion_jwt = UDAPSecurity::UDAPJWTBuilder.encode_jwt_with_x5c_header(
+      client_assertion_jwt = UDAPSecurityTestKit::UDAPJWTBuilder.encode_jwt_with_x5c_header(
         client_assertion_payload,
         udap_client_private_key_auth_code_flow,
         udap_jwt_signing_alg,
         x5c_certs
       )
 
-      token_exchange_headers, token_exchange_body = UDAPSecurity::UDAPRequestBuilder.build_token_exchange_request(
+      token_exchange_headers, token_exchange_body = UDAPSecurityTestKit::UDAPRequestBuilder.build_token_exchange_request(
         client_assertion_jwt,
         'authorization_code',
         udap_authorization_code,

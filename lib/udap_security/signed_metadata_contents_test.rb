@@ -1,6 +1,6 @@
 require 'jwt'
 require_relative 'udap_jwt_validator'
-module UDAPSecurity
+module UDAPSecurityTestKit
   class SignedMetadataContentsTest < Inferno::Test
     include Inferno::DSL::Assertions
 
@@ -28,7 +28,7 @@ module UDAPSecurity
 
       leaf_cert_der = Base64.urlsafe_decode64(token_header['x5c'].first)
       leaf_cert = OpenSSL::X509::Certificate.new(leaf_cert_der)
-      signature_validation_result = UDAPSecurity::UDAPJWTValidator.validate_signature(
+      signature_validation_result = UDAPSecurityTestKit::UDAPJWTValidator.validate_signature(
         signed_metadata_jwt,
         token_header['alg'],
         leaf_cert

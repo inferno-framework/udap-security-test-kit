@@ -3,7 +3,7 @@ require_relative 'authorization_code_received_test'
 require_relative 'authorization_code_token_exchange_test'
 require_relative 'token_exchange_response_body_test'
 require_relative 'token_exchange_response_headers_test'
-module UDAPSecurity
+module UDAPSecurityTestKit
   class AuthorizationCodeAuthenticationGroup < Inferno::TestGroup
     title 'UDAP Authorization Code Authorization & Authentication'
     description %(

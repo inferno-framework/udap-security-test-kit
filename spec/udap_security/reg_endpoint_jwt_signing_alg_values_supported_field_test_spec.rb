@@ -1,6 +1,6 @@
 require_relative '../../lib/udap_security/reg_endpoint_jwt_signing_alg_values_supported_field_test'
 
-RSpec.describe UDAPSecurity::RegEndpointJWTSigningAlgValuesSupportedFieldTest do
+RSpec.describe UDAPSecurityTestKit::RegEndpointJWTSigningAlgValuesSupportedFieldTest do
   let(:runnable) { Inferno::Repositories::Tests.new.find('udap_reg_endpoint_jwt_signing_alg_values_supported_field') }
   let(:session_data_repo) { Inferno::Repositories::SessionData.new }
   let(:results_repo) { Inferno::Repositories::Results.new }

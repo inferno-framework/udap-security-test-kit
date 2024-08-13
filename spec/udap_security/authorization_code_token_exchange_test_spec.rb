@@ -2,17 +2,17 @@ require_relative '../../lib/udap_security/authorization_code_token_exchange_test
 require_relative '../../lib/udap_security/udap_request_builder'
 require_relative '../../lib/udap_security/default_cert_file_loader'
 
-RSpec.describe UDAPSecurity::AuthorizationCodeTokenExchangeTest do
+RSpec.describe UDAPSecurityTestKit::AuthorizationCodeTokenExchangeTest do
   let(:runnable) { Inferno::Repositories::Tests.new.find('udap_authorization_code_token_exchange') }
   let(:session_data_repo) { Inferno::Repositories::SessionData.new }
   let(:results_repo) { Inferno::Repositories::Results.new }
   let(:test_session) { repo_create(:test_session, test_suite_id: 'udap_security') }
   let(:udap_client_cert_pem_auth_code_flow) do
-    UDAPSecurity::DefaultCertFileLoader.load_test_client_cert_pem_file
+    UDAPSecurityTestKit::DefaultCertFileLoader.load_test_client_cert_pem_file
   end
 
   let(:udap_client_private_key_auth_code_flow) do
-    UDAPSecurity::DefaultCertFileLoader.load_test_client_private_key_file
+    UDAPSecurityTestKit::DefaultCertFileLoader.load_test_client_private_key_file
   end
 
   let(:base_url) { 'http://example.com/fhir' }

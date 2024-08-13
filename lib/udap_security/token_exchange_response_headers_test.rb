@@ -1,4 +1,4 @@
-module UDAPSecurity
+module UDAPSecurityTestKit
   class TokenExchangeResponseHeadersTest < Inferno::Test
     title 'Response includes correct HTTP Cache-Control and Pragma headers'
     description %(

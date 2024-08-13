@@ -1,6 +1,6 @@
 require_relative '../../lib/udap_security/udap_client_assertion_payload_builder'
 
-RSpec.describe UDAPSecurity::UDAPClientAssertionPayloadBuilder do
+RSpec.describe UDAPSecurityTestKit::UDAPClientAssertionPayloadBuilder do
   let(:iss) { 'https://example.org/sample-iss' }
   let(:aud) { 'http://example.org/token' }
   let(:extensions) do

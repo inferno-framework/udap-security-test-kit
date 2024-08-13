@@ -1,4 +1,4 @@
-module UDAPSecurity
+module UDAPSecurityTestKit
   class AuthorizationCodeRedirectTest < Inferno::Test
     title 'Authorization server redirects client to redirect URI'
     id :udap_authorization_code_redirect

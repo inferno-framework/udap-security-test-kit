@@ -1,4 +1,4 @@
-module UDAPSecurity
+module UDAPSecurityTestKit
   class RegistrationSuccessContentsTest < Inferno::Test
     title 'Successful Dynamic Client Registration request response contains required contents'
     id :udap_registration_success_contents

@@ -1,7 +1,7 @@
 require_relative 'udap_x509_certificate'
 require_relative 'default_cert_file_loader'
 
-module UDAPSecurity
+module UDAPSecurityTestKit
   class GenerateClientCertsTest < Inferno::Test
     title 'Generate Client Certificates'
     id :udap_generate_client_certs

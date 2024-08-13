@@ -1,6 +1,6 @@
 require 'jwt'
 require_relative 'udap_jwt_validator'
-module UDAPSecurity
+module UDAPSecurityTestKit
   class SignedMetadataTrustVerificationTest < Inferno::Test
     include Inferno::DSL::Assertions
 

@@ -1,13 +1,13 @@
 require_relative '../../lib/udap_security/udap_x509_certificate'
 require_relative '../../lib/udap_security/default_cert_file_loader'
 
-RSpec.describe UDAPSecurity::UDAPX509Certificate do # rubocop:disable RSpec/SpecFilePathFormat,RSpec/FilePath
+RSpec.describe UDAPSecurityTestKit::UDAPX509Certificate do # rubocop:disable RSpec/SpecFilePathFormat,RSpec/FilePath
   let(:ca_cert_string) do
-    UDAPSecurity::DefaultCertFileLoader.load_default_ca_pem_file
+    UDAPSecurityTestKit::DefaultCertFileLoader.load_default_ca_pem_file
   end
 
   let(:ca_private_key_string) do
-    UDAPSecurity::DefaultCertFileLoader.load_default_ca_private_key_file
+    UDAPSecurityTestKit::DefaultCertFileLoader.load_default_ca_private_key_file
   end
 
   it 'creates a new client certificate signed by the provided CA' do

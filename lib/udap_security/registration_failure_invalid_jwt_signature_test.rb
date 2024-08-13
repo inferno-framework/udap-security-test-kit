@@ -2,7 +2,7 @@ require_relative 'software_statement_builder'
 require_relative 'udap_jwt_builder'
 require_relative 'udap_request_builder'
 
-module UDAPSecurity
+module UDAPSecurityTestKit
   class RegistrationFailureInvalidJWTSignatureTest < Inferno::Test
     title 'Dynamic Client Registration request fails when software statement JWT is improperly signed'
     id :udap_registration_failure_invalid_jwt_signature
@@ -44,19 +44,19 @@ module UDAPSecurity
         udap_registration_requested_scope
       )
 
-      x5c_certs = UDAPSecurity::UDAPJWTBuilder.split_user_input_cert_string(
+      x5c_certs = UDAPSecurityTestKit::UDAPJWTBuilder.split_user_input_cert_string(
         udap_client_cert_pem
       )
 
       random_private_key = OpenSSL::PKey::RSA.generate 2048
-      signed_jwt = UDAPSecurity::UDAPJWTBuilder.encode_jwt_with_x5c_header(
+      signed_jwt = UDAPSecurityTestKit::UDAPJWTBuilder.encode_jwt_with_x5c_header(
         software_statement_payload,
         random_private_key.to_pem,
         udap_jwt_signing_alg,
         x5c_certs
       )
 
-      reg_headers, reg_body = UDAPSecurity::UDAPRequestBuilder.build_registration_request(
+      reg_headers, reg_body = UDAPSecurityTestKit::UDAPRequestBuilder.build_registration_request(
         signed_jwt,
         udap_registration_certifications
       )

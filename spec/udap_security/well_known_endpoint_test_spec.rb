@@ -1,6 +1,6 @@
 require_relative '../../lib/udap_security/well_known_endpoint_test'
 
-RSpec.describe UDAPSecurity::WellKnownEndpointTest do
+RSpec.describe UDAPSecurityTestKit::WellKnownEndpointTest do
   let(:runnable) { Inferno::Repositories::Tests.new.find('udap_well_known_endpoint') }
   let(:session_data_repo) { Inferno::Repositories::SessionData.new }
   let(:results_repo) { Inferno::Repositories::Results.new }

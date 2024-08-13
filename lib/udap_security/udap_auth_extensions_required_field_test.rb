@@ -1,4 +1,4 @@
-module UDAPSecurity
+module UDAPSecurityTestKit
   class UDAPAuthExtensionsRequiredFieldTest < Inferno::Test
     include Inferno::DSL::Assertions
 

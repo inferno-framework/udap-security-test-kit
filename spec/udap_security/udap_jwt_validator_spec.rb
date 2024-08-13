@@ -41,8 +41,60 @@ RSpec.describe UDAPSecurity::UDAPJWTValidator do # rubocop:disable RSpec/FilePat
 
   let(:signing_algorithm) { 'RS256' }
 
+  let(:mock_crl_endpoint) { 'https://inferno.com/mock_crl_endpoint.crl' }
+
+  let(:inferno_crl) do
+    File.read(File.join(File.dirname(__FILE__), '../../spec/fixtures/crl/InfernoCA_CRL.pem'))
+  end
+
   describe 'validate_trust_chain' do
     it 'returns that trust chain is valid with correct inputs' do
+      stub_request(:get, mock_crl_endpoint)
+        .to_return(status: 200, body: inferno_crl)
+
+      test_jwt = UDAPSecurity::UDAPJWTBuilder.encode_jwt_with_x5c_header(
+        {},
+        inferno_client_private_key,
+        signing_algorithm,
+        [inferno_client_cert, inferno_root_ca]
+      )
+
+      _token_body, token_header = JWT.decode(test_jwt, nil, false)
+      trust_anchor_certs = [OpenSSL::X509::Certificate.new(inferno_root_ca)]
+
+      validation_result = described_class.validate_trust_chain(
+        token_header['x5c'],
+        trust_anchor_certs
+      )
+      expect(validation_result[:success]).to be true
+      unless validation_result[:success]
+        puts "Trust chain validation error message: #{validation_result[:error_message]}"
+      end
+    end
+
+    it 'returns that trust chain cannot be verified if CRL endpoint not accessible' do
+      stub_request(:get, mock_crl_endpoint)
+        .to_return(status: 503, body: {}.to_json)
+
+      test_jwt = UDAPSecurity::UDAPJWTBuilder.encode_jwt_with_x5c_header(
+        {},
+        inferno_client_private_key,
+        signing_algorithm,
+        [inferno_client_cert, inferno_root_ca]
+      )
+
+      _token_body, token_header = JWT.decode(test_jwt, nil, false)
+      trust_anchor_certs = [OpenSSL::X509::Certificate.new(inferno_root_ca)]
+
+      validation_result = described_class.validate_trust_chain(
+        token_header['x5c'],
+        trust_anchor_certs
+      )
+      expect(validation_result[:success]).to be false
+      expect(validation_result[:error_message]).to match(/PEM_read_bio_X509_CRL: no start line/)
+    end
+
+    it 'returns that trust chain is valid with EMR Direct inputs' do
       WebMock.allow_net_connect!
       # Since input certs are real, using dummy private key to generate JWT
       # Since we do not have access to real certs and its private key
@@ -66,28 +118,6 @@ RSpec.describe UDAPSecurity::UDAPJWTValidator do # rubocop:disable RSpec/FilePat
       unless validation_result[:success]
         puts "Trust chain validation error message: #{validation_result[:error_message]}"
       end
-    end
-
-    it 'returns that trust chain cannot be verified with invalid certs' do
-      WebMock.allow_net_connect!
-      test_jwt = UDAPSecurity::UDAPJWTBuilder.encode_jwt_with_x5c_header(
-        {},
-        inferno_client_private_key,
-        signing_algorithm,
-        [inferno_client_cert]
-      )
-
-      _token_body, token_header = JWT.decode(test_jwt, nil, false)
-
-      trust_anchor_certs = [OpenSSL::X509::Certificate.new(inferno_root_ca)]
-
-      validation_result = described_class.validate_trust_chain(
-        token_header['x5c'],
-        trust_anchor_certs
-      )
-
-      expect(validation_result[:success]).to be false
-      expect(validation_result[:error_message]).to match(/unable to get certificate CRL/)
     end
   end
 

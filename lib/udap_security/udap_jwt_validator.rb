@@ -28,8 +28,15 @@ module UDAPSecurity
       crl_uris = cert_chain.map(&:crl_uris).compact.flatten
       crl_uris_anchors = trust_anchor_certs.map(&:crl_uris).compact.flatten
       crl_uris.concat(crl_uris_anchors)
-      crls = crl_uris.map do |uri|
-        get_crl_from_uri(uri)
+      begin
+        crls = crl_uris.map do |uri|
+          get_crl_from_uri(uri)
+        end
+      rescue OpenSSL::X509::CRLError => e
+        return {
+          success: false,
+          error_message: e.message
+        }
       end
 
       begin

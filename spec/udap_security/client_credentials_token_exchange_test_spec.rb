@@ -1,5 +1,5 @@
-require_relative '../../lib/udap_security/client_credentials_token_exchange_test'
-require_relative '../../lib/udap_security/default_cert_file_loader'
+require_relative '../../lib/udap_security_test_kit/client_credentials_token_exchange_test'
+require_relative '../../lib/udap_security_test_kit/default_cert_file_loader'
 
 RSpec.describe UDAPSecurityTestKit::ClientCredentialsTokenExchangeTest do
   let(:runnable) { Inferno::Repositories::Tests.new.find('udap_client_credentials_token_exchange') }

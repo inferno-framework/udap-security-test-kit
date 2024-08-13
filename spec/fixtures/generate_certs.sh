@@ -22,7 +22,7 @@ openssl genrsa -out TestClientPrivateKey.key 2048
 echo "Client private key generated"
 
 echo "Now generating client's certificate signing request"
-openssl req -new -key TestClientPrivateKey.key -subj "/C=US/ST=MA/L=Bedford/O=Inferno/CN=UDAP Example Test Client" -addext "subjectAltName=URI:https://inferno.com/udap_security/" -out TestClientCSR.csr
+openssl req -new -key TestClientPrivateKey.key -subj "/C=US/ST=MA/L=Bedford/O=Inferno/CN=UDAP Example Test Client" -addext "subjectAltName=URI:https://inferno.com/udap_security_test_kit/" -out TestClientCSR.csr
 echo "Client's certificate signing request generated"
 
 echo "Now generating client certificate using extension file & signing with CA"
@@ -34,7 +34,7 @@ echo "Now creating a cert chain of client and CA certs"
 
 openssl x509 -in TestClient.pem -noout -text
 echo "Inferno test certificates generated, now moving to lib directory"
-# Move to lib/udap_security/certs because of file loading module
+# Move to lib/udap_security_test_kit/certs because of file loading module
 
-mv InfernoCA.key InfernoCA.pem TestClient.pem TestClientPrivateKey.key ../../lib/udap_security/certs
+mv InfernoCA.key InfernoCA.pem TestClient.pem TestClientPrivateKey.key ../../lib/udap_security_test_kit/certs
 echo "Script complete"

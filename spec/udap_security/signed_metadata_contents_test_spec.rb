@@ -1,7 +1,7 @@
-require_relative '../../lib/udap_security/signed_metadata_contents_test'
-require_relative '../../lib/udap_security/udap_jwt_builder'
-require_relative '../../lib/udap_security/default_cert_file_loader'
-require_relative '../../lib/udap_security/udap_x509_certificate'
+require_relative '../../lib/udap_security_test_kit/signed_metadata_contents_test'
+require_relative '../../lib/udap_security_test_kit/udap_jwt_builder'
+require_relative '../../lib/udap_security_test_kit/default_cert_file_loader'
+require_relative '../../lib/udap_security_test_kit/udap_x509_certificate'
 
 RSpec.describe UDAPSecurityTestKit::SignedMetadataContentsTest do
   let(:runnable) { Inferno::Repositories::Tests.new.find('udap_signed_metadata_contents') }
@@ -17,11 +17,11 @@ RSpec.describe UDAPSecurityTestKit::SignedMetadataContentsTest do
       'udap_certifications_supported' => [],
       'udap_certifications_required' => [],
       'grant_types_supported' => ['authorization_code', 'client_credentials', 'refresh_token'],
-      'authorization_endpoint' => 'https://inferno.com/udap_security/authz',
-      'token_endpoint' => 'https://inferno.com/udap_security/token',
+      'authorization_endpoint' => 'https://inferno.com/udap_security_test_kit/authz',
+      'token_endpoint' => 'https://inferno.com/udap_security_test_kit/token',
       'token_endpoint_auth_methods_supported' => ['private_key_jwt'],
       'token_endpoint_auth_signing_alg_values_supported' => ['RS256'],
-      'registration_endpoint' => 'https://inferno.com/udap_security/registration',
+      'registration_endpoint' => 'https://inferno.com/udap_security_test_kit/registration',
       'registration_endpoint_jwt_signing_alg_values_supported' => ['RS256'],
       'signed_metadata' => signed_metadata_jwt
     }
@@ -49,7 +49,7 @@ RSpec.describe UDAPSecurityTestKit::SignedMetadataContentsTest do
     }
   end
 
-  let(:udap_fhir_base_url) { 'https://inferno.com/udap_security/ac' }
+  let(:udap_fhir_base_url) { 'https://inferno.com/udap_security_test_kit/ac' }
 
   let(:client_cert_pem) do
     UDAPSecurityTestKit::DefaultCertFileLoader.load_test_client_cert_pem_file

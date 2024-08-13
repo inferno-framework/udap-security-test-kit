@@ -4,7 +4,7 @@ module UDAPSecurityTestKit
   class SoftwareStatementBuilder
     def self.build_payload(iss, aud, grant_type, scope)
       if grant_type == 'authorization_code'
-        redirect_uris = ["#{Inferno::Application['base_url']}/custom/udap_security/redirect"]
+        redirect_uris = ["#{Inferno::Application['base_url']}/custom/udap_security_test_kit/redirect"]
         response_types = ['code']
         client_name = 'Inferno UDAP Authorization Code Test Client'
       elsif grant_type == 'client_credentials'

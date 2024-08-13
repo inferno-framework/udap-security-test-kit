@@ -1,6 +1,6 @@
-require_relative 'udap_security/authorization_code_group'
-require_relative 'udap_security/client_credentials_group'
-require_relative 'udap_security/version'
+require_relative 'udap_security_test_kit/authorization_code_group'
+require_relative 'udap_security_test_kit/client_credentials_group'
+require_relative 'udap_security_test_kit/version'
 
 module UDAPSecurityTestKit
   class Suite < Inferno::TestSuite
@@ -47,7 +47,7 @@ module UDAPSecurityTestKit
       entries on `grant_type` and `iss` claims for more details.
     )
 
-    # cert_file = File.read(File.join(File.dirname(__FILE__), 'udap_security/certs/InfernoCA.pem'))
+    # cert_file = File.read(File.join(File.dirname(__FILE__), 'udap_security_test_kit/certs/InfernoCA.pem'))
 
     # cert_file_route_handler = proc { [200, { 'Content-Type' => 'application/x-pem-file' }, [cert_file]] }
 

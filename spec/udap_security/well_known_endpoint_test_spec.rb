@@ -1,4 +1,4 @@
-require_relative '../../lib/udap_security/well_known_endpoint_test'
+require_relative '../../lib/udap_security_test_kit/well_known_endpoint_test'
 
 RSpec.describe UDAPSecurityTestKit::WellKnownEndpointTest do
   let(:runnable) { Inferno::Repositories::Tests.new.find('udap_well_known_endpoint') }

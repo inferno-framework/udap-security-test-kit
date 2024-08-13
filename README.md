@@ -28,9 +28,9 @@ test.  There are two categories of certificates for this test kit:
 - Signing certificate: the certificate used to issue and sign the client
   certificates.  This test kit includes a self-signed certificate
   authority, `InfernoCA.pem`, and its accompanying private key, `InfernoCA.key`,
-  in `lib/udap_security/certs`.
+  in `lib/udap_security_test_kit/certs`.
   By default, Inferno will use this cert and private key to
-  issue and sign it auto-generated client certs.  In the `lib/udap_security/certs`
+  issue and sign it auto-generated client certs.  In the `lib/udap_security_test_kit/certs`
   directory there is also a `generate_certs.sh` script that will
   regenerate the CA cert and its key as well as an example client cert and
   private key.

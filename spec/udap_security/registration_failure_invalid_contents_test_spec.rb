@@ -1,5 +1,5 @@
-require_relative '../../lib/udap_security/registration_failure_invalid_contents_test'
-require_relative '../../lib/udap_security/default_cert_file_loader'
+require_relative '../../lib/udap_security_test_kit/registration_failure_invalid_contents_test'
+require_relative '../../lib/udap_security_test_kit/default_cert_file_loader'
 
 RSpec.describe UDAPSecurityTestKit::RegistrationFailureInvalidContentsTest do
   let(:runnable) { Inferno::Repositories::Tests.new.find('udap_registration_failure_invalid_contents') }

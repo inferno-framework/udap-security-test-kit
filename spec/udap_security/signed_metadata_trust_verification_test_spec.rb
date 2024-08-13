@@ -1,6 +1,6 @@
-require_relative '../../lib/udap_security/signed_metadata_trust_verification_test'
-require_relative '../../lib/udap_security/udap_jwt_builder'
-require_relative '../../lib/udap_security/default_cert_file_loader'
+require_relative '../../lib/udap_security_test_kit/signed_metadata_trust_verification_test'
+require_relative '../../lib/udap_security_test_kit/udap_jwt_builder'
+require_relative '../../lib/udap_security_test_kit/default_cert_file_loader'
 
 RSpec.describe UDAPSecurityTestKit::SignedMetadataTrustVerificationTest do
   let(:runnable) { Inferno::Repositories::Tests.new.find('udap_signed_metadata_trust_verification') }

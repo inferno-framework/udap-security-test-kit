@@ -1,4 +1,4 @@
-require_relative '../../lib/udap_security/udap_profiles_supported_field_test'
+require_relative '../../lib/udap_security_test_kit/udap_profiles_supported_field_test'
 
 RSpec.describe UDAPSecurityTestKit::UDAPProfilesSupportedFieldTest do
   let(:runnable) { Inferno::Repositories::Tests.new.find('udap_profiles_supported_field') }

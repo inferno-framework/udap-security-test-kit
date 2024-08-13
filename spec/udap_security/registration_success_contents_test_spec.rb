@@ -1,4 +1,4 @@
-require_relative '../../lib/udap_security/registration_success_contents_test'
+require_relative '../../lib/udap_security_test_kit/registration_success_contents_test'
 
 RSpec.describe UDAPSecurityTestKit::RegistrationSuccessContentsTest do
   let(:runnable) { Inferno::Repositories::Tests.new.find('udap_registration_success_contents') }
@@ -7,13 +7,13 @@ RSpec.describe UDAPSecurityTestKit::RegistrationSuccessContentsTest do
   let(:test_session) { repo_create(:test_session, test_suite_id: 'udap_security') }
 
   let(:udap_software_statement_json) do
-    '{"iss":"https://inferno.org/udap_security/1716937143",
-    "sub":"https://inferno.org/udap_security/1716937143",
+    '{"iss":"https://inferno.org/udap_security_test_kit/1716937143",
+    "sub":"https://inferno.org/udap_security_test_kit/1716937143",
     "aud":"http://example.fhir.org/registration",
     "exp":1716937449,
     "iat":1716937149,"jti":"1f625c375762e3e603299f1a522046c4fb20aeacab9d8d7ed9c54241ec68ea0f",
     "client_name":"Inferno UDAP Authorization Code Test Client",
-    "redirect_uris":["https:/localhost/suites/custom/udap_security/redirect"],
+    "redirect_uris":["https:/localhost/suites/custom/udap_security_test_kit/redirect"],
     "contacts":["mailto:inferno@groups.mitre.org"],
     "logo_uri":"https://inferno-framework.github.io/assets/inferno_logo.png",
     "grant_types":["authorization_code"],
@@ -28,7 +28,7 @@ RSpec.describe UDAPSecurityTestKit::RegistrationSuccessContentsTest do
     '{"client_id": "example_client_id",
       "software_statement": "example_jwt",
       "client_name": "Inferno UDAP Authorization Code Test Client",
-      "redirect_uris": ["https:/localhost/suites/custom/udap_security/redirect"],
+      "redirect_uris": ["https:/localhost/suites/custom/udap_security_test_kit/redirect"],
       "grant_types": ["authorization_code"],
       "response_types": ["code"],
       "token_endpoint_auth_method": "private_key_jwt",
@@ -60,7 +60,7 @@ RSpec.describe UDAPSecurityTestKit::RegistrationSuccessContentsTest do
     response = '{
       "software_statement": "example_jwt",
       "client_name": "Inferno UDAP Authorization Code Test Client",
-      "redirect_uris": ["https:/localhost/suites/custom/udap_security/redirect"],
+      "redirect_uris": ["https:/localhost/suites/custom/udap_security_test_kit/redirect"],
       "grant_types": ["authorization_code"],
       "response_types": ["code"],
       "token_endpoint_auth_method": "private_key_jwt"
@@ -80,7 +80,7 @@ RSpec.describe UDAPSecurityTestKit::RegistrationSuccessContentsTest do
       "client_id": "",
       "software_statement": "example_jwt",
       "client_name": "Inferno UDAP Authorization Code Test Client",
-      "redirect_uris": ["https:/localhost/suites/custom/udap_security/redirect"],
+      "redirect_uris": ["https:/localhost/suites/custom/udap_security_test_kit/redirect"],
       "grant_types": ["authorization_code"],
       "response_types": ["code"],
       "token_endpoint_auth_method": "private_key_jwt"

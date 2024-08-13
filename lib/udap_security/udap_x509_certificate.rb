@@ -26,7 +26,7 @@ module UDAPSecurityTestKit
 
       if include_san_extension
         # SAN must be unique for each cert
-        @san = "https://inferno.org/udap_security/#{cert.serial}"
+        @san = "https://inferno.org/udap_security_test_kit/#{cert.serial}"
         unique_uri_entry = "URI:#{@san}"
         cert.add_extension(ef.create_extension('subjectAltName', unique_uri_entry, false))
       end

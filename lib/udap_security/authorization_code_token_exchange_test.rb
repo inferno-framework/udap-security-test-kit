@@ -61,7 +61,7 @@ module UDAPSecurityTestKit
     output :authorization_code_token_response_body
     makes_request :token_exchange
 
-    config options: { redirect_uri: "#{Inferno::Application['base_url']}/custom/udap_security/redirect" }
+    config options: { redirect_uri: "#{Inferno::Application['base_url']}/custom/udap_security_test_kit/redirect" }
 
     run do
       client_assertion_payload = UDAPClientAssertionPayloadBuilder.build(

@@ -1,4 +1,4 @@
-require_relative '../../lib/udap_security/token_endpoint_auth_signing_alg_values_supported_field_test'
+require_relative '../../lib/udap_security_test_kit/token_endpoint_auth_signing_alg_values_supported_field_test'
 
 RSpec.describe UDAPSecurityTestKit::TokenEndpointAuthSigningAlgValuesSupportedFieldTest do
   let(:runnable) do

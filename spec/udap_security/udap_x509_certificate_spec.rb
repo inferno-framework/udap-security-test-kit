@@ -1,5 +1,5 @@
-require_relative '../../lib/udap_security/udap_x509_certificate'
-require_relative '../../lib/udap_security/default_cert_file_loader'
+require_relative '../../lib/udap_security_test_kit/udap_x509_certificate'
+require_relative '../../lib/udap_security_test_kit/default_cert_file_loader'
 
 RSpec.describe UDAPSecurityTestKit::UDAPX509Certificate do # rubocop:disable RSpec/SpecFilePathFormat,RSpec/FilePath
   let(:ca_cert_string) do

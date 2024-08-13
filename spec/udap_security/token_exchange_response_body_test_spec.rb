@@ -1,4 +1,4 @@
-require_relative '../../lib/udap_security/token_exchange_response_body_test'
+require_relative '../../lib/udap_security_test_kit/token_exchange_response_body_test'
 
 RSpec.describe UDAPSecurityTestKit::TokenExchangeResponseBodyTest do
   let(:runnable) { Inferno::Repositories::Tests.new.find('udap_token_exchange_response_body') }

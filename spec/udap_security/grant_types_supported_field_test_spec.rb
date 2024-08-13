@@ -1,4 +1,4 @@
-require_relative '../../lib/udap_security/grant_types_supported_field_test'
+require_relative '../../lib/udap_security_test_kit/grant_types_supported_field_test'
 
 RSpec.describe UDAPSecurityTestKit::GrantTypesSupportedFieldTest do
   let(:runnable) { Inferno::Repositories::Tests.new.find('udap_grant_types_supported_field') }

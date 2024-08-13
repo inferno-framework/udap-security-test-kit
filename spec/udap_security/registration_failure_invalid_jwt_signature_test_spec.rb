@@ -1,5 +1,5 @@
-require_relative '../../lib/udap_security/registration_failure_invalid_jwt_signature_test'
-require_relative '../../lib/udap_security/default_cert_file_loader'
+require_relative '../../lib/udap_security_test_kit/registration_failure_invalid_jwt_signature_test'
+require_relative '../../lib/udap_security_test_kit/default_cert_file_loader'
 
 RSpec.describe UDAPSecurityTestKit::RegistrationFailureInvalidJWTSignatureTest do
   let(:runnable) { Inferno::Repositories::Tests.new.find('udap_registration_failure_invalid_jwt_signature') }
@@ -10,7 +10,7 @@ RSpec.describe UDAPSecurityTestKit::RegistrationFailureInvalidJWTSignatureTest d
     UDAPSecurityTestKit::DefaultCertFileLoader.load_test_client_cert_pem_file
   end
 
-  let(:udap_cert_iss) { 'https://inferno.org/udap_security/1716935719' }
+  let(:udap_cert_iss) { 'https://inferno.org/udap_security_test_kit/1716935719' }
   let(:udap_registration_endpoint) { 'http://example.fhir.com/registration' }
   let(:udap_jwt_signing_alg) { 'RS256' }
   let(:udap_registration_requested_scope) { 'system/*' }

@@ -1,4 +1,4 @@
-require_relative '../../lib/udap_security/authorization_endpoint_field_test'
+require_relative '../../lib/udap_security_test_kit/authorization_endpoint_field_test'
 
 RSpec.describe UDAPSecurityTestKit::AuthorizationEndpointFieldTest do
   let(:runnable) { Inferno::Repositories::Tests.new.find('udap_authorization_endpoint_field') }

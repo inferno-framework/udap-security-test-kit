@@ -1,5 +1,5 @@
-require_relative '../../lib/udap_security/generate_client_certs_test'
-require_relative '../../lib/udap_security/default_cert_file_loader'
+require_relative '../../lib/udap_security_test_kit/generate_client_certs_test'
+require_relative '../../lib/udap_security_test_kit/default_cert_file_loader'
 
 RSpec.describe UDAPSecurityTestKit::GenerateClientCertsTest do
   let(:runnable) { Inferno::Repositories::Tests.new.find('udap_generate_client_certs') }

@@ -1,4 +1,4 @@
-subjectAltName = URI:https://inferno.com/udap_security/ac
+subjectAltName = URI:https://inferno.com/udap_security_test_kit/ac
 extendedKeyUsage = serverAuth, clientAuth, codeSigning, emailProtection
 crlDistributionPoints=URI:https://inferno.com/mock_crl_endpoint.crl
 basicConstraints = CA:FALSE

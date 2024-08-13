@@ -1,4 +1,4 @@
-require_relative '../../lib/udap_security/signed_metadata_field_test'
+require_relative '../../lib/udap_security_test_kit/signed_metadata_field_test'
 
 RSpec.describe UDAPSecurityTestKit::SignedMetadataFieldTest do
   let(:runnable) { Inferno::Repositories::Tests.new.find('udap_signed_metadata_field') }

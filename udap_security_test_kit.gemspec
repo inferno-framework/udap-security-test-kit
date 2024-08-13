@@ -1,4 +1,4 @@
-require_relative 'lib/udap_security/version'
+require_relative 'lib/udap_security_test_kit/version'
 
 Gem::Specification.new do |spec|
   spec.name          = 'udap_security_test_kit'

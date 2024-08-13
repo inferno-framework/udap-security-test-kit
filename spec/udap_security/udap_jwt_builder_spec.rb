@@ -1,5 +1,5 @@
-require_relative '../../lib/udap_security/udap_jwt_builder'
-require_relative '../../lib/udap_security/default_cert_file_loader'
+require_relative '../../lib/udap_security_test_kit/udap_jwt_builder'
+require_relative '../../lib/udap_security_test_kit/default_cert_file_loader'
 
 RSpec.describe UDAPSecurityTestKit::UDAPJWTBuilder do # rubocop:disable RSpec/FilePath,RSpec/SpecFilePathFormat
   let(:jwt_alg) { 'RS256' }

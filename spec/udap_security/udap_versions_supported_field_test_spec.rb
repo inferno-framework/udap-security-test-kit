@@ -1,4 +1,4 @@
-require_relative '../../lib/udap_security/udap_versions_supported_field_test'
+require_relative '../../lib/udap_security_test_kit/udap_versions_supported_field_test'
 
 RSpec.describe UDAPSecurityTestKit::UDAPVersionsSupportedFieldTest do
   let(:runnable) { Inferno::Repositories::Tests.new.find('udap_versions_supported_field') }

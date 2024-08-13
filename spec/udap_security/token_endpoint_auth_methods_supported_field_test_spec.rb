@@ -1,4 +1,4 @@
-require_relative '../../lib/udap_security/token_endpoint_auth_methods_supported_field_test'
+require_relative '../../lib/udap_security_test_kit/token_endpoint_auth_methods_supported_field_test'
 
 RSpec.describe UDAPSecurityTestKit::TokenEndpointAuthMethodsSupportedFieldTest do
   let(:runnable) { Inferno::Repositories::Tests.new.find('udap_token_endpoint_auth_methods_supported_field') }

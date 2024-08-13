@@ -1,6 +1,6 @@
-require_relative '../../lib/udap_security/authorization_code_token_exchange_test'
-require_relative '../../lib/udap_security/udap_request_builder'
-require_relative '../../lib/udap_security/default_cert_file_loader'
+require_relative '../../lib/udap_security_test_kit/authorization_code_token_exchange_test'
+require_relative '../../lib/udap_security_test_kit/udap_request_builder'
+require_relative '../../lib/udap_security_test_kit/default_cert_file_loader'
 
 RSpec.describe UDAPSecurityTestKit::AuthorizationCodeTokenExchangeTest do
   let(:runnable) { Inferno::Repositories::Tests.new.find('udap_authorization_code_token_exchange') }

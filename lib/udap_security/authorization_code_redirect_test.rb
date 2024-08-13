@@ -20,7 +20,7 @@ module UDAPSecurityTestKit
 
     receives_request :redirect
 
-    config options: { redirect_uri: "#{Inferno::Application['base_url']}/custom/udap_security/redirect" }
+    config options: { redirect_uri: "#{Inferno::Application['base_url']}/custom/udap_security_test_kit/redirect" }
 
     def wait_message(auth_url)
       if config.options[:redirect_message_proc].present?

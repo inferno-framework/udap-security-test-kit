@@ -1,4 +1,4 @@
-require_relative '../../lib/udap_security/software_statement_builder'
+require_relative '../../lib/udap_security_test_kit/software_statement_builder'
 
 RSpec.describe UDAPSecurityTestKit::SoftwareStatementBuilder do
   let(:iss_ac) { 'https://inferno.org/ac_client' }

@@ -59,7 +59,7 @@ module UDAPSecurity
             leaf_cert.extensions
               .find { |extension| extension.oid == 'subjectAltName' }
               .value
-        rescue NoMethodError => e
+        rescue NoMethodError
           assert false, 'Could not find Subject Alternative Name extension in leaf certificate'
         end
 

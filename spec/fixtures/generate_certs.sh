@@ -7,9 +7,14 @@ echo "CA private key generated"
 
 echo "Now generating self-signed CA cert"
 # TODO: Create CRL that can be hosted at local enpoint
-openssl req -x509 -new -nodes -key InfernoCA.key -sha256 -days 3650 -subj "/C=US/ST=MA/L=Bedford/O=Inferno/CN=Inferno-UDAP-Root-CA/emailAddress=inferno@groups.mitre.org" -addext "keyUsage = digitalSignature, keyCertSign" -addext "certificatePolicies = anyPolicy" -out InfernoCA.pem
+openssl req -x509 -new -nodes -key InfernoCA.key -sha256 -days 3650 -subj "/C=US/ST=MA/L=Bedford/O=Inferno/CN=Inferno-UDAP-Root-CA/emailAddress=inferno@groups.mitre.org" -addext "keyUsage = digitalSignature, keyCertSign, cRLSign" -addext "certificatePolicies = anyPolicy" -out InfernoCA.pem
 
 echo "Self-signed CA cert generated"
+
+echo "Now generating empty, signed CRL"
+cd crl
+openssl ca -gencrl -keyfile ../InfernoCA.key -cert ../InfernoCA.pem -out InfernoCA_CRL.pem -config ./crl_openssl.conf
+cd ..
 
 echo "Now generating client private key"
 openssl genrsa -out TestClientPrivateKey.key 2048

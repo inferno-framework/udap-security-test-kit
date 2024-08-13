@@ -6,7 +6,7 @@ openssl genrsa -out InfernoCA.key 4096
 echo "CA private key generated"
 
 echo "Now generating self-signed CA cert"
-# TODO: Create CRL that can be hosted at local enpoint
+
 openssl req -x509 -new -nodes -key InfernoCA.key -sha256 -days 3650 -subj "/C=US/ST=MA/L=Bedford/O=Inferno/CN=Inferno-UDAP-Root-CA/emailAddress=inferno@groups.mitre.org" -addext "keyUsage = digitalSignature, keyCertSign, cRLSign" -addext "certificatePolicies = anyPolicy" -out InfernoCA.pem
 
 echo "Self-signed CA cert generated"
@@ -33,5 +33,8 @@ echo "Client certificate generated and signed"
 echo "Now creating a cert chain of client and CA certs"
 
 openssl x509 -in TestClient.pem -noout -text
-echo "Cert chain generated"
+echo "Inferno test certificates generated, now moving to lib directory"
+# Move to lib/udap_security/certs because of file loading module
+
+mv InfernoCA.key InfernoCA.pem TestClient.pem TestClientPrivateKey.key ../../lib/udap_security/certs
 echo "Script complete"

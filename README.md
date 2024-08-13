@@ -21,25 +21,16 @@ use of X.509 certificates that are trusted by the authorization server under
 test.  There are two categories of certificates for this test kit:
 - Client certificates: represent the logical instance of a UDAP client interfacing
   with the authorization server.  This test
-  kit supports multiple logical clients, and a new client certificate is needed for each instance of
-  testing Dynamic Client Registration.  By default, Inferno will generate a
-  new client certificate for each run of the Dynamic Client Registration test
-  group.
+  kit supports multiple logical clients, and a new logical client is needed for each instance of
+  testing Dynamic Client Registration. 
 - Signing certificate: the certificate used to issue and sign the client
-  certificates.  This test kit includes a self-signed certificate
-  authority, `InfernoCA.pem`, and its accompanying private key, `InfernoCA.key`,
-  in `lib/udap_security_test_kit/certs`.
-  By default, Inferno will use this cert and private key to
-  issue and sign it auto-generated client certs.  In the `lib/udap_security_test_kit/certs`
-  directory there is also a `generate_certs.sh` script that will
-  regenerate the CA cert and its key as well as an example client cert and
-  private key.
+  certificates.
 
-Testers may also provide their own client certificate(s) via the
-test inputs.
+Testers must provide their own client certificate(s) via the
+test inputs.  Currently, the certificates available in `lib/udap_security_test_kit/certs`
+are for unit testing only.
 
-In order for tests to pass, register the `InfernoCA.pem` file (if using
-Inferno's default CA) OR your own signing certificate as a trusted CA with
+In order for tests to pass, register your own signing certificate as a trust anchor with
 the authorization server under tests. 
 
 

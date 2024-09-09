@@ -57,6 +57,25 @@ module UDAPSecurityTestKit
       request.query_parameters['state']
     end
 
+    links [
+      {
+        label: 'Report Issue',
+        url: 'https://github.com/inferno-framework/udap-security-test-kit/issues'
+      },
+      {
+        label: 'Open Source',
+        url: 'https://github.com/inferno-framework/udap-security-test-kit'
+      },
+      {
+        label: 'Download',
+        url: 'https://github.com/inferno-framework/udap-security-test-kit/releases'
+      },
+      {
+        label: 'Implementation Guide',
+        url: 'https://hl7.org/fhir/us/udap-security/STU1'
+      }
+    ]
+
     group from: :udap_authorization_code_group
     group from: :udap_client_credentials_group
   end

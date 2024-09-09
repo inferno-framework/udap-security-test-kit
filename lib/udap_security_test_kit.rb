@@ -69,6 +69,10 @@ module UDAPSecurityTestKit
       {
         label: 'Download',
         url: 'https://github.com/inferno-framework/udap-security-test-kit/releases'
+      },
+      {
+        label: 'Implementation Guide',
+        url: 'https://hl7.org/fhir/us/udap-security/STU1'
       }
     ]
 

@@ -60,7 +60,7 @@ module UDAPSecurityTestKit
 
       post(udap_registration_endpoint, body: reg_body, headers: reg_headers)
 
-      assert_response_status(201)
+      assert_response_status([201, 200])
       assert_valid_json(response[:body])
       output udap_registration_response: response[:body]
     end

@@ -4,7 +4,7 @@ require_relative '../../lib/udap_security_test_kit/udap_x509_certificate'
 require_relative '../../lib/udap_security_test_kit/default_cert_file_loader'
 require 'pry'
 
-RSpec.describe UDAPSecurityTestKit::UDAPJWTValidator do # rubocop:disable RSpec/FilePath,RSpec/SpecFilePathFormat
+RSpec.describe UDAPSecurityTestKit::UDAPJWTValidator do # rubocop:disable RSpec/SpecFilePathFormat
   let(:inferno_client_cert) do
     UDAPSecurityTestKit::DefaultCertFileLoader.load_test_client_cert_pem_file
   end
@@ -83,7 +83,7 @@ RSpec.describe UDAPSecurityTestKit::UDAPJWTValidator do # rubocop:disable RSpec/
       )
       _token_body, token_header = JWT.decode(test_jwt, nil, false)
 
-      cert = OpenSSL::X509::Certificate.new(Base64.urlsafe_decode64(token_header['x5c'].first))
+      cert = OpenSSL::X509::Certificate.new(Base64.decode64(token_header['x5c'].first))
 
       validation_result = described_class.validate_signature(
         test_jwt,

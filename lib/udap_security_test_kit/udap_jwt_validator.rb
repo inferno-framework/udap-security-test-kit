@@ -22,7 +22,7 @@ module UDAPSecurityTestKit
 
     def self.validate_trust_chain(x5c_header_encoded, trust_anchor_certs)
       cert_chain = x5c_header_encoded.map do |cert|
-        cert_der = Base64.urlsafe_decode64(cert)
+        cert_der = Base64.decode64(cert)
         OpenSSL::X509::Certificate.new(cert_der)
       end
       crl_uris = cert_chain.map(&:crl_uris).compact.flatten

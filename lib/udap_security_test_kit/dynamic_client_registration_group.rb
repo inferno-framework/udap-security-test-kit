@@ -1,3 +1,4 @@
+require_relative 'generate_client_certs_test'
 require_relative 'registration_failure_invalid_contents_test'
 require_relative 'registration_failure_invalid_jwt_signature_test'
 require_relative 'registration_success_test'

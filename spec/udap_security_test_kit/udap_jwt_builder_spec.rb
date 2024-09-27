@@ -1,7 +1,7 @@
 require_relative '../../lib/udap_security_test_kit/udap_jwt_builder'
 require_relative '../../lib/udap_security_test_kit/default_cert_file_loader'
 
-RSpec.describe UDAPSecurityTestKit::UDAPJWTBuilder do # rubocop:disable RSpec/FilePath,RSpec/SpecFilePathFormat
+RSpec.describe UDAPSecurityTestKit::UDAPJWTBuilder do # rubocop:disable RSpec/SpecFilePathFormat
   let(:jwt_alg) { 'RS256' }
   let(:rsa_private_string) do
     UDAPSecurityTestKit::DefaultCertFileLoader.load_test_client_private_key_file
@@ -78,9 +78,9 @@ RSpec.describe UDAPSecurityTestKit::UDAPJWTBuilder do # rubocop:disable RSpec/Fi
       expect(jwt_header['x5c'].is_a?(Array)).to be true
 
       # verify enclosed certificate
-      cert = OpenSSL::X509::Certificate.new(Base64.urlsafe_decode64(jwt_header['x5c'].first))
+      cert = OpenSSL::X509::Certificate.new(Base64.decode64(jwt_header['x5c'].first))
 
-      jwt_client_cert = OpenSSL::X509::Certificate.new(Base64.urlsafe_decode64(jwt_header['x5c'].first))
+      jwt_client_cert = OpenSSL::X509::Certificate.new(Base64.decode64(jwt_header['x5c'].first))
       expect(jwt_client_cert.check_private_key(rsa_private)).to be true
 
       ca_cert = OpenSSL::X509::Certificate.new(ca_cert_string)
@@ -113,7 +113,7 @@ RSpec.describe UDAPSecurityTestKit::UDAPJWTBuilder do # rubocop:disable RSpec/Fi
       expect(jwt_header['x5c'].is_a?(Array)).to be true
 
       # fails when using public key from attached certificate
-      jwt_client_cert = OpenSSL::X509::Certificate.new(Base64.urlsafe_decode64(jwt_header['x5c'].first))
+      jwt_client_cert = OpenSSL::X509::Certificate.new(Base64.decode64(jwt_header['x5c'].first))
 
       expect do
         JWT.decode encoded_jwt, jwt_client_cert.public_key, true, { algorithm: jwt_alg }

@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    udap_security_test_kit (0.9.1)
+    udap_security_test_kit (0.9.2)
       inferno_core (>= 0.4.2)
       jwt (~> 2.3)
 
@@ -85,7 +85,7 @@ GEM
     faraday-patron (1.0.0)
     faraday-rack (1.0.0)
     faraday-retry (1.0.3)
-    faraday_middleware (1.2.0)
+    faraday_middleware (1.2.1)
       faraday (~> 1.0)
     fhir_client (5.0.3)
       activesupport (>= 3)
@@ -134,7 +134,7 @@ GEM
       domain_name (~> 0.5)
     i18n (1.14.6)
       concurrent-ruby (~> 1.0)
-    inferno_core (0.4.42)
+    inferno_core (0.4.43)
       activesupport (~> 6.1.7.5)
       base62-rb (= 0.3.1)
       blueprinter (= 0.25.2)
@@ -165,15 +165,17 @@ GEM
       rdoc (>= 4.0.0)
       reline (>= 0.4.2)
     json (2.7.2)
-    jwt (2.9.0)
+    jwt (2.9.3)
       base64
     kramdown (2.4.0)
       rexml
     language_server-protocol (3.17.0.3)
+    logger (1.6.1)
     method_source (1.1.0)
-    mime-types (3.5.2)
+    mime-types (3.6.0)
+      logger
       mime-types-data (~> 3.2015)
-    mime-types-data (3.2024.0903)
+    mime-types-data (3.2024.1001)
     minitest (5.25.1)
     multi_json (1.15.0)
     multi_xml (0.7.1)
@@ -232,7 +234,7 @@ GEM
       http-cookie (>= 1.0.2, < 2.0)
       mime-types (>= 1.16, < 4.0)
       netrc (~> 0.8)
-    rexml (3.3.7)
+    rexml (3.3.8)
     rouge (4.4.0)
     rspec (3.13.0)
       rspec-core (~> 3.13.0)

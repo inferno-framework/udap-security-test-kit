@@ -47,7 +47,7 @@ module UDAPSecurityTestKit
           config: {
             inputs: {
               udap_registration_grant_type: {
-                name: :reg_grant_type_client_creds,
+                name: :client_credentials_flow_registration_grant_type,
                 default: 'client_credentials',
                 locked: true
               },
@@ -91,7 +91,7 @@ module UDAPSecurityTestKit
             }
           } do
       input_order :udap_registration_endpoint,
-                  :reg_grant_type_client_creds,
+                  :client_credentials_flow_registration_grant_type,
                   :udap_client_cert_pem_client_creds_flow,
                   :udap_client_private_key_client_creds_flow,
                   :udap_cert_iss_client_creds_flow,

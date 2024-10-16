@@ -74,7 +74,7 @@ module UDAPSecurityTestKit
                 )
               },
               udap_registration_certifications: {
-                name: :udap_registration_certifications_client_creds_flow,
+                name: :udap_client_creds_flow_registration_certifications,
                 title: 'Client Credentials UDAP Registration Certifications'
               }
             },
@@ -96,7 +96,7 @@ module UDAPSecurityTestKit
                   :udap_client_credentials_flow_client_private_key,
                   :udap_cert_iss_client_creds_flow,
                   :udap_client_credentials_flow_registration_scope,
-                  :udap_jwt_signing_alg, :udap_registration_certifications_client_creds_flow
+                  :udap_jwt_signing_alg, :udap_client_creds_flow_registration_certifications
     end
 
     group from: :udap_client_credentials_authentication_group,

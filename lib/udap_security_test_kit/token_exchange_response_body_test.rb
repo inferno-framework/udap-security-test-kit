@@ -15,9 +15,17 @@ module UDAPSecurityTestKit
 
     input :token_response_body
 
+    output :udap_access_token,
+           :udap_expires_in,
+           :udap_received_scopes
+
     run do
       assert_valid_json(token_response_body)
       token_response_body_parsed = JSON.parse(token_response_body)
+
+      output udap_access_token: token_response_body_parsed['access_token'],
+             udap_expires_in: token_response_body_parsed['expires_in'],
+             udap_received_scopes: token_response_body_parsed['scope']
 
       required_keys = ['access_token', 'token_type']
 

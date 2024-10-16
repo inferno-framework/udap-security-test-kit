@@ -26,6 +26,17 @@ module UDAPSecurityTestKit
              token_response_body: {
                name: :client_credentials_token_response_body
              }
+           },
+           outputs: {
+             udap_access_token: {
+               name: :udap_client_creds_flow_access_token
+             },
+             udap_expires_in: {
+               name: :udap_client_creds_flow_expires_in
+             },
+             udap_received_scopes: {
+               name: :udap_client_creds_flow_received_scopes
+             }
            }
          }
     test from: :udap_token_exchange_response_headers,

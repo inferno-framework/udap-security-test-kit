@@ -48,7 +48,7 @@ module UDAPSecurityTestKit
             authorization server under test.
           )
 
-    input :udap_client_private_key_client_creds_flow,
+    input :udap_client_credentials_flow_client_private_key,
           type: 'textarea',
           title: 'Client Private Key (PEM Format)',
           description: 'The private key corresponding to the X.509 client certificate'
@@ -102,7 +102,7 @@ module UDAPSecurityTestKit
 
       client_assertion_jwt = UDAPJWTBuilder.encode_jwt_with_x5c_header(
         client_assertion_payload,
-        udap_client_private_key_client_creds_flow,
+        udap_client_credentials_flow_client_private_key,
         udap_jwt_signing_alg,
         x5c_certs
       )

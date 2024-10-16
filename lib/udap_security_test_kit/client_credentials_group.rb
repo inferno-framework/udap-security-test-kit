@@ -56,7 +56,7 @@ module UDAPSecurityTestKit
                 title: 'Client Credentials Client Certificate(s) (PEM Format)'
               },
               udap_client_private_key_pem: {
-                name: :udap_client_private_key_client_creds_flow,
+                name: :udap_client_credentials_flow_client_private_key,
                 title: 'Client Credentials Client Private Key (PEM Format)'
               },
               udap_cert_iss: {
@@ -83,7 +83,7 @@ module UDAPSecurityTestKit
                 name: :udap_client_credentials_flow_client_cert_pem
               },
               udap_client_private_key_pem: {
-                name: :udap_client_private_key_client_creds_flow
+                name: :udap_client_credentials_flow_client_private_key
               },
               udap_cert_iss: {
                 name: :udap_cert_iss_client_creds_flow
@@ -93,7 +93,7 @@ module UDAPSecurityTestKit
       input_order :udap_registration_endpoint,
                   :client_credentials_flow_registration_grant_type,
                   :udap_client_credentials_flow_client_cert_pem,
-                  :udap_client_private_key_client_creds_flow,
+                  :udap_client_credentials_flow_client_private_key,
                   :udap_cert_iss_client_creds_flow,
                   :udap_client_credentials_flow_registration_scope,
                   :udap_jwt_signing_alg, :udap_registration_certifications_client_creds_flow

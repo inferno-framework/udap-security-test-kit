@@ -10,7 +10,7 @@ RSpec.describe UDAPSecurityTestKit::ClientCredentialsTokenExchangeTest do
     UDAPSecurityTestKit::DefaultCertFileLoader.load_test_client_cert_pem_file
   end
 
-  let(:udap_client_private_key_client_creds_flow) do
+  let(:udap_client_credentials_flow_client_private_key) do
     UDAPSecurityTestKit::DefaultCertFileLoader.load_test_client_private_key_file
   end
 
@@ -22,7 +22,7 @@ RSpec.describe UDAPSecurityTestKit::ClientCredentialsTokenExchangeTest do
       udap_token_endpoint:,
       udap_client_id: 'CLIENT_ID',
       udap_client_credentials_flow_client_cert_pem:,
-      udap_client_private_key_client_creds_flow:,
+      udap_client_credentials_flow_client_private_key:,
       udap_jwt_signing_alg: 'RS256'
     }
   end

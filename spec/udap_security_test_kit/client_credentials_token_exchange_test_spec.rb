@@ -6,7 +6,7 @@ RSpec.describe UDAPSecurityTestKit::ClientCredentialsTokenExchangeTest do
   let(:session_data_repo) { Inferno::Repositories::SessionData.new }
   let(:results_repo) { Inferno::Repositories::Results.new }
   let(:test_session) { repo_create(:test_session, test_suite_id: 'udap_security') }
-  let(:udap_client_cert_pem_client_creds_flow) do
+  let(:udap_client_credentials_flow_client_cert_pem) do
     UDAPSecurityTestKit::DefaultCertFileLoader.load_test_client_cert_pem_file
   end
 
@@ -21,7 +21,7 @@ RSpec.describe UDAPSecurityTestKit::ClientCredentialsTokenExchangeTest do
     {
       udap_token_endpoint:,
       udap_client_id: 'CLIENT_ID',
-      udap_client_cert_pem_client_creds_flow:,
+      udap_client_credentials_flow_client_cert_pem:,
       udap_client_private_key_client_creds_flow:,
       udap_jwt_signing_alg: 'RS256'
     }

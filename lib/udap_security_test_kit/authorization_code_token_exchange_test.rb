@@ -23,7 +23,7 @@ module UDAPSecurityTestKit
           title: 'Token Endpoint',
           description: 'The full URL from which Inferno will request an access token'
 
-    input :udap_client_cert_pem_auth_code_flow,
+    input :udap_auth_code_flow_client_cert_pem,
           title: 'X.509 Client Certificate (PEM Format)',
           type: 'textarea',
           description: %(
@@ -70,7 +70,7 @@ module UDAPSecurityTestKit
         nil
       )
 
-      x5c_certs = UDAPJWTBuilder.split_user_input_cert_string(udap_client_cert_pem_auth_code_flow)
+      x5c_certs = UDAPJWTBuilder.split_user_input_cert_string(udap_auth_code_flow_client_cert_pem)
 
       client_assertion_jwt = UDAPJWTBuilder.encode_jwt_with_x5c_header(
         client_assertion_payload,

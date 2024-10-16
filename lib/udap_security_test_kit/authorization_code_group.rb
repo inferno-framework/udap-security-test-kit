@@ -50,7 +50,7 @@ module UDAPSecurityTestKit
                 locked: true
               },
               udap_client_cert_pem: {
-                name: :udap_client_cert_pem_auth_code_flow,
+                name: :udap_auth_code_flow_client_cert_pem,
                 title: 'Authorization Code Client Certificate(s) (PEM Format)'
               },
               udap_client_private_key_pem: {
@@ -78,7 +78,7 @@ module UDAPSecurityTestKit
             },
             outputs: {
               udap_client_cert_pem: {
-                name: :udap_client_cert_pem_auth_code_flow
+                name: :udap_auth_code_flow_client_cert_pem
               },
               udap_client_private_key_pem: {
                 name: :udap_client_private_key_auth_code_flow
@@ -90,7 +90,7 @@ module UDAPSecurityTestKit
           } do
       input_order :udap_registration_endpoint,
                   :auth_code_flow_registration_grant_type,
-                  :udap_client_cert_pem_auth_code_flow,
+                  :udap_auth_code_flow_client_cert_pem,
                   :udap_client_private_key_auth_code_flow,
                   :udap_cert_iss_auth_code_flow,
                   :udap_auth_code_flow_registration_scope,

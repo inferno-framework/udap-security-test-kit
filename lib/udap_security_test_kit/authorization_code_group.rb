@@ -45,7 +45,7 @@ module UDAPSecurityTestKit
           config: {
             inputs: {
               udap_registration_grant_type: {
-                name: :auth_code_flow_registration_grant_type,
+                name: :udap_auth_code_flow_registration_grant_type,
                 default: 'authorization_code',
                 locked: true
               },
@@ -89,7 +89,7 @@ module UDAPSecurityTestKit
             }
           } do
       input_order :udap_registration_endpoint,
-                  :auth_code_flow_registration_grant_type,
+                  :udap_auth_code_flow_registration_grant_type,
                   :udap_auth_code_flow_client_cert_pem,
                   :udap_auth_code_flow_client_private_key,
                   :udap_auth_code_flow_cert_iss,

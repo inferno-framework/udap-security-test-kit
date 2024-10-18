@@ -38,8 +38,7 @@ RSpec.describe UDAPSecurityTestKit::RegistrationSuccessContentsTest do
   let(:expected_claims) do
     ['client_name',
      'grant_types',
-     'token_endpoint_auth_method',
-     'scope']
+     'token_endpoint_auth_method']
   end
 
   def run(runnable, inputs = {})
@@ -121,6 +120,47 @@ RSpec.describe UDAPSecurityTestKit::RegistrationSuccessContentsTest do
       expect(result.result).to eq('fail')
       expect(result.result_message).to match(key.to_s)
     end
+  end
+
+  it 'fails if response does not include scope parameter' do
+    response = '{
+      "client_id": "example_client_id",
+      "software_statement": "example_jwt",
+      "client_name": "Inferno UDAP Authorization Code Test Client",
+      "redirect_uris": ["https:/localhost/suites/custom/udap_security_test_kit/redirect"],
+      "grant_types": ["authorization_code"],
+      "response_types": ["code"],
+      "token_endpoint_auth_method": "private_key_jwt"
+    }'
+    result = run(runnable,
+                 udap_software_statement_json:,
+                 udap_software_statement_jwt:,
+                 udap_registration_response: response,
+                 udap_registration_grant_type:)
+
+    expect(result.result).to eq('fail')
+    expect(result.result_message).to match(/must include 'scope'/)
+  end
+
+  it 'fails if scope parameter in registration response is blank' do
+    response = '{
+      "client_id": "example_client_id",
+      "software_statement": "example_jwt",
+      "client_name": "Inferno UDAP Authorization Code Test Client",
+      "redirect_uris": ["https:/localhost/suites/custom/udap_security_test_kit/redirect"],
+      "grant_types": ["authorization_code"],
+      "response_types": ["code"],
+      "token_endpoint_auth_method": "private_key_jwt",
+      "scope": ""
+    }'
+    result = run(runnable,
+                 udap_software_statement_json:,
+                 udap_software_statement_jwt:,
+                 udap_registration_response: response,
+                 udap_registration_grant_type:)
+
+    expect(result.result).to eq('fail')
+    expect(result.result_message).to match(/Scope cannot be blank/)
   end
 
   it 'passes when response contains all required values' do

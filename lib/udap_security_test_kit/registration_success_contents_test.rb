@@ -48,7 +48,14 @@ module UDAPSecurityTestKit
 
       original_software_statement = JSON.parse(udap_software_statement_json)
 
-      expected_claims = ['client_name', 'grant_types', 'token_endpoint_auth_method', 'scope']
+      # Scopes received will not exactly match scopes requested if wildcard used
+      # for request (e.g., patient/*.read)
+      # Keep it simple here and just check that scopes are returned, save more
+      # detailed assessment of scope values for SMART-UDAP test kit?
+      assert registration_response.key?('scope'), "Successful registration response must include 'scope' claim"
+      assert registration_response['scope'].present?, 'Scope cannot be blank'
+
+      expected_claims = ['client_name', 'grant_types', 'token_endpoint_auth_method']
       auth_code_claims = ['redirect_uris', 'response_types']
 
       expected_claims.concat auth_code_claims if udap_registration_grant_type == 'authorization_code'

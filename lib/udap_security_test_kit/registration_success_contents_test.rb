@@ -48,10 +48,7 @@ module UDAPSecurityTestKit
 
       original_software_statement = JSON.parse(udap_software_statement_json)
 
-      # Scopes received will not exactly match scopes requested if wildcard used
-      # for request (e.g., patient/*.read)
-      # Keep it simple here and just check that scopes are returned, save more
-      # detailed assessment of scope values for SMART-UDAP test kit?
+      # Scopes received may not exactly match scopes requested
       assert registration_response.key?('scope'), "Successful registration response must include 'scope' claim"
       assert registration_response['scope'].present?, 'Scope cannot be blank'
 

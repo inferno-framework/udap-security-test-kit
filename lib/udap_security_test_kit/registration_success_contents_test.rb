@@ -48,20 +48,23 @@ module UDAPSecurityTestKit
 
       original_software_statement = JSON.parse(udap_software_statement_json)
 
-      # Scopes received may not exactly match scopes requested
-      assert registration_response.key?('scope'), "Successful registration response must include 'scope' claim"
-      assert registration_response['scope'].present?, 'Scope cannot be blank'
-
-      expected_claims = ['client_name', 'grant_types', 'token_endpoint_auth_method']
+      expected_claims = ['scope', 'client_name', 'grant_types', 'token_endpoint_auth_method']
       auth_code_claims = ['redirect_uris', 'response_types']
+
+      # For this subset, authorization server may return a different value than
+      # the one originally provided in client software statement
+      mutable_claims = ['scope', 'client_name']
 
       expected_claims.concat auth_code_claims if udap_registration_grant_type == 'authorization_code'
 
       expected_claims.each do |claim|
         assert registration_response.key?(claim), "Successful registration response must include #{claim} claim"
+        assert registration_response[claim].present?, "`#{claim}` value cannot be blank"
+        next if mutable_claims.include?(claim)
+
         assert registration_response[claim] == original_software_statement[claim],
                "Registration response value for #{claim} does not match " \
-               'in client-submitted software statement'
+               'value in client-submitted software statement'
       end
     end
   end

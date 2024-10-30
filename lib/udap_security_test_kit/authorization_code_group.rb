@@ -45,24 +45,24 @@ module UDAPSecurityTestKit
           config: {
             inputs: {
               udap_registration_grant_type: {
-                name: :reg_grant_type_auth_code,
+                name: :udap_auth_code_flow_registration_grant_type,
                 default: 'authorization_code',
                 locked: true
               },
               udap_client_cert_pem: {
-                name: :udap_client_cert_pem_auth_code_flow,
+                name: :udap_auth_code_flow_client_cert_pem,
                 title: 'Authorization Code Client Certificate(s) (PEM Format)'
               },
               udap_client_private_key_pem: {
-                name: :udap_client_private_key_auth_code_flow,
+                name: :udap_auth_code_flow_client_private_key,
                 title: 'Authorization Code Client Private Key (PEM Format)'
               },
               udap_cert_iss: {
-                name: :udap_cert_iss_auth_code_flow,
+                name: :udap_auth_code_flow_cert_iss,
                 title: 'Authorization Code JWT Issuer (iss) Claim'
               },
               udap_registration_requested_scope: {
-                name: :udap_registration_scope_auth_code_flow,
+                name: :udap_auth_code_flow_registration_scope,
                 title: 'Authorization Code Registration Requested Scope(s)',
                 description: %(
                   String containing a space delimited list of scopes requested by the client application for use in
@@ -72,29 +72,29 @@ module UDAPSecurityTestKit
                 )
               },
               udap_registration_certifications: {
-                name: :udap_registration_certifications_auth_code_flow,
+                name: :udap_auth_code_flow_registration_certifications,
                 title: 'Authorization Code UDAP Registration Certifications'
               }
             },
             outputs: {
               udap_client_cert_pem: {
-                name: :udap_client_cert_pem_auth_code_flow
+                name: :udap_auth_code_flow_client_cert_pem
               },
               udap_client_private_key_pem: {
-                name: :udap_client_private_key_auth_code_flow
+                name: :udap_auth_code_flow_client_private_key
               },
               udap_cert_iss: {
-                name: :udap_cert_iss_auth_code_flow
+                name: :udap_auth_code_flow_cert_iss
               }
             }
           } do
       input_order :udap_registration_endpoint,
-                  :reg_grant_type_auth_code,
-                  :udap_client_cert_pem_auth_code_flow,
-                  :udap_client_private_key_auth_code_flow,
-                  :udap_cert_iss_auth_code_flow,
-                  :udap_registration_scope_auth_code_flow,
-                  :udap_jwt_signing_alg, :udap_registration_certifications_auth_code_flow
+                  :udap_auth_code_flow_registration_grant_type,
+                  :udap_auth_code_flow_client_cert_pem,
+                  :udap_auth_code_flow_client_private_key,
+                  :udap_auth_code_flow_cert_iss,
+                  :udap_auth_code_flow_registration_scope,
+                  :udap_jwt_signing_alg, :udap_auth_code_flow_registration_certifications
     end
 
     group from: :udap_authorization_code_authentication_group,

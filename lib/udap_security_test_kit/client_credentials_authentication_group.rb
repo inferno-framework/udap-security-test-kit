@@ -16,7 +16,7 @@ module UDAPSecurityTestKit
          config: {
            requests: {
              token_exchange: {
-               name: :client_credentials_token_exchange
+               name: :udap_client_creds_flow_token_exchange
              }
            }
          }
@@ -24,7 +24,7 @@ module UDAPSecurityTestKit
          config: {
            inputs: {
              token_response_body: {
-               name: :client_credentials_token_response_body
+               name: :udap_client_creds_flow_token_exchange_response_body
              }
            },
            outputs: {
@@ -43,7 +43,7 @@ module UDAPSecurityTestKit
          config: {
            requests: {
              token_exchange: {
-               name: :client_credentials_token_exchange
+               name: :udap_client_creds_flow_token_exchange
              }
            }
          }

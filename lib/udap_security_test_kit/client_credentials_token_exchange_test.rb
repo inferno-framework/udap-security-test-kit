@@ -71,8 +71,9 @@ module UDAPSecurityTestKit
           default: 'RS256',
           locked: true
 
-    output :token_retrieval_time
-    output :client_credentials_token_response_body
+    output :udap_client_credentials_flow_token_retrieval_time,
+           :udap_client_credentials_flow_token_exchange_response_body
+
     makes_request :token_exchange
 
     run do
@@ -122,9 +123,9 @@ module UDAPSecurityTestKit
       assert_response_status(200)
       assert_valid_json(request.response_body)
 
-      output token_retrieval_time: Time.now.iso8601
+      output udap_client_credentials_flow_token_retrieval_time: Time.now.iso8601
 
-      output client_credentials_token_response_body: request.response_body
+      output udap_client_credentials_flow_token_exchange_response_body: request.response_body
     end
   end
 end

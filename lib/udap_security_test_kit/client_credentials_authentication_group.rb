@@ -36,6 +36,9 @@ module UDAPSecurityTestKit
              },
              udap_received_scopes: {
                name: :udap_client_credentials_flow_received_scopes
+             },
+             udap_refresh_token: {
+               name: :udap_client_credentials_flow_refresh_token
              }
            }
          }

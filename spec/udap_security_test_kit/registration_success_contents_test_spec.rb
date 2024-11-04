@@ -35,11 +35,17 @@ RSpec.describe UDAPSecurityTestKit::RegistrationSuccessContentsTest do
       "scope": "user/*.read"}'
   end
 
-  let(:expected_claims) do
-    ['client_name',
-     'grant_types',
-     'token_endpoint_auth_method',
-     'scope']
+  let(:required_immutable_claims) do
+    ['grant_types',
+     'token_endpoint_auth_method']
+  end
+
+  let(:required_mutable_claims) do
+    ['scope', 'client_name']
+  end
+
+  let(:all_required_claims) do
+    (required_immutable_claims + required_mutable_claims).append('client_id')
   end
 
   def run(runnable, inputs = {})
@@ -56,47 +62,8 @@ RSpec.describe UDAPSecurityTestKit::RegistrationSuccessContentsTest do
     Inferno::TestRunner.new(test_session:, test_run:).run(runnable)
   end
 
-  it 'fails if response does not include client_id parameter' do
-    response = '{
-      "software_statement": "example_jwt",
-      "client_name": "Inferno UDAP Authorization Code Test Client",
-      "redirect_uris": ["https:/localhost/suites/custom/udap_security_test_kit/redirect"],
-      "grant_types": ["authorization_code"],
-      "response_types": ["code"],
-      "token_endpoint_auth_method": "private_key_jwt"
-    }'
-    result = run(runnable,
-                 udap_software_statement_json:,
-                 udap_software_statement_jwt:,
-                 udap_registration_response: response,
-                 udap_registration_grant_type:)
-
-    expect(result.result).to eq('fail')
-    expect(result.result_message).to match(/client_id/)
-  end
-
-  it 'fails if client_id parameter in registration response is blank' do
-    response = '{
-      "client_id": "",
-      "software_statement": "example_jwt",
-      "client_name": "Inferno UDAP Authorization Code Test Client",
-      "redirect_uris": ["https:/localhost/suites/custom/udap_security_test_kit/redirect"],
-      "grant_types": ["authorization_code"],
-      "response_types": ["code"],
-      "token_endpoint_auth_method": "private_key_jwt"
-    }'
-    result = run(runnable,
-                 udap_software_statement_json:,
-                 udap_software_statement_jwt:,
-                 udap_registration_response: response,
-                 udap_registration_grant_type:)
-
-    expect(result.result).to eq('fail')
-    expect(result.result_message).to match(/client_id/)
-  end
-
-  it 'fails if response does not include relevant claims from original request' do
-    expected_claims.each do |key|
+  it 'fails if response does not include required claims' do
+    all_required_claims.each do |key|
       response_json = JSON.parse(correct_response)
       response_json.delete(key)
       result = run(runnable,
@@ -109,10 +76,10 @@ RSpec.describe UDAPSecurityTestKit::RegistrationSuccessContentsTest do
     end
   end
 
-  it 'fails if response values do not match values submitted in original request' do
-    expected_claims.each do |key|
+  it 'fails if response values for required claims are blank' do
+    all_required_claims.each do |key|
       response_json = JSON.parse(correct_response)
-      response_json[key] = 'incorrect_value'
+      response_json[key] = ''
       result = run(runnable,
                    udap_software_statement_json:,
                    udap_software_statement_jwt:,
@@ -123,7 +90,34 @@ RSpec.describe UDAPSecurityTestKit::RegistrationSuccessContentsTest do
     end
   end
 
-  it 'passes when response contains all required values' do
+  it 'fails if response values for immutable claims do not match values submitted in original request' do
+    required_immutable_claims.each do |key|
+      response_json = JSON.parse(correct_response)
+      response_json[key] = 'CHANGED_VALUE'
+      result = run(runnable,
+                   udap_software_statement_json:,
+                   udap_software_statement_jwt:,
+                   udap_registration_response: JSON.generate(response_json),
+                   udap_registration_grant_type:)
+      expect(result.result).to eq('fail')
+      expect(result.result_message).to match(key.to_s)
+    end
+  end
+
+  it 'passes if mutable claim values in registration response differ from original client request values' do
+    required_mutable_claims.each do |key|
+      response_json = JSON.parse(correct_response)
+      response_json[key] = 'CHANGED VALUE'
+      result = run(runnable,
+                   udap_software_statement_json:,
+                   udap_software_statement_jwt:,
+                   udap_registration_response: JSON.generate(response_json),
+                   udap_registration_grant_type:)
+      expect(result.result).to eq('pass')
+    end
+  end
+
+  it 'passes when all required values in registration response exactly match original client request values' do
     result = run(runnable,
                  udap_software_statement_json:,
                  udap_software_statement_jwt:,

@@ -57,8 +57,9 @@ module UDAPSecurityTestKit
           default: 'RS256',
           locked: true
 
-    output :token_retrieval_time
-    output :authorization_code_token_response_body
+    output :udap_auth_code_flow_token_retrieval_time,
+           :udap_auth_code_flow_token_exchange_response_body
+
     makes_request :token_exchange
 
     config options: { redirect_uri: "#{Inferno::Application['base_url']}/custom/udap_security_test_kit/redirect" }
@@ -95,9 +96,9 @@ module UDAPSecurityTestKit
       assert_response_status(200)
       assert_valid_json(request.response_body)
 
-      output token_retrieval_time: Time.now.iso8601
+      output udap_auth_code_flow_token_retrieval_time: Time.now.iso8601
 
-      output authorization_code_token_response_body: request.response_body
+      output udap_auth_code_flow_token_exchange_response_body: request.response_body
     end
   end
 end

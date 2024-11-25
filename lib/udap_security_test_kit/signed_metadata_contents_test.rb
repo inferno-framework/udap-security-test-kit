@@ -26,7 +26,7 @@ module UDAPSecurityTestKit
       assert token_header.key?('x5c'), 'JWT header does not contain `x5c` field'
       assert token_header.key?('alg'), 'JWT header does not contain `alg` field'
 
-      leaf_cert_der = Base64.urlsafe_decode64(token_header['x5c'].first)
+      leaf_cert_der = Base64.decode64(token_header['x5c'].first)
       leaf_cert = OpenSSL::X509::Certificate.new(leaf_cert_der)
       signature_validation_result = UDAPSecurityTestKit::UDAPJWTValidator.validate_signature(
         signed_metadata_jwt,

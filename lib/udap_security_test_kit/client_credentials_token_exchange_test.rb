@@ -38,7 +38,7 @@ module UDAPSecurityTestKit
           title: 'Token Endpoint',
           description: 'The full URL from which Inferno will request an access token'
 
-    input :udap_client_cert_pem_client_creds_flow,
+    input :udap_client_credentials_flow_client_cert_pem,
           title: 'X.509 Client Certificate(s) (PEM Format)',
           type: 'textarea',
           description: %(
@@ -48,7 +48,7 @@ module UDAPSecurityTestKit
             authorization server under test.
           )
 
-    input :udap_client_private_key_client_creds_flow,
+    input :udap_client_credentials_flow_client_private_key,
           type: 'textarea',
           title: 'Client Private Key (PEM Format)',
           description: 'The private key corresponding to the X.509 client certificate'
@@ -71,8 +71,9 @@ module UDAPSecurityTestKit
           default: 'RS256',
           locked: true
 
-    output :token_retrieval_time
-    output :client_credentials_token_response_body
+    output :udap_client_credentials_flow_token_retrieval_time,
+           :udap_client_credentials_flow_token_exchange_response_body
+
     makes_request :token_exchange
 
     run do
@@ -97,12 +98,12 @@ module UDAPSecurityTestKit
       )
 
       x5c_certs = UDAPJWTBuilder.split_user_input_cert_string(
-        udap_client_cert_pem_client_creds_flow
+        udap_client_credentials_flow_client_cert_pem
       )
 
       client_assertion_jwt = UDAPJWTBuilder.encode_jwt_with_x5c_header(
         client_assertion_payload,
-        udap_client_private_key_client_creds_flow,
+        udap_client_credentials_flow_client_private_key,
         udap_jwt_signing_alg,
         x5c_certs
       )
@@ -122,9 +123,9 @@ module UDAPSecurityTestKit
       assert_response_status(200)
       assert_valid_json(request.response_body)
 
-      output token_retrieval_time: Time.now.iso8601
+      output udap_client_credentials_flow_token_retrieval_time: Time.now.iso8601
 
-      output client_credentials_token_response_body: request.response_body
+      output udap_client_credentials_flow_token_exchange_response_body: request.response_body
     end
   end
 end

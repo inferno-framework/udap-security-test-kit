@@ -20,7 +20,7 @@ module UDAPSecurityTestKit
          config: {
            requests: {
              token_exchange: {
-               name: :authorization_code_token_exchange
+               name: :udap_auth_code_flow_token_exchange
              }
            }
          }
@@ -28,7 +28,21 @@ module UDAPSecurityTestKit
          config: {
            inputs: {
              token_response_body: {
-               name: :authorization_code_token_response_body
+               name: :udap_auth_code_flow_token_exchange_response_body
+             }
+           },
+           outputs: {
+             udap_access_token: {
+               name: :udap_auth_code_flow_access_token
+             },
+             udap_expires_in: {
+               name: :udap_auth_code_flow_expires_in
+             },
+             udap_received_scopes: {
+               name: :udap_auth_code_flow_received_scopes
+             },
+             udap_refresh_token: {
+               name: :udap_auth_code_flow_refresh_token
              }
            }
          }
@@ -36,7 +50,7 @@ module UDAPSecurityTestKit
          config: {
            requests: {
              token_exchange: {
-               name: :authorization_code_token_exchange
+               name: :udap_auth_code_flow_token_exchange
              }
            }
          }

@@ -49,6 +49,11 @@ module UDAPSecurityTestKit
     end
 
     run do
+      assert_valid_http_uri(
+        udap_authorization_endpoint,
+        "UDAP authorization endpoint '#{udap_authorization_endpoint}' is not a valid URI"
+      )
+
       output udap_authorization_code_state: SecureRandom.uuid
 
       oauth2_params = {

@@ -8,6 +8,10 @@ module UDAPSecurityTestKit
         the provided client redirection URI using an HTTP redirection response.
       )
 
+    input :udap_fhir_base_url,
+          title: 'FHIR Server Base URL',
+          description: 'Base FHIR URL of FHIR Server. Value for the aud parameter in the redirect URI.'
+
     input :udap_authorization_endpoint,
           title: 'Authorization Endpoint',
           description: 'The full URL from which Inferno will request an authorization code.'
@@ -16,11 +20,16 @@ module UDAPSecurityTestKit
           title: 'Client ID',
           description: 'Client ID as registered with the authorization server.'
 
+    input :udap_auth_code_flow_registration_scope,
+          title: 'Requested Scopes',
+          description: 'A list of space-separated scopes.',
+          default: 'launch/patient openid fhirUser offline_access patient/*.read'
+
     output :udap_authorization_code_state
 
     receives_request :redirect
 
-    config options: { redirect_uri: "#{Inferno::Application['base_url']}/custom/udap_security_test_kit/redirect" }
+    config options: { redirect_uri: "#{Inferno::Application['base_url']}/custom/udap_security/redirect" }
 
     def wait_message(auth_url)
       if config.options[:redirect_message_proc].present?
@@ -55,7 +64,9 @@ module UDAPSecurityTestKit
         'response_type' => 'code',
         'client_id' => udap_client_id,
         'redirect_uri' => config.options[:redirect_uri],
-        'state' => udap_authorization_code_state
+        'scope' => udap_auth_code_flow_registration_scope,
+        'state' => udap_authorization_code_state,
+        'aud' => udap_fhir_base_url
       }.compact
 
       authorization_url = authorization_url_builder(

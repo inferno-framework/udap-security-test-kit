@@ -1,6 +1,7 @@
 require_relative 'udap_security_test_kit/authorization_code_group'
 require_relative 'udap_security_test_kit/client_credentials_group'
 require_relative 'udap_security_test_kit/version'
+require_relative 'udap_security_test_kit/redirect_uri'
 
 module UDAPSecurityTestKit
   class Suite < Inferno::TestSuite
@@ -60,6 +61,10 @@ module UDAPSecurityTestKit
     resume_test_route :get, '/redirect' do |request|
       request.query_parameters['state']
     end
+
+    config options: {
+      redirect_uri: UDAPSecurityTestKit::UDAP_REDIRECT_URI
+    }
 
     links [
       {

@@ -4,6 +4,7 @@ require_relative '../../lib/udap_security_test_kit/default_cert_file_loader'
 require_relative '../../lib/udap_security_test_kit/udap_x509_certificate'
 
 RSpec.describe UDAPSecurityTestKit::SignedMetadataContentsTest do
+  let(:suite_id) { 'udap_security' }
   let(:runnable) { Inferno::Repositories::Tests.new.find('udap_signed_metadata_contents') }
   let(:session_data_repo) { Inferno::Repositories::SessionData.new }
   let(:results_repo) { Inferno::Repositories::Results.new }

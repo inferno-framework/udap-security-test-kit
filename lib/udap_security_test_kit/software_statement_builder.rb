@@ -1,10 +1,11 @@
 require 'jwt'
+require_relative 'redirect_uri'
 
 module UDAPSecurityTestKit
   class SoftwareStatementBuilder
     def self.build_payload(iss, aud, grant_type, scope)
       if grant_type == 'authorization_code'
-        redirect_uris = ["#{Inferno::Application['base_url']}/custom/udap_security_test_kit/redirect"]
+        redirect_uris = [UDAPSecurityTestKit::UDAP_REDIRECT_URI]
         response_types = ['code']
         client_name = 'Inferno UDAP Authorization Code Test Client'
       elsif grant_type == 'client_credentials'

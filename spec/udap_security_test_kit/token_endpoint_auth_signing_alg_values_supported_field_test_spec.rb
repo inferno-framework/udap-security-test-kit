@@ -1,6 +1,7 @@
 require_relative '../../lib/udap_security_test_kit/token_endpoint_auth_signing_alg_values_supported_field_test'
 
 RSpec.describe UDAPSecurityTestKit::TokenEndpointAuthSigningAlgValuesSupportedFieldTest do
+  let(:suite_id) { 'udap_security' }
   let(:runnable) do
     Inferno::Repositories::Tests.new.find('udap_token_endpoint_auth_signing_alg_values_supported_field')
   end

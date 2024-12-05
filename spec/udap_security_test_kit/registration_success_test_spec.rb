@@ -2,6 +2,7 @@ require_relative '../../lib/udap_security_test_kit/registration_success_test'
 require_relative '../../lib/udap_security_test_kit/default_cert_file_loader'
 
 RSpec.describe UDAPSecurityTestKit::RegistrationSuccessTest do
+  let(:suite_id) { 'udap_security' }
   let(:runnable) { Inferno::Repositories::Tests.new.find('udap_registration_success') }
   let(:session_data_repo) { Inferno::Repositories::SessionData.new }
   let(:results_repo) { Inferno::Repositories::Results.new }

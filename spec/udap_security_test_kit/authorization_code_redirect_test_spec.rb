@@ -1,6 +1,7 @@
 require_relative '../../lib/udap_security_test_kit/authorization_code_redirect_test'
 
 RSpec.describe UDAPSecurityTestKit::AuthorizationCodeRedirectTest, :request do
+  let(:suite_id) { 'udap_security' }
   let(:test) { Inferno::Repositories::Tests.new.find('udap_authorization_code_redirect') }
   let(:session_data_repo) { Inferno::Repositories::SessionData.new }
   let(:results_repo) { Inferno::Repositories::Results.new }

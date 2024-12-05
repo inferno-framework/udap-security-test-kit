@@ -1,6 +1,7 @@
 require_relative '../../lib/udap_security_test_kit/registration_success_contents_test'
 
 RSpec.describe UDAPSecurityTestKit::RegistrationSuccessContentsTest do
+  let(:suite_id) { 'udap_security' }
   let(:runnable) { Inferno::Repositories::Tests.new.find('udap_registration_success_contents') }
   let(:session_data_repo) { Inferno::Repositories::SessionData.new }
   let(:results_repo) { Inferno::Repositories::Results.new }

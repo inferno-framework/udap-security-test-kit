@@ -15,14 +15,25 @@ module UDAPSecurityTestKit
       > use by the Client App, the software statement as submitted by the Client App, and all of the registration
       > related parameters that were included in the software statement.
 
+      [UDAP STU 1.1](https://hl7.org/fhir/us/udap-security/STU1.1/registration.html#request-body) clarifies that,
+      in accordance with [Section 3.2.1 of RFC 7591](https://datatracker.ietf.org/doc/html/rfc7591#section-3.2.1):
+        > The authorization server MAY reject or replace any of the client's requested metadata values submitted during
+        > the registration and substitute them with suitable values.
+
       This test verifies:
-      - `client_id` claim is included in the registration response and its value is not blank
-      - `software_statement` claim in the registration response matches the software statement JWT provided in the
-      original registration request
-      - The registration response includes claims for `client_name`, `grant_types`, `token_endpoint_auth_method`, and
-      `scope`, whose values match those in the originally submitted software statement
-      - If the registered grant type is `authorization_code`, then the response includes claims for `redirect_uris` and
-      `response_type` whose values match those in the originally submitted software statement
+      - `client_id` claim is present in the registration response and its value is not blank.
+      - `scope` and `client_name` claims are present in the registration response and their values are not blank.
+      - `software_statement`, `grant_types`, and `token_endpoint_auth_method` claims are present in the registration
+      response and their values match those in the originally submitted software statement.
+      - If the registered grant type is `authorization_code`, then the `redirect_uris` and `response_type` claims are
+      present in the registration response and their values match in the originally submitted software statement.
+
+      In order for downstream tests to succeed, it is
+      essential that the client and server are in agreement on the values of most of the software statement
+      parameters. The exception is `client_name`, which does not impact behavior. For this reason, an exact match
+      between the request and response values for `client_name` is not required.
+      Additionally, an exact match between `scope` request and response value is also not required because the
+      authorization server may grant different scopes than those orignally requested by the client.
     )
 
     input :udap_software_statement_json

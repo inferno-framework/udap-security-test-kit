@@ -18,7 +18,8 @@ module UDAPSecurityTestKit
       2. Dynamic Client Registration
       3. Authorization & Authentication
 
-      These steps are grouped by the OAuth2.0 flow being tested:
+      In this test suite, Inferno acts as a mock UDAP client to test *server conformance* to the HL7 UDAP IG. Tests are
+      grouped according to the OAuth2.0 flow used in the authorization and authentication step:
       1. Authorization Code flow, which supports
         [Consumer-Facing](https://hl7.org/fhir/us/udap-security/STU1/consumer.html) or [Business-to-Business (B2B)](https://hl7.org/fhir/us/udap-security/STU1/b2b.html)
         use cases
@@ -26,6 +27,9 @@ module UDAPSecurityTestKit
       [B2B](https://hl7.org/fhir/us/udap-security/STU1/b2b.html) use case
 
       Testers may test one or both flows based on their system under test.
+
+      This test suite does NOT assess [Tiered OAuth for User Authentication](https://hl7.org/fhir/us/udap-security/STU1/user.html)
+      (which is not a required capability) or client conformance to the HL7 UDAP IG.
     )
 
     input_instructions %(

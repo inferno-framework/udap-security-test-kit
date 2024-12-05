@@ -57,6 +57,10 @@ module UDAPSecurityTestKit
       request.query_parameters['state']
     end
 
+    config options: {
+      redirect_uri: "#{Inferno::Application['base_url']}/custom/udap_security/redirect"
+    }
+
     links [
       {
         label: 'Report Issue',

@@ -1,3 +1,4 @@
+require_relative '../udap_security_test_kit'
 module UDAPSecurityTestKit
   class AuthorizationCodeRedirectTest < Inferno::Test
     title 'Authorization server redirects client to redirect URI'
@@ -19,8 +20,6 @@ module UDAPSecurityTestKit
     output :udap_authorization_code_state
 
     receives_request :redirect
-
-    config options: { redirect_uri: "#{Inferno::Application['base_url']}/custom/udap_security/redirect" }
 
     def wait_message(auth_url)
       if config.options[:redirect_message_proc].present?

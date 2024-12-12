@@ -17,6 +17,23 @@ module UDAPSecurityTestKit
           title: 'Client ID',
           description: 'Client ID as registered with the authorization server.'
 
+    input :udap_authorization_code_request_scopes,
+          title: 'Scope Parameter for Authorization Request',
+          description: %(
+              A list of space-separated scopes to include in the authorization request. If included, these may be equal
+              to or a subset of the scopes requested during registration.
+              If empty, scope will be omitted as a parameter to the authorization endpoint.
+          ),
+          optional: true
+
+    input :udap_authorization_code_request_aud,
+          title: "Audience ('aud') Parameter for Authorization Request",
+          description: %(
+              If included, should be the same as the base FHIR URL. If empty, 'aud' parameter will be omitted as
+              a parameter to the authorization endpoint.
+          ),
+          optional: true
+
     output :udap_authorization_code_state
 
     receives_request :redirect
@@ -59,7 +76,9 @@ module UDAPSecurityTestKit
         'response_type' => 'code',
         'client_id' => udap_client_id,
         'redirect_uri' => config.options[:redirect_uri],
-        'state' => udap_authorization_code_state
+        'state' => udap_authorization_code_state,
+        'scope' => udap_authorization_request_requested_scopes,
+        'aud' => udap_authorization_code_request_aud
       }.compact
 
       authorization_url = authorization_url_builder(

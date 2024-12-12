@@ -35,6 +35,7 @@ module UDAPSecurityTestKit
           optional: true
 
     output :udap_authorization_code_state
+    output :udap_authorization_redirect_url
 
     receives_request :redirect
 
@@ -77,7 +78,7 @@ module UDAPSecurityTestKit
         'client_id' => udap_client_id,
         'redirect_uri' => config.options[:redirect_uri],
         'state' => udap_authorization_code_state,
-        'scope' => udap_authorization_request_requested_scopes,
+        'scope' => udap_authorization_code_request_scopes,
         'aud' => udap_authorization_code_request_aud
       }.compact
 
@@ -87,6 +88,8 @@ module UDAPSecurityTestKit
       )
 
       info("Inferno redirecting browser to #{authorization_url}.")
+
+      output udap_authorization_redirect_url: authorization_url
 
       wait(
         identifier: udap_authorization_code_state,

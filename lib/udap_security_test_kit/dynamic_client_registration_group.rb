@@ -57,6 +57,27 @@ module UDAPSecurityTestKit
             ]
           }
 
+    input :udap_client_registration_status,
+          title: 'Client Registration Status',
+          description: %(
+            If the client's iss and certificate combination has already been registered with the authorization server
+            prior to this test run, select 'Update'.
+          ),
+          type: 'radio',
+          options: {
+            list_options: [
+              {
+                label: 'New Registration (201 Response Code Expected)',
+                value: 'new'
+              },
+              {
+                label: 'Update Registration (200 Response Code Expected)',
+                value: 'update'
+              }
+            ]
+          },
+          default: 'new'
+
     input :udap_client_cert_pem,
           title: 'X.509 Client Certificate(s) (PEM Format)',
           description: %(

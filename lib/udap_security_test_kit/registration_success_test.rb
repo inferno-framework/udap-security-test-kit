@@ -20,6 +20,7 @@ module UDAPSecurityTestKit
     input :udap_cert_iss
 
     input :udap_registration_endpoint
+    input :udap_client_registration_status
     input :udap_jwt_signing_alg
     input :udap_registration_requested_scope
     input :udap_registration_grant_type

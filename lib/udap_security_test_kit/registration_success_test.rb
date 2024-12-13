@@ -61,7 +61,12 @@ module UDAPSecurityTestKit
 
       post(udap_registration_endpoint, body: reg_body, headers: reg_headers)
 
-      assert_response_status(201)
+      if udap_client_registration_status == 'new'
+        assert_response_status(201)
+      elsif udap_client_registration_status == 'update'
+        assert_response_status(200)
+      end
+
       assert_valid_json(response[:body])
       output udap_registration_response: response[:body]
     end

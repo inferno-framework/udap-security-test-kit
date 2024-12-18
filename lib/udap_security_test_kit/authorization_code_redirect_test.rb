@@ -37,7 +37,7 @@ module UDAPSecurityTestKit
             list_options: [
               {
                 label: "Include 'aud' parameter",
-                value: 'include'
+                value: 'include_aud'
               }
             ]
           },
@@ -86,13 +86,15 @@ module UDAPSecurityTestKit
 
       output udap_authorization_code_state: SecureRandom.uuid
 
+      aud = udap_fhir_base_url if udap_authorization_code_request_aud.include? 'include_aud'
+
       oauth2_params = {
         'response_type' => 'code',
         'client_id' => udap_client_id,
         'redirect_uri' => config.options[:redirect_uri],
         'state' => udap_authorization_code_state,
         'scope' => udap_authorization_code_request_scopes,
-        'aud' => udap_authorization_code_request_aud
+        'aud' => aud
       }.compact
 
       authorization_url = authorization_url_builder(

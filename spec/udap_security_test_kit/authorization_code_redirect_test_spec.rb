@@ -10,6 +10,7 @@ RSpec.describe UDAPSecurityTestKit::AuthorizationCodeRedirectTest, :request do
   let(:url) { 'http://example.com/fhir' }
   let(:inputs) do
     {
+      udap_fhir_base_url: url,
       udap_authorization_endpoint: 'http://example.com/authorize',
       udap_client_id: 'CLIENT_ID'
     }
@@ -18,7 +19,7 @@ RSpec.describe UDAPSecurityTestKit::AuthorizationCodeRedirectTest, :request do
   let(:inputs_scope_aud) do
     {
       udap_authorization_code_request_scopes: 'patient/Condition.rs',
-      udap_authorization_code_request_aud: 'http://example.com'
+      udap_authorization_code_request_aud: ['include_aud']
     }
   end
 

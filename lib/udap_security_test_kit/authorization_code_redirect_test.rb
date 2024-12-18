@@ -9,6 +9,10 @@ module UDAPSecurityTestKit
         the provided client redirection URI using an HTTP redirection response.
       )
 
+    input :udap_fhir_base_url,
+          title: 'FHIR Server Base URL',
+          description: 'Base FHIR URL of FHIR Server.'
+
     input :udap_authorization_endpoint,
           title: 'Authorization Endpoint',
           description: 'The full URL from which Inferno will request an authorization code.'
@@ -28,9 +32,18 @@ module UDAPSecurityTestKit
 
     input :udap_authorization_code_request_aud,
           title: "Audience ('aud') Parameter for Authorization Request",
+          type: 'checkbox',
+          options: {
+            list_options: [
+              {
+                label: "Include 'aud' parameter",
+                value: 'include'
+              }
+            ]
+          },
           description: %(
-              If included, should be the same as the base FHIR URL. If empty, 'aud' parameter will be omitted as
-              a parameter to the authorization endpoint.
+              If selected, the Base FHIR URL will be used as the 'aud' parameter in the request to the authorization
+              endpoint.
           ),
           optional: true
 

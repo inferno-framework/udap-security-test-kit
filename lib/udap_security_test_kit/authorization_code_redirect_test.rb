@@ -9,6 +9,10 @@ module UDAPSecurityTestKit
         the provided client redirection URI using an HTTP redirection response.
       )
 
+    input :udap_fhir_base_url,
+          title: 'FHIR Server Base URL',
+          description: 'Base FHIR URL of FHIR Server.'
+
     input :udap_authorization_endpoint,
           title: 'Authorization Endpoint',
           description: 'The full URL from which Inferno will request an authorization code.'
@@ -17,7 +21,34 @@ module UDAPSecurityTestKit
           title: 'Client ID',
           description: 'Client ID as registered with the authorization server.'
 
+    input :udap_authorization_code_request_scopes,
+          title: 'Scope Parameter for Authorization Request',
+          description: %(
+              A list of space-separated scopes to include in the authorization request. If included, these may be equal
+              to or a subset of the scopes requested during registration.
+              If empty, scope will be omitted as a parameter to the authorization endpoint.
+          ),
+          optional: true
+
+    input :udap_authorization_code_request_aud,
+          title: "Audience ('aud') Parameter for Authorization Request",
+          type: 'checkbox',
+          options: {
+            list_options: [
+              {
+                label: "Include 'aud' parameter",
+                value: 'include_aud'
+              }
+            ]
+          },
+          description: %(
+              If selected, the Base FHIR URL will be used as the 'aud' parameter in the request to the authorization
+              endpoint.
+          ),
+          optional: true
+
     output :udap_authorization_code_state
+    output :udap_authorization_redirect_url
 
     receives_request :redirect
 
@@ -55,11 +86,15 @@ module UDAPSecurityTestKit
 
       output udap_authorization_code_state: SecureRandom.uuid
 
+      aud = udap_fhir_base_url if udap_authorization_code_request_aud.include? 'include_aud'
+
       oauth2_params = {
         'response_type' => 'code',
         'client_id' => udap_client_id,
         'redirect_uri' => config.options[:redirect_uri],
-        'state' => udap_authorization_code_state
+        'state' => udap_authorization_code_state,
+        'scope' => udap_authorization_code_request_scopes,
+        'aud' => aud
       }.compact
 
       authorization_url = authorization_url_builder(
@@ -68,6 +103,8 @@ module UDAPSecurityTestKit
       )
 
       info("Inferno redirecting browser to #{authorization_url}.")
+
+      output udap_authorization_redirect_url: authorization_url
 
       wait(
         identifier: udap_authorization_code_state,

@@ -19,13 +19,11 @@ module UDAPSecurityTestKit
       establish a trust chain.
 
       Cancelling a UDAP client's registration is not a required server capability and as such the Inferno client has no
-      way of resetting state on the authorization server after a successful registration attempt.  Testers wishing to
-      run the Dynamic Client Registration tests more than once must do one of the following:
-      - Remove the Inferno test client's registration out-of-band before re-running tests, to register the original
-      client URI anew
-      - Specifiy a different client URI as the issuer input (if the client cert has more than one Subject Alternative
-      Name (SAN) URI entry), to register a different logical client with the original certificate
-      - Provide a different client certificate and its associated URI to register a new logical client
+      way of resetting state on the authorization server after a successful registration attempt.  If a given
+      certificate and issuer URI identity combination has already been registered with the authorization server, testers
+      may select the "Update Registration" option under Client Registration Status. This option will expect a `200 OK`
+      return status that indicates a registration modification, instead of the
+      `201 Created` return status required for a new registration entry.
     )
     end
 

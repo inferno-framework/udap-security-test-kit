@@ -13,6 +13,12 @@ module UDAPSecurityTestKit
       The [UDAP IG Section 3.2.3](https://hl7.org/fhir/us/udap-security/STU1/registration.html#request-body) states:
       > If a new registration is successful, the Authorization Server SHALL return a registration response with a 201
       > Created HTTP response code as per Section 5.1 of UDAP Dynamic Client Registration
+
+      If the tester indicated this registration attempt represents a modification of an existing registration entry,
+      this test will expect a 200 response code instead, as indicated in
+      the [UDAP IG Section 3.4](https://hl7.org/fhir/us/udap-security/STU1/registration.html#modifying-and-cancelling-registrations):
+      > If the Authorization Server returns the same client_id in the registration response for a modification request,
+      > it SHOULD also return a 200 OK HTTP response code.
     )
 
     input :udap_client_cert_pem

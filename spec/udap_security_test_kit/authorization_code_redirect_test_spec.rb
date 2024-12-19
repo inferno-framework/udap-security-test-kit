@@ -10,8 +10,16 @@ RSpec.describe UDAPSecurityTestKit::AuthorizationCodeRedirectTest, :request do
   let(:url) { 'http://example.com/fhir' }
   let(:inputs) do
     {
+      udap_fhir_base_url: url,
       udap_authorization_endpoint: 'http://example.com/authorize',
       udap_client_id: 'CLIENT_ID'
+    }
+  end
+
+  let(:inputs_scope_aud) do
+    {
+      udap_authorization_code_request_scopes: 'patient/Condition.rs',
+      udap_authorization_code_request_aud: ['include_aud']
     }
   end
 
@@ -31,54 +39,96 @@ RSpec.describe UDAPSecurityTestKit::AuthorizationCodeRedirectTest, :request do
     Inferno::TestRunner.new(test_session:, test_run:).run(runnable)
   end
 
-  it 'waits and then passes when it receives a request with the correct state' do
-    allow(test).to receive(:parent).and_return(Inferno::TestGroup)
-    result = run(test, inputs)
-    expect(result.result).to eq('wait')
+  context "when optional 'scope' and 'aud' inputs are omitted" do
+    it 'waits and then passes when it receives a request with the correct state' do
+      allow(test).to receive(:parent).and_return(Inferno::TestGroup)
+      result = run(test, inputs)
+      expect(result.result).to eq('wait')
 
-    state = session_data_repo.load(test_session_id: test_session.id, name: 'udap_authorization_code_state')
-    get "/custom/udap_security/redirect?state=#{state}"
+      state = session_data_repo.load(test_session_id: test_session.id, name: 'udap_authorization_code_state')
+      get "/custom/udap_security/redirect?state=#{state}"
 
-    result = results_repo.find(result.id)
-    expect(result.result).to eq('pass')
+      result = results_repo.find(result.id)
+      expect(result.result).to eq('pass')
+    end
+
+    it 'continues to wait when it receives a request with the incorrect state' do
+      result = run(test, inputs)
+      expect(result.result).to eq('wait')
+
+      state = SecureRandom.uuid
+      get "/custom/smart/redirect?state=#{state}"
+
+      result = results_repo.find(result.id)
+      expect(result.result).to eq('wait')
+    end
+
+    it 'fails if the authorization url is invalid' do
+      inputs[:udap_authorization_endpoint] = 'invalid'
+      result = run(test, inputs)
+      expect(result.result).to eq('fail')
+      expect(result.result_message).to match(/is not a valid URI/)
+    end
+
+    it "persists the incoming 'redirect' request" do
+      allow(test).to receive(:parent).and_return(Inferno::TestGroup)
+      run(test, inputs)
+      state = session_data_repo.load(test_session_id: test_session.id, name: 'udap_authorization_code_state')
+      url = "/custom/udap_security/redirect?state=#{state}"
+      get url
+
+      request = requests_repo.find_named_request(test_session.id, 'redirect')
+      expect(request.url).to end_with(url)
+    end
+
+    it "persists the 'udap_authorization_code_state' output" do
+      result = run(test, inputs)
+      expect(result.result).to eq('wait')
+
+      state = result.result_message.match(/a state of `(.*)`/)[1]
+      persisted_state = session_data_repo.load(test_session_id: test_session.id, name: 'udap_authorization_code_state')
+
+      expect(persisted_state).to eq(state)
+    end
+
+    it "omits 'scope' and 'aud' values from authorization redirect url" do
+      result = run(test, inputs)
+      expect(result.result).to eq('wait')
+
+      authorization_url = session_data_repo.load(
+        test_session_id: test_session.id,
+        name: 'udap_authorization_redirect_url'
+      )
+
+      expect(authorization_url).to_not include('scope')
+      expect(authorization_url).to_not include('aud')
+    end
   end
 
-  it 'continues to wait when it receives a request with the incorrect state' do
-    result = run(test, inputs)
-    expect(result.result).to eq('wait')
+  context "when optional 'scope' and 'aud' inputs are provided" do
+    it 'waits and then passes when it receives a request with the correct state' do
+      allow(test).to receive(:parent).and_return(Inferno::TestGroup)
+      result = run(test, inputs.merge(inputs_scope_aud))
+      expect(result.result).to eq('wait')
 
-    state = SecureRandom.uuid
-    get "/custom/smart/redirect?state=#{state}"
+      state = session_data_repo.load(test_session_id: test_session.id, name: 'udap_authorization_code_state')
+      get "/custom/udap_security/redirect?state=#{state}"
 
-    result = results_repo.find(result.id)
-    expect(result.result).to eq('wait')
-  end
+      result = results_repo.find(result.id)
+      expect(result.result).to eq('pass')
+    end
 
-  it 'fails if the authorization url is invalid' do
-    inputs[:udap_authorization_endpoint] = 'invalid'
-    result = run(test, inputs)
-    expect(result.result).to eq('fail')
-    expect(result.result_message).to match(/is not a valid URI/)
-  end
+    it "includes 'scope' and 'aud' values in authorization redirect url" do
+      result = run(test, inputs.merge(inputs_scope_aud))
+      expect(result.result).to eq('wait')
 
-  it "persists the incoming 'redirect' request" do
-    allow(test).to receive(:parent).and_return(Inferno::TestGroup)
-    run(test, inputs)
-    state = session_data_repo.load(test_session_id: test_session.id, name: 'udap_authorization_code_state')
-    url = "/custom/udap_security/redirect?state=#{state}"
-    get url
+      authorization_url = session_data_repo.load(
+        test_session_id: test_session.id,
+        name: 'udap_authorization_redirect_url'
+      )
 
-    request = requests_repo.find_named_request(test_session.id, 'redirect')
-    expect(request.url).to end_with(url)
-  end
-
-  it "persists the 'udap_authorization_code_state' output" do
-    result = run(test, inputs)
-    expect(result.result).to eq('wait')
-
-    state = result.result_message.match(/a state of `(.*)`/)[1]
-    persisted_state = session_data_repo.load(test_session_id: test_session.id, name: 'udap_authorization_code_state')
-
-    expect(persisted_state).to eq(state)
+      expect(authorization_url).to include('scope')
+      expect(authorization_url).to include('aud')
+    end
   end
 end

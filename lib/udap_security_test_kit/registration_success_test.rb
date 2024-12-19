@@ -70,7 +70,7 @@ module UDAPSecurityTestKit
       if udap_client_registration_status == 'new'
         assert_response_status(201)
       elsif udap_client_registration_status == 'update'
-        assert_response_status(200)
+        assert_response_status([200, 201])
       end
 
       assert_valid_json(response[:body])

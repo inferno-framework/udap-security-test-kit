@@ -71,9 +71,9 @@ RSpec.describe UDAPSecurityTestKit::RegistrationSuccessTest do
   end
 
   context 'when existing client is updating its registration data' do
-    it 'fails if response status is not 200' do
+    it 'fails if response status is not 200 or 201' do
       stub_request(:post, udap_registration_endpoint)
-        .to_return(status: 201, body: {}.to_json)
+        .to_return(status: 401, body: {}.to_json)
 
       input[:udap_client_registration_status] = 'update'
       result = run(runnable, input)
@@ -84,6 +84,16 @@ RSpec.describe UDAPSecurityTestKit::RegistrationSuccessTest do
     it 'passes when response status is 200' do
       stub_request(:post, udap_registration_endpoint)
         .to_return(status: 200, body: {}.to_json)
+
+      input[:udap_client_registration_status] = 'update'
+      result = run(runnable, input)
+
+      expect(result.result).to eq('pass')
+    end
+
+    it 'passes when response status is 201' do
+      stub_request(:post, udap_registration_endpoint)
+        .to_return(status: 201, body: {}.to_json)
 
       input[:udap_client_registration_status] = 'update'
       result = run(runnable, input)

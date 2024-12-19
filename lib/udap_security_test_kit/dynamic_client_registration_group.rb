@@ -21,9 +21,10 @@ module UDAPSecurityTestKit
       Cancelling a UDAP client's registration is not a required server capability and as such the Inferno client has no
       way of resetting state on the authorization server after a successful registration attempt.  If a given
       certificate and issuer URI identity combination has already been registered with the authorization server, testers
-      may select the "Update Registration" option under Client Registration Status. This option will expect a `200 OK`
-      return status that indicates a registration modification, instead of the
-      `201 Created` return status required for a new registration entry.
+      whose systems support registration modifications
+      may select the "Update Registration" option under Client Registration Status. This option will accept either a
+      `200 OK` or `201 Created` return status. Registration attempts for a new client may only return `201 Created`,
+      per the [IG](https://hl7.org/fhir/us/udap-security/STU1/registration.html#request-body).
     )
     end
 
@@ -69,7 +70,7 @@ module UDAPSecurityTestKit
                 value: 'new'
               },
               {
-                label: 'Update Registration (200 Response Code Expected)',
+                label: 'Update Registration (200 or 201 Response Code Expected)',
                 value: 'update'
               }
             ]

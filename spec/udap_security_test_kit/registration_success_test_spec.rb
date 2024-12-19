@@ -21,6 +21,7 @@ RSpec.describe UDAPSecurityTestKit::RegistrationSuccessTest do
   let(:udap_registration_requested_scope) { 'system/*' }
   let(:udap_registration_grant_type) { 'client_credentials' }
   let(:udap_registration_certifications) { '' }
+  let(:udap_client_registration_status) { 'new' }
   let(:input) do
     {
       udap_client_cert_pem:,
@@ -30,7 +31,8 @@ RSpec.describe UDAPSecurityTestKit::RegistrationSuccessTest do
       udap_jwt_signing_alg:,
       udap_registration_requested_scope:,
       udap_registration_grant_type:,
-      udap_registration_certifications:
+      udap_registration_certifications:,
+      udap_client_registration_status:
     }
   end
 
@@ -48,21 +50,55 @@ RSpec.describe UDAPSecurityTestKit::RegistrationSuccessTest do
     Inferno::TestRunner.new(test_session:, test_run:).run(runnable)
   end
 
-  it 'fails if response status is not 201' do
-    stub_request(:post, udap_registration_endpoint)
-      .to_return(status: 400, body: {}.to_json)
+  context 'when new client is being registered' do
+    it 'fails if response status is not 201' do
+      stub_request(:post, udap_registration_endpoint)
+        .to_return(status: 200, body: {}.to_json)
 
-    result = run(runnable, input)
+      result = run(runnable, input)
 
-    expect(result.result).to eq('fail')
+      expect(result.result).to eq('fail')
+    end
+
+    it 'passes when response status is 201' do
+      stub_request(:post, udap_registration_endpoint)
+        .to_return(status: 201, body: {}.to_json)
+
+      result = run(runnable, input)
+
+      expect(result.result).to eq('pass')
+    end
   end
 
-  it 'passes when response status is 201' do
-    stub_request(:post, udap_registration_endpoint)
-      .to_return(status: 201, body: {}.to_json)
+  context 'when existing client is updating its registration data' do
+    it 'fails if response status is not 200 or 201' do
+      stub_request(:post, udap_registration_endpoint)
+        .to_return(status: 401, body: {}.to_json)
 
-    result = run(runnable, input)
+      input[:udap_client_registration_status] = 'update'
+      result = run(runnable, input)
 
-    expect(result.result).to eq('pass')
+      expect(result.result).to eq('fail')
+    end
+
+    it 'passes when response status is 200' do
+      stub_request(:post, udap_registration_endpoint)
+        .to_return(status: 200, body: {}.to_json)
+
+      input[:udap_client_registration_status] = 'update'
+      result = run(runnable, input)
+
+      expect(result.result).to eq('pass')
+    end
+
+    it 'passes when response status is 201' do
+      stub_request(:post, udap_registration_endpoint)
+        .to_return(status: 201, body: {}.to_json)
+
+      input[:udap_client_registration_status] = 'update'
+      result = run(runnable, input)
+
+      expect(result.result).to eq('pass')
+    end
   end
 end

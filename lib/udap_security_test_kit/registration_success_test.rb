@@ -13,6 +13,14 @@ module UDAPSecurityTestKit
       The [UDAP IG Section 3.2.3](https://hl7.org/fhir/us/udap-security/STU1/registration.html#request-body) states:
       > If a new registration is successful, the Authorization Server SHALL return a registration response with a 201
       > Created HTTP response code as per Section 5.1 of UDAP Dynamic Client Registration
+
+      If the tester indicated this registration attempt represents a modification of an existing registration entry,
+      the [UDAP IG Section 3.4](https://hl7.org/fhir/us/udap-security/STU1/registration.html#modifying-and-cancelling-registrations)
+      states:
+      > If the Authorization Server returns the same client_id in the registration response for a modification request,
+      > it SHOULD also return a 200 OK HTTP response code.
+
+      In this case, the test will require either a 201 or 200 response code to pass.
     )
 
     input :udap_client_cert_pem
@@ -20,6 +28,7 @@ module UDAPSecurityTestKit
     input :udap_cert_iss
 
     input :udap_registration_endpoint
+    input :udap_client_registration_status
     input :udap_jwt_signing_alg
     input :udap_registration_requested_scope
     input :udap_registration_grant_type
@@ -60,7 +69,12 @@ module UDAPSecurityTestKit
 
       post(udap_registration_endpoint, body: reg_body, headers: reg_headers)
 
-      assert_response_status(201)
+      if udap_client_registration_status == 'new'
+        assert_response_status(201)
+      elsif udap_client_registration_status == 'update'
+        assert_response_status([200, 201])
+      end
+
       assert_valid_json(response[:body])
       output udap_registration_response: response[:body]
     end

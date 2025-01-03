@@ -9,6 +9,9 @@ module UDAPSecurityTestKit
     title 'UDAP Security'
     version VERSION
     description %(
+
+      THIS IS A LOCAL TEST VERSION OF THE UDAP TEST KIT, DELETE AFTER TESTING!!!
+
       The User Data Access Protocol (UDAP) Security test kit verifies that systems correctly implement the
       [HL7 UDAP Security IG](http://hl7.org/fhir/us/udap-security/STU1/)
       for extending OAuth 2.0 using UDAP workflows.

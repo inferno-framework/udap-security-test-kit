@@ -52,6 +52,10 @@ module UDAPSecurityTestKit
 
     receives_request :redirect
 
+    config options: {
+      redirect_uri: UDAPSecurityTestKit::UDAP_REDIRECT_URI
+    }
+
     def wait_message(auth_url)
       if config.options[:redirect_message_proc].present?
         return instance_exec(auth_url, &config.options[:redirect_message_proc])

@@ -1,3 +1,4 @@
+require 'uri'
 module UDAPSecurityTestKit
   class WellKnownEndpointTest < Inferno::Test
     include Inferno::DSL::Assertions
@@ -18,11 +19,23 @@ module UDAPSecurityTestKit
           title: 'FHIR Server Base URL',
           description: 'Base FHIR URL of FHIR Server. Discovery request will be sent to {baseURL}/.well-known/udap'
 
+    input :udap_community_parameter,
+          title: 'UDAP Community Parameter',
+          description: "If included, the designated community value will be appended as a query to the well-known
+          endpoint to indicate the client's trust of certificates from this trust community.",
+          optional: true
+
     output :udap_well_known_metadata_json
     makes_request :config
 
     run do
-      get("#{udap_fhir_base_url.strip.chomp('/')}/.well-known/udap", name: :udap_well_known_metadata_json)
+      uri = URI.parse("#{udap_fhir_base_url.strip.chomp('/')}/.well-known/udap")
+      unless udap_community_parameter.blank?
+        queries = URI.decode_www_form(uri.query || '') << ['community', udap_community_parameter]
+        uri.query = URI.encode_www_form(queries)
+      end
+
+      get(uri.to_s, name: :udap_well_known_metadata_json)
       assert_response_status(200)
       assert_valid_json(response[:body])
       output udap_well_known_metadata_json: response[:body]

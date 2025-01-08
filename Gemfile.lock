@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    udap_security_test_kit (0.10.2)
+    udap_security_test_kit (0.10.3)
       inferno_core (>= 0.5.1)
       jwt (~> 2.3)
 

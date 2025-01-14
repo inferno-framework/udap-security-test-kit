@@ -39,8 +39,13 @@ module UDAPSecurityTestKit
     def self.load_specified_client_cert(cert_name)
       if cert_name == 'SureFhir'
         # TODO: change to env variables
-        raw_cert = File.read('/Users/awallace/Desktop/test_certs/jan-2025-connectathon/surefhir-certs/custom-client-certs/SureFhirClientCert.pem')
-        cert = OpenSSL::X509::Certificate.new raw_cert
+        raw_client_cert = File.read('/Users/awallace/Desktop/test_certs/jan-2025-connectathon/surefhir-certs/custom-client-certs/SureFhirClientCert.pem')
+        client_cert = OpenSSL::X509::Certificate.new raw_client_cert
+        raw_int_cert = File.read('/Users/awallace/Desktop/test_certs/jan-2025-connectathon/surefhir-certs/custom-client-certs/SureFhirIntCA.pem')
+        int_cert = OpenSSL::X509::Certificate.new raw_int_cert
+        raw_root_cert = File.read('/Users/awallace/Desktop/test_certs/jan-2025-connectathon/surefhir-certs/custom-client-certs/SureFhirRootCA.pem')
+        root_cert = OpenSSL::X509::Certificate.new raw_root_cert
+        cert = [client_cert.to_pem, int_cert.to_pem, root_cert.to_pem]
       elsif cert_name == 'EMRDirect'
         raw_cert = File.read('/Users/awallace/Desktop/test_certs/jan-2025-connectathon/phimail-credentials/emr-direct-certs/EMRDirectClientCert.pem')
         cert = OpenSSL::X509::Certificate.new raw_cert

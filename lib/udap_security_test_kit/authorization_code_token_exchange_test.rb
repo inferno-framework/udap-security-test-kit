@@ -103,8 +103,7 @@ module UDAPSecurityTestKit
           x5c_certs
         )
       elsif udap_auth_code_flow_client_keyset_source == 'SureFhir'
-        cert = DefaultCertFileLoader.load_specified_client_cert('SureFhir')
-        x5c_certs = [cert.to_pem]
+        x5c_certs = DefaultCertFileLoader.load_specified_client_cert('SureFhir')
         private_key = DefaultCertFileLoader.load_specified_private_key('SureFhir')
         client_assertion_jwt = UDAPSecurityTestKit::UDAPJWTBuilder.encode_jwt_with_x5c_header_no_string_pkey(
           client_assertion_payload,

@@ -53,8 +53,7 @@ module UDAPSecurityTestKit
           udap_client_cert_pem
         )
       elsif udap_client_keyset_source == 'SureFhir'
-        cert = DefaultCertFileLoader.load_specified_client_cert('SureFhir')
-        x5c_certs = [cert.to_pem]
+        x5c_certs = DefaultCertFileLoader.load_specified_client_cert('SureFhir')
       elsif udap_client_keyset_source == 'EMRDirect'
         cert = DefaultCertFileLoader.load_specified_client_cert('EMRDirect')
         x5c_certs = [cert.to_pem]

@@ -104,7 +104,6 @@ module UDAPSecurityTestKit
                   :udap_client_credentials_client_keyset_source,
                   :udap_client_credentials_flow_client_cert_pem,
                   :udap_client_credentials_flow_client_private_key,
-                  :udap_cert_iss_client_creds_flow,
                   :udap_client_credentials_flow_registration_scope,
                   :udap_jwt_signing_alg, :udap_client_creds_flow_registration_certifications
     end

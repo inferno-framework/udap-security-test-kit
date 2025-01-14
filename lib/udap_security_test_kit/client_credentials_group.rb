@@ -54,6 +54,10 @@ module UDAPSecurityTestKit
               udap_client_registration_status: {
                 name: :udap_client_credentials_flow_client_registration_status
               },
+              udap_client_keyset_source: {
+                name: :udap_client_credentials_client_keyset_source,
+                title: 'Client Credentials Client Cert & Private Key Source'
+              },
               udap_client_cert_pem: {
                 name: :udap_client_credentials_flow_client_cert_pem,
                 title: 'Client Credentials Client Certificate(s) (PEM Format)'
@@ -96,6 +100,8 @@ module UDAPSecurityTestKit
       input_order :udap_registration_endpoint,
                   :udap_client_credentials_flow_registration_grant_type,
                   :udap_client_credentials_flow_client_registration_status,
+                  :udap_cert_iss_client_creds_flow,
+                  :udap_client_credentials_client_keyset_source,
                   :udap_client_credentials_flow_client_cert_pem,
                   :udap_client_credentials_flow_client_private_key,
                   :udap_cert_iss_client_creds_flow,

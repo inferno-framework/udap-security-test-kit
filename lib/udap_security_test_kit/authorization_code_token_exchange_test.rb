@@ -23,6 +23,27 @@ module UDAPSecurityTestKit
           title: 'Token Endpoint',
           description: 'The full URL from which Inferno will request an access token'
 
+    input :udap_auth_code_flow_client_keyset_source,
+          title: 'X.509 Client Certificate and Private Key Source',
+          type: 'radio',
+          options: {
+            list_options: [
+              {
+                label: 'Provide Custom Cert(s) and Private Key',
+                value: 'Custom'
+              },
+              {
+                label: 'SureFhir Test Client Cert and Private Key',
+                value: 'SureFhir'
+              },
+              {
+                label: 'EMR Direct Test Client Cert and Private Key',
+                value: 'EMRDirect'
+              }
+            ]
+          },
+          default: 'Custom'
+
     input :udap_auth_code_flow_client_cert_pem,
           title: 'X.509 Client Certificate (PEM Format)',
           type: 'textarea',
@@ -32,12 +53,14 @@ module UDAPSecurityTestKit
             represent the client entity Inferno registered as,
             and the trust chain that will be built from the provided certificate(s) must resolve to a CA trusted by the
             authorization server under test.
-          )
+          ),
+          optional: true
 
     input :udap_auth_code_flow_client_private_key,
           type: 'textarea',
           title: 'Client Private Key (PEM Format)',
-          description: 'The private key corresponding to the X.509 client certificate'
+          description: 'The private key corresponding to the X.509 client certificate',
+          optional: true
 
     input :udap_jwt_signing_alg,
           title: 'JWT Signing Algorithm',
@@ -69,14 +92,46 @@ module UDAPSecurityTestKit
         nil
       )
 
-      x5c_certs = UDAPJWTBuilder.split_user_input_cert_string(udap_auth_code_flow_client_cert_pem)
+      if udap_auth_code_flow_client_keyset_source == 'Custom'
+        x5c_certs = UDAPSecurityTestKit::UDAPJWTBuilder.split_user_input_cert_string(
+          udap_auth_code_flow_client_cert_pem
+        )
+        client_assertion_jwt = UDAPSecurityTestKit::UDAPJWTBuilder.encode_jwt_with_x5c_header(
+          client_assertion_payload,
+          udap_auth_code_flow_client_private_key_pem,
+          udap_jwt_signing_alg,
+          x5c_certs
+        )
+      elsif udap_auth_code_flow_client_keyset_source == 'SureFhir'
+        cert = DefaultCertFileLoader.load_specified_client_cert('SureFhir')
+        x5c_certs = [cert.to_pem]
+        private_key = DefaultCertFileLoader.load_specified_private_key('SureFhir')
+        client_assertion_jwt = UDAPSecurityTestKit::UDAPJWTBuilder.encode_jwt_with_x5c_header_no_string_pkey(
+          client_assertion_payload,
+          private_key,
+          udap_jwt_signing_alg,
+          x5c_certs
+        )
+      elsif udap_auth_code_flow_client_keyset_source == 'EMRDirect'
+        cert = DefaultCertFileLoader.load_specified_client_cert('EMRDirect')
+        x5c_certs = [cert.to_pem]
+        private_key = DefaultCertFileLoader.load_specified_private_key('EMRDirect')
+        client_assertion_jwt = UDAPSecurityTestKit::UDAPJWTBuilder.encode_jwt_with_x5c_header_no_string_pkey(
+          client_assertion_payload,
+          private_key,
+          udap_jwt_signing_alg,
+          x5c_certs
+        )
+      end
 
-      client_assertion_jwt = UDAPJWTBuilder.encode_jwt_with_x5c_header(
-        client_assertion_payload,
-        udap_auth_code_flow_client_private_key,
-        udap_jwt_signing_alg,
-        x5c_certs
-      )
+      # x5c_certs = UDAPJWTBuilder.split_user_input_cert_string(udap_auth_code_flow_client_cert_pem)
+
+      # client_assertion_jwt = UDAPJWTBuilder.encode_jwt_with_x5c_header(
+      #   client_assertion_payload,
+      #   udap_auth_code_flow_client_private_key,
+      #   udap_jwt_signing_alg,
+      #   x5c_certs
+      # )
 
       token_exchange_headers, token_exchange_body =
         UDAPRequestBuilder.build_token_exchange_request(

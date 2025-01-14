@@ -1,5 +1,6 @@
 require_relative 'software_statement_builder'
 require_relative 'udap_jwt_builder'
+require_relative 'default_cert_file_loader'
 
 module UDAPSecurityTestKit
   class RegistrationSuccessTest < Inferno::Test
@@ -23,6 +24,7 @@ module UDAPSecurityTestKit
       In this case, the test will require either a 201 or 200 response code to pass.
     )
 
+    input :udap_client_keyset_source
     input :udap_client_cert_pem
     input :udap_client_private_key_pem
     input :udap_cert_iss
@@ -49,16 +51,52 @@ module UDAPSecurityTestKit
 
       output udap_software_statement_json: software_statement_payload.to_json
 
-      x5c_certs = UDAPSecurityTestKit::UDAPJWTBuilder.split_user_input_cert_string(
-        udap_client_cert_pem
-      )
+      if udap_client_keyset_source == 'Custom'
+        x5c_certs = UDAPSecurityTestKit::UDAPJWTBuilder.split_user_input_cert_string(
+          udap_client_cert_pem
+        )
+        signed_jwt = UDAPSecurityTestKit::UDAPJWTBuilder.encode_jwt_with_x5c_header(
+          software_statement_payload,
+          udap_client_private_key_pem,
+          udap_jwt_signing_alg,
+          x5c_certs
+        )
+      elsif udap_client_keyset_source == 'SureFhir'
+        cert = DefaultCertFileLoader.load_specified_client_cert('SureFhir')
+        x5c_certs = [cert.to_pem]
+        private_key = DefaultCertFileLoader.load_specified_private_key('SureFhir')
+        signed_jwt = UDAPSecurityTestKit::UDAPJWTBuilder.encode_jwt_with_x5c_header_no_string_pkey(
+          software_statement_payload,
+          private_key,
+          udap_jwt_signing_alg,
+          x5c_certs
+        )
+      elsif udap_client_keyset_source == 'EMRDirect'
+        cert = DefaultCertFileLoader.load_specified_client_cert('EMRDirect')
+        x5c_certs = [cert.to_pem]
+        private_key = DefaultCertFileLoader.load_specified_private_key('EMRDirect')
+        signed_jwt = UDAPSecurityTestKit::UDAPJWTBuilder.encode_jwt_with_x5c_header_no_string_pkey(
+          software_statement_payload,
+          private_key,
+          udap_jwt_signing_alg,
+          x5c_certs
+        )
+      end
 
-      signed_jwt = UDAPSecurityTestKit::UDAPJWTBuilder.encode_jwt_with_x5c_header(
-        software_statement_payload,
-        udap_client_private_key_pem,
-        udap_jwt_signing_alg,
-        x5c_certs
-      )
+      # signed_jwt = UDAPSecurityTestKit::UDAPJWTBuilder.encode_jwt_with_x5c_header(
+      #   software_statement_payload,
+      #   udap_client_private_key_pem,
+      #   udap_jwt_signing_alg,
+      #   x5c_certs
+      # )
+
+      # private_key = DefaultCertFileLoader.load_specified_private_key('EMRDirect')
+      # signed_jwt = UDAPSecurityTestKit::UDAPJWTBuilder.encode_jwt_with_x5c_header_no_string_pkey(
+      #   software_statement_payload,
+      #   private_key,
+      #   udap_jwt_signing_alg,
+      #   [cert.to_pem]
+      # )
 
       output udap_software_statement_jwt: signed_jwt
 

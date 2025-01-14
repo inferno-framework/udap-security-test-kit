@@ -77,6 +77,27 @@ module UDAPSecurityTestKit
           },
           default: 'new'
 
+    input :udap_client_keyset_source,
+          title: 'X.509 Client Certificate and Private Key Source',
+          type: 'radio',
+          options: {
+            list_options: [
+              {
+                label: 'Provide Custom Cert(s) and Private Key',
+                value: 'Custom'
+              },
+              {
+                label: 'SureFhir Test Client Cert and Private Key',
+                value: 'SureFhir'
+              },
+              {
+                label: 'EMR Direct Test Client Cert and Private Key',
+                value: 'EMRDirect'
+              }
+            ]
+          },
+          default: 'Custom'
+
     input :udap_client_cert_pem,
           title: 'X.509 Client Certificate(s) (PEM Format)',
           description: %(
@@ -86,7 +107,7 @@ module UDAPSecurityTestKit
             authorization server under test.
           ),
           type: 'textarea',
-          optional: false
+          optional: true
 
     input :udap_client_private_key_pem,
           title: 'Client Private Key (PEM Format)',
@@ -95,7 +116,7 @@ module UDAPSecurityTestKit
           registration and/or authentication JWTs.
           ),
           type: 'textarea',
-          optional: false
+          optional: true
 
     input :udap_cert_iss,
           title: 'JWT Issuer (iss) Claim',

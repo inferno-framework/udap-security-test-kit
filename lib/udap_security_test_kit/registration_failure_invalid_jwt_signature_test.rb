@@ -26,6 +26,7 @@ module UDAPSecurityTestKit
       describing the error in the response body.
     )
 
+    input :udap_client_keyset_source
     input :udap_client_cert_pem
     input :udap_cert_iss
 
@@ -44,9 +45,20 @@ module UDAPSecurityTestKit
         udap_registration_requested_scope
       )
 
-      x5c_certs = UDAPSecurityTestKit::UDAPJWTBuilder.split_user_input_cert_string(
-        udap_client_cert_pem
-      )
+      # x5c_certs = UDAPSecurityTestKit::UDAPJWTBuilder.split_user_input_cert_string(
+      #   udap_client_cert_pem
+      # )
+      if udap_client_keyset_source == 'Custom'
+        x5c_certs = UDAPSecurityTestKit::UDAPJWTBuilder.split_user_input_cert_string(
+          udap_client_cert_pem
+        )
+      elsif udap_client_keyset_source == 'SureFhir'
+        cert = DefaultCertFileLoader.load_specified_client_cert('SureFhir')
+        x5c_certs = [cert.to_pem]
+      elsif udap_client_keyset_source == 'EMRDirect'
+        cert = DefaultCertFileLoader.load_specified_client_cert('EMRDirect')
+        x5c_certs = [cert.to_pem]
+      end
 
       random_private_key = OpenSSL::PKey::RSA.generate 2048
       signed_jwt = UDAPSecurityTestKit::UDAPJWTBuilder.encode_jwt_with_x5c_header(

@@ -175,19 +175,7 @@
     },
     {
       "name": "udap_authorization_code_request_aud",
-      "value": "include_aud",
-      "_title": "Audience ('aud') Parameter for Authorization Request",
-      "_description": "\n              If selected, the Base FHIR URL will be used as the 'aud' parameter in the request to the authorization\n              endpoint.\n          ",
-      "_type": "checkbox",
-      "_optional": true,
-      "_options": {
-        "list_options": [
-          {
-            "label": "Include 'aud' parameter",
-            "value": "include_aud"
-          }
-        ]
-      }
+      "value": ["include_aud"]
     },
     {
       "name": "flow_type_client_creds",

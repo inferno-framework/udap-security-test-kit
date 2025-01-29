@@ -1,6 +1,5 @@
 require_relative 'udap_security_test_kit/authorization_code_group'
 require_relative 'udap_security_test_kit/client_credentials_group'
-require_relative 'udap_security_test_kit/version'
 require_relative 'udap_security_test_kit/redirect_uri'
 require_relative 'udap_security_test_kit/metadata'
 

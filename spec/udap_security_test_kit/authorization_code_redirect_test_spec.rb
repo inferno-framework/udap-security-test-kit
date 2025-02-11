@@ -12,7 +12,7 @@ RSpec.describe UDAPSecurityTestKit::AuthorizationCodeRedirectTest, :request do
     {
       udap_fhir_base_url: url,
       udap_authorization_endpoint: 'http://example.com/authorize',
-      udap_client_id: 'CLIENT_ID'
+      udap_authorization_code_flow_client_id: 'CLIENT_ID'
     }
   end
 

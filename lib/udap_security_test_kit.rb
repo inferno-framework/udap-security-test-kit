@@ -51,12 +51,6 @@ module UDAPSecurityTestKit
       entries on `grant_type` and `iss` claims for more details.
     )
 
-    # cert_file = File.read(File.join(File.dirname(__FILE__), 'udap_security_test_kit/certs/InfernoCA.pem'))
-
-    # cert_file_route_handler = proc { [200, { 'Content-Type' => 'application/x-pem-file' }, [cert_file]] }
-
-    # route(:get, '/inferno_ca.pem', cert_file_route_handler)
-
     resume_test_route :get, '/redirect' do |request|
       request.query_parameters['state']
     end

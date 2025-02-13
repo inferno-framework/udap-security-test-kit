@@ -1,0 +1,272 @@
+{
+  "title": "Demo: SureFhir Certs + IdentityMatching Server",
+  "id": null,
+  "test_suite_id": "udap_security",
+  "inputs": [
+    {
+      "name": "udap_fhir_base_url",
+      "value": "https://identity-matching.fast.hl7.org/fhir",
+      "_title": "FHIR Server Base URL",
+      "_description": "Base FHIR URL of FHIR Server. Discovery request will be sent to {baseURL}/.well-known/udap",
+      "_type": "text"
+    },
+    {
+      "name": "udap_community_parameter",
+      "value": "udap://stage.healthtogo.me/",
+      "_title": "UDAP Community Parameter",
+      "_description": "If included, the designated community value will be appended as a query to the well-known\n          endpoint to indicate the client's trust of certificates from this trust community.",
+      "_type": "text",
+      "_optional": true
+    },
+    {
+      "name": "flow_type_auth_code",
+      "value": [
+        "authorization_code"
+      ],
+      "_title": "Required OAuth2.0 Flow Type for Authorization Code Workflow",
+      "_description": "Which grant type(s) must be supported per the returned Discovery metadata",
+      "_type": "checkbox",
+      "_optional": false,
+      "_options": {
+        "list_options": [
+          {
+            "label": "Authorization Code",
+            "value": "authorization_code"
+          },
+          {
+            "label": "Client Credentials",
+            "value": "client_credentials"
+          }
+        ]
+      },
+      "_locked": true
+    },
+    {
+      "name": "udap_server_trust_anchor_certs",
+      "value": "-----BEGIN CERTIFICATE-----\nMIIF4DCCA8igAwIBAgIIC7cAbiIvVFwwDQYJKoZIhvcNAQELBQAwgZgxCzAJBgNV\nBAYTAlVTMQswCQYDVQQIEwJDQTESMBAGA1UEBxMJU2FuIERpZWdvMRMwEQYDVQQK\nEwpFTVIgRGlyZWN0MTYwNAYDVQQLEy1DZXJ0aWZpY2F0aW9uIEF1dGhvcml0eSAo\nY2VydHMuZW1yZGlyZWN0LmNvbSkxGzAZBgNVBAMTEkVNUiBEaXJlY3QgVGVzdCBD\nQTAeFw0xNDA0MjQxNjI5MjBaFw0yOTA0MjQxNjI5MjBaMIGzMQswCQYDVQQGEwJV\nUzETMBEGA1UECAwKQ2FsaWZvcm5pYTESMBAGA1UEBwwJU2FuIERpZWdvMRMwEQYD\nVQQKDApFTVIgRGlyZWN0MT8wPQYDVQQLDDZUZXN0IFBLSSBDZXJ0aWZpY2F0aW9u\nIEF1dGhvcml0eSAoY2VydHMuZW1yZGlyZWN0LmNvbSkxJTAjBgNVBAMMHEVNUiBE\naXJlY3QgVGVzdCBDbGllbnQgU3ViQ0EwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAw\nggEKAoIBAQCPwkP36KVBwdb9dNsKAhqEoVtMEdL4Ee01tB7y6gIINi3ZGbqhw/lF\nJjRS/fi+SqN8SkjZMkLl6ET9aTM5W+y7aXl+3iqn+dKsesS+kinTAfD4cSI2R4WK\n5HBomEf+PR3scewFKMBbguYW2I42tKPLMwI6L+kMRlQhI3sK4Fyj6M6gUqPaKlx7\nsGPQ/qr8PLwU3doCrC65avSmuC+y5jpbCkJ1kk+g4DLcO+TXx8oC2aVrMRFdD+lx\nNiShdlo5hzhiIGUZmyVe08vLTLB9LGCHz1w9+oqteco4aerYbOlZQxe9d0f7xlZa\nhj7DDfmkqLEFKRQXOJFQtcdCFp3XrXbDAgMBAAGjggEPMIIBCzBQBggrBgEFBQcB\nAQREMEIwQAYIKwYBBQUHMAKGNGh0dHA6Ly9jZXJ0cy5lbXJkaXJlY3QuY29tL2Nl\ncnRzL0VNUkRpcmVjdFRlc3RDQS5jcnQwHQYDVR0OBBYEFKOVbWu9K1HN4c/lkG/X\nJk+/3T7eMA8GA1UdEwEB/wQFMAMBAf8wHwYDVR0jBBgwFoAUMdaEL0mYbgAB0Geh\n+J4csG+noqwwEQYDVR0gBAowCDAGBgRVHSAAMEMGA1UdHwQ8MDowOKA2oDSGMmh0\ndHA6Ly9jZXJ0cy5lbXJkaXJlY3QuY29tL2NybC9FTVJEaXJlY3RUZXN0Q0EuY3Js\nMA4GA1UdDwEB/wQEAwIBhjANBgkqhkiG9w0BAQsFAAOCAgEAKAjGzW0AEdMKRjKx\niEzS5SQqmHmAYmajowd38wac4udD3TMvf3tHMZfkGy3ulZSQ40LyjXa60s9/5508\nbwFGHBejyfo1vnc2FJA/0KcmlKzhwhmpe7QoZ1T7uWwG+Y98TRzL7wF8mzCUT+Fe\nMFP35xL3IIJ3CKzIkC9Wv+6kSgkobNoAJyUECbVtmxJer2/LmzfXsYI0NQ3QmeZL\npYoo4EOmIXpoWUSeZHh3av3guoy16s+bs5UuFQ2NfJeuD1n+uQBaNRchR3DxshEK\n66RiKu+QjdBrq0aoTXIT2MYKGiVEbYQlJuDuxilXLYlcYTcDpPIS7hh95bmAxRho\nwgbr3E3dsNgvMuANlgUJno5vyMr9P5zu+kDbJ8nB2fm5/LjXLmNvOy+rj8jCLbuP\nGS/vWxfvi21l4Xfmphi6skeq6JyIUPAm/U6bkR8LF5+/aVoIXUvkRHqbyBzDDDWc\n4+LjI4+INFK+Lxj/cwvh398Ko4LCA0KenJDBFN0Je/rz92uK867sgcQ7dreOK8pf\ngqWulL9H4kCkoZZF4367x2SQVQPWPExefQrpPwk6AlJTHocFqm1TUvmjTwCxmXWr\nztkq2GRxsmT6/2n5TrmHabl6cXDKtmnhS3k9FGFA556YowwJSEm9pKexguxqcyrg\nPPKM/j6ERtHoHDSMKT0frOoawoY=\n-----END CERTIFICATE-----\n-----BEGIN CERTIFICATE-----\nMIIGZjCCBE6gAwIBAgIBATANBgkqhkiG9w0BAQsFADCBmDELMAkGA1UEBhMCVVMx\nCzAJBgNVBAgTAkNBMRIwEAYDVQQHEwlTYW4gRGllZ28xEzARBgNVBAoTCkVNUiBE\naXJlY3QxNjA0BgNVBAsTLUNlcnRpZmljYXRpb24gQXV0aG9yaXR5IChjZXJ0cy5l\nbXJkaXJlY3QuY29tKTEbMBkGA1UEAxMSRU1SIERpcmVjdCBUZXN0IENBMB4XDTEy\nMDkwNjA0MzEzNloXDTMyMDkwNjA0MzEzNlowgZgxCzAJBgNVBAYTAlVTMQswCQYD\nVQQIEwJDQTESMBAGA1UEBxMJU2FuIERpZWdvMRMwEQYDVQQKEwpFTVIgRGlyZWN0\nMTYwNAYDVQQLEy1DZXJ0aWZpY2F0aW9uIEF1dGhvcml0eSAoY2VydHMuZW1yZGly\nZWN0LmNvbSkxGzAZBgNVBAMTEkVNUiBEaXJlY3QgVGVzdCBDQTCCAiIwDQYJKoZI\nhvcNAQEBBQADggIPADCCAgoCggIBALugk56Hoot6yEEohbRQdQP6sMTCzXOSgxHr\neYI4h00EhMb8x8VzD/ZCEdgmrwa6y1WE7WaPdTcX/jCd0GNUwgqPz7sLP2NeTA9k\ngn/m0kXvxIgzaEhJntdqdvzHqlhtIMAURAu9erAfMn0giK7zwtSg5bYwC09tyv4d\nRIAX9UuvOpOqJnQk9DRRd64+9EKkX9Zj1lqT0/Wjr0w3jcGYN02dB03T4WARZEug\nzkBzPcmYPLhl09gRrgQg8msgTQi68vR+UKNUoQhRJAkk/CAqkMT8Uzuae/W7utYk\n4/vmiJEHoC7OV7yGa7VrD0HhjDzfs53kdnnzlo6MB+6oGFtIKaMF4D8GVSr+MY/p\na+C2dkqf4y3Pr3hqM3t4vgmr/eg0dhzh9+z4lpEZz9ciWcOXwjmxec3OFanvMOeG\n4OhKRiGIj/mVkDEWlC3tcdP22DtGk/RHGOJHkf6qKFxeNDOFHUdTpiXldAl3cUg9\nBNAlUnWHFwim+byxxVYzmXs/8KfLfOp6xIFjI/eddNE7/avQWoEkOapgUDfaixWi\nI1d40QGKJr0d1Yo+W5VxzzufJp5iC/4EmlYzaK9+dVOtfQGfNWaXmfYa8H7krcrW\ncvp0ando4Reh3a+qpybvBVyRJree1WODQHqs7J2lx9quyVfI3Box3uc/Hw2xxdjx\nV3cUsvd5AgMBAAGjgbgwgbUwDwYDVR0TAQH/BAUwAwEB/zAOBgNVHQ8BAf8EBAMC\nAQYwHQYDVR0OBBYEFDHWhC9JmG4AAdBnofieHLBvp6KsMB8GA1UdIwQYMBaAFDHW\nhC9JmG4AAdBnofieHLBvp6KsMD8GA1UdHwQ4MDYwNKAyoDCGLmh0dHA6Ly9jZXJ0\ncy5lbXJkaXJlY3QuY29tL0VNUkRpcmVjdFRlc3RDQS5jcmwwEQYDVR0gBAowCDAG\nBgRVHSAAMA0GCSqGSIb3DQEBCwUAA4ICAQBsXbY8B7FcIskyeB/CGEI77GaDMDfK\nWGseJJYlJYz2FeIJgPtqdPhzn0jhQUVcwr//gC5j1aARlussG3gMr8OajpSpOqqf\nXEjzuITeq+Hxsp+ursiJXOZKhurY5NJKZ30ulFDxOZ97bWVUYPTfyy1qUrsqnNlW\n8LJcCnNzZ2uDSJn32FugUtWe0EEgRM10/8Q2IJXLuIhEQLbwl6q7PcDiPkT/yVh/\n9L6ul2bO/ZXp7DeSPeOafWOuCoTNbKxgBuljajm2VNB5+Xx/rSuPnoTRhsaXhke+\nnb3ZbGHJ2ZRu/Q45+OB1ws7VednMci25OVo+yVpH8tl2KF9u1JVNtf5mY3//HEwR\n8OfPPRZeQCqquESVrQjZILa6Ot7lVIhoNI6zkZAp3TaWYBi94upVkeA9uqVIC7cB\npiOz+6XXRDdJDMuh6xsA2tq2E5BY51H5pfskXBBGgHxDQ56R3RskZ7q/NaKSiqBA\nInueG7TVW+dR++rT2n9wkzJHKpA+YS0zHodvIoB71KNq1P/9choCMcBrNph5n32C\n8DpOlF+hi3kOkwjwchfkzC5XS+Zio5VYOyCV1C+CYJ7sw1psk1yYAWPm9rnUmfrm\nO27HXv6lW0Z9EpeUu++52CSYjZsx3E4J1FR0TulzsD8BQtFRL6aPfuSg85okOsxw\nb/p0AdITxRO0vQ==\n-----END CERTIFICATE-----",
+      "_title": "Auth Server Trust Anchor X509 Certificate(s) (PEM Format)",
+      "_description": "\n            A list of one or more trust anchor root CA X.509 certificates, separated by a newline. Inferno will use\n            these to establish\n            trust with the authorization server's certificates provided in the discovery response signed_metadata JWT.\n          ",
+      "_type": "textarea",
+      "_optional": true
+    },
+    {
+      "name": "udap_auth_code_flow_registration_grant_type",
+      "value": "authorization_code",
+      "_title": "Client Registration Grant Type",
+      "_description": "\n            The OAuth2.0 grant type for which this client will register itself. A given client may register as either\n             option, but not both.\n          ",
+      "_type": "radio",
+      "_options": {
+        "list_options": [
+          {
+            "label": "Authorization Code",
+            "value": "authorization_code"
+          },
+          {
+            "label": "Client Credentials",
+            "value": "client_credentials"
+          }
+        ]
+      },
+      "_locked": true
+    },
+    {
+      "name": "udap_auth_code_flow_client_registration_status",
+      "value": "update",
+      "_title": "Client Registration Status",
+      "_description": "\n            If the client's iss and certificate combination has already been registered with the authorization server\n            prior to this test run, select 'Update'.\n          ",
+      "_type": "radio",
+      "_options": {
+        "list_options": [
+          {
+            "label": "New Registration (201 Response Code Expected)",
+            "value": "new"
+          },
+          {
+            "label": "Update Registration (200 or 201 Response Code Expected)",
+            "value": "update"
+          }
+        ]
+      }
+    },
+    {
+      "name": "udap_auth_code_flow_client_cert_pem",
+      "value": "-----BEGIN CERTIFICATE-----\nMIIF7jCCA9agAwIBAgIRANwIl2YXy2fVCASfkpDCJvMwDQYJKoZIhvcNAQELBQAw\nfjELMAkGA1UEBhMCVVMxDzANBgNVBAgTBk9yZWdvbjERMA8GA1UEBxMIUG9ydGxh\nbmQxFDASBgNVBAoTC0ZoaXIgQ29kaW5nMRUwEwYDVQQLEwxJbnRlcm1lZGlhdGUx\nHjAcBgNVBAMTFVN1cmVGaGlyLUludGVybWVkaWF0ZTAeFw0yNTAyMDMyMDU3MDZa\nFw0yNzAyMDMyMDU3MDZaMH4xCzAJBgNVBAYTAlVTMQ8wDQYDVQQIDAZPcmVnb24x\nETAPBgNVBAcMCFBvcnRsYW5kMRQwEgYDVQQKDAtGaGlyIENvZGluZzENMAsGA1UE\nCwwEVURBUDEmMCQGA1UEAwwdaHR0cHM6Ly9pbmZlcm5vLmhlYWx0aGl0Lmdvdi8w\nggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDy2kOxArrYZ2XKajkDouih\naTHHhFEI9pMdlpDkp9sYXnZRiNoQwFQ08svjrYNNzJtDFE1HNxKLzv3Ubrg2Ty7E\nEQ26kKC0ChO6oobtkXxEFGT5ynVY9WPockHQClWD00F85Sr5+ftqUBP2rBiDHuWD\n0kNmTjqEnq5G0G4mYr85V1euY/9c3Apubz5BGy1J51AI0043vV/h4baIH2hyEl5R\nEvu5XwjvAgOv6qk0+xDCTBXKxUDeOZjBelxLHxpaCs1y7uiw4Ob/r57QvHgWyerv\nofuCqyBR5mz4aZSdmREkXh2amp9uqA5zEfxrfjkMz1D6wJ43jXANNdp8GgABIOvH\nAgMBAAGjggFlMIIBYTAMBgNVHRMBAf8EAjAAMA4GA1UdDwEB/wQEAwIHgDAdBgNV\nHQ4EFgQUDbOUKAfjcENPuV+fTYDkz+TFA/AwHwYDVR0jBBgwFoAUffrWFW01n6A5\nGTggnyqUp2pxKZMwTQYDVR0fBEYwRDBCoECgPoY8aHR0cDovL2NybC5maGlyY2Vy\ndHMubmV0L2NybC9zdXJlZmhpcmxhYnNJbnRlcm1lZGlhdGVDcmwuY3JsMEoGA1Ud\nEQRDMEGGHWh0dHBzOi8vaW5mZXJuby5oZWFsdGhpdC5nb3YvhiBodHRwczovL2lu\nZmVybm8tcWEuaGVhbHRoaXQuZ292LzBmBggrBgEFBQcBAQRaMFgwVgYIKwYBBQUH\nMAKGSmh0dHA6Ly9jcmwuZmhpcmNlcnRzLm5ldC9jZXJ0cy9pbnRlcm1lZGlhdGVz\nL1N1cmVGaGlyTGFic19JbnRlcm1lZGlhdGUuY2VyMA0GCSqGSIb3DQEBCwUAA4IC\nAQC4PtCfyOouoNmNBtT7sTyv5jMXtgv+kfu9ySepV9KbpOUceQEs9qbrCf3vmn4c\n4T4VGgXtoGHc2GmqdkWFmj37uqfjfR5dQ05SmYprvrI0he5Fe3f3FxzyBhEns69g\nIUay/hMWKLemati0MQ2HOZnY3SusF6qqCYTPYEWeV9sPNDNdgsIq47gPrZsnOlsQ\n6SyFmnmid4K8mJblxZBGpfpIfW6UaluId9WZeRhY39rhKXoxFc08alBfI6WEtTPG\nI6T+azyaVtDm+ypo18d94oLI7rmr/67xEwDFUNrJ2lotueI0Fr3IA2BHNw1BdrX/\nnXr/RRCENdsRnAJ+fhWYVjDCBdqmjF1b386lBWyJSuWlh6CbcEXFDxBN0LPzyWEj\nqIENKnWCWG8QoregV3K0gu1WiHhtNdaDdBAy79sbQ+5i86jMcyjJ0bC16kLz+jeo\nqDBx0oNdH4YVum/Uscyp/bwxznQ7eAg1oyCAeywlQ3eZKTB4Ki3rhfDDnuzDdh4X\nqS7H0/euzP7VIpTy/8QRrgTXCrFubRqZY0axoPDWG6ZrXtxAillVOoUVn6ucrvxf\nLE2BtQRVgNnw58QbP1bNZei5intokoy3V/3+1/En2/HlEv/HZloooUwkbuxkQE97\nb/b3yodmo1lF1qq+zfd6zzk9ERxC+2X9c2g2VCP5LcpJJQ==\n-----END CERTIFICATE-----\n-----BEGIN CERTIFICATE-----\n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\ng+IojrfmcIE=\n-----END CERTIFICATE-----\n-----BEGIN CERTIFICATE-----\n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\n-----END CERTIFICATE-----",
+      "_title": "Authorization Code Client Certificate(s) (PEM Format)",
+      "_description": "\n            A list of one or more X.509 certificates in PEM format separated by a newline. The first (leaf) certificate\n            MUST represent the client entity Inferno will register as,\n            and the trust chain that will be built from the provided certificate(s) must resolve to a CA trusted by the\n            authorization server under test.\n          ",
+      "_type": "textarea",
+      "_optional": false
+    },
+    {
+      "name": "udap_auth_code_flow_client_private_key",
+      "value": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDy2kOxArrYZ2XK\najkDouihaTHHhFEI9pMdlpDkp9sYXnZRiNoQwFQ08svjrYNNzJtDFE1HNxKLzv3U\nbrg2Ty7EEQ26kKC0ChO6oobtkXxEFGT5ynVY9WPockHQClWD00F85Sr5+ftqUBP2\nrBiDHuWD0kNmTjqEnq5G0G4mYr85V1euY/9c3Apubz5BGy1J51AI0043vV/h4baI\nH2hyEl5REvu5XwjvAgOv6qk0+xDCTBXKxUDeOZjBelxLHxpaCs1y7uiw4Ob/r57Q\nvHgWyervofuCqyBR5mz4aZSdmREkXh2amp9uqA5zEfxrfjkMz1D6wJ43jXANNdp8\nGgABIOvHAgMBAAECggEARNiRhhXjCERPvBFe9mPxlQiwXwJowqS8UhAEJX5cg00M\nN9MXFtafSJ9oI7Rl2+FcRqjzu3OmY1Ib7WQx/tt1w4meHbywgjm1HBzFKYYr91Tc\nx1+Y4s42M4holeTIF2YFU7XX+CPhHWN0NWLWVB2nLTanetJEjqI5f8PI5kLqOQO3\nbApR7DRGjQAKTM3ozC9ycwVUlQcOagG5VeO0pvExmj3LP1MZ/smrgnEZe+BlqRIe\nnmFfO8XR4r+G2Y8g6z6SC/C8CCHlLrBtzqRp655cKgwnYatDMIViVTngqSx+XmIa\n5a6j0RRE9H30h4E2qbxggjInArd8Qxg+XyebKWD2UQKBgQD7hjyNvvcXEXDCZGJD\nrOx0IsAwFxw98MPnaUjUJWoXXqAgKe5goAgKIyGxvdvJkx8axlORtf1dndBLd4v+\n51upncgNN0lw7XtZeYyKkLzoMQvKHuTZKxSrxWnd5r+/VxioOfxMf1PQav8oTUgF\nf8BDkdmWwZzT+6/bwP5f9cA9TwKBgQD3LIaMBh2uoTu6M1WOxFfYPagyuN1hzoBv\nNc6mHtuqULEJGSgGIZfSqgB7t2qn0t+L/jrZX8AIJjGoF1OGOuZnTSRuvymt+m1P\nH2gjbTeaxr1OO0v2tnws4zAieqV2MaGKKLkzLZvkgz7Ihga3dUMNCysp11KwV9gu\nKp8kL2v8CQKBgQCSnI+FbC/pQWBB33Or0QtPMsZmAcKTlFkM9cDe8CQkFSMvPGHX\n7tBg4FOOoIWRvPEfkUU7JSLXw9qbcsamwcMbXn4yvexQKA2DfSdfybhje9tMaK+q\nqsL00TDBiPRyGtmjjZE0IfAAB65NlqaJlgrDGCwGBTteEVJTvO5Jjx0MXwKBgQCb\nkkHJJhxOiprOMns6Vag4qW4RJrvoUJIT7Rj5A9kclJco89V2LnShmnCdba9Km/Yp\n5cTihlqWhnugobXneXEFOc+hiN5R65obP9hK2/Ywi8Ag2j+QtADqO8BTI0C7aLeU\n/ta6OI2zQUwl5/2YQM0IC6yKNEWOSmv9esQZgWOFCQKBgG0KqReVpgyWsru2echQ\nj3UGbgftBQtEssSr5Zd7ZymrIUa0na2X4c3qmAEjD5aT1RrU0xvOvOz0Ib3RS77U\nEkDFFGHsOMdo21gx+L14dJtevBtiOs4+ka18YvLxBv7L+EtJjs96rb+2vTC+hPOn\nPt+YtETr5wLxaKTolgnN3Xok\n-----END PRIVATE KEY-----",
+      "_title": "Authorization Code Client Private Key (PEM Format)",
+      "_description": "\n          The private key corresponding to the client certificate used for registration, in PEM format.  Used to sign\n          registration and/or authentication JWTs.\n          ",
+      "_type": "textarea",
+      "_optional": false
+    },
+    {
+      "name": "udap_auth_code_flow_cert_iss",
+      "value": "https://inferno.healthit.gov/",
+      "_title": "Authorization Code JWT Issuer (iss) Claim",
+      "_description": "\n            MUST correspond to a unique URI entry in the Subject Alternative Name (SAN) extension of the client\n            certificate used for registration.\n          ",
+      "_type": "text",
+      "_optional": false
+    },
+    {
+      "name": "udap_auth_code_flow_registration_scope",
+      "value": "patient/*.r",
+      "_title": "Authorization Code Registration Requested Scope(s)",
+      "_description": "\n                  String containing a space delimited list of scopes requested by the client application for use in\n                  subsequent requests. The Authorization Server MAY consider this list when deciding the scopes that it\n                  will allow the application to subsequently request. Apps requesting the \"authorization_code\" grant\n                  type SHOULD request user or patient scopes.\n                ",
+      "_type": "text"
+    },
+    {
+      "name": "udap_jwt_signing_alg",
+      "value": "RS256",
+      "_title": "JWT Signing Algorithm",
+      "_description": "\n            Algorithm used to sign UDAP JSON Web Tokens (JWTs). UDAP Implementations SHALL support\n            RS256.\n            ",
+      "_type": "radio",
+      "_options": {
+        "list_options": [
+          {
+            "label": "RS256",
+            "value": "RS256"
+          }
+        ]
+      },
+      "_locked": true
+    },
+    {
+      "name": "udap_auth_code_flow_registration_certifications",
+      "value": null,
+      "_title": "Authorization Code UDAP Registration Certifications",
+      "_description": "\n            Additional UDAP certifications to include in registration request, if required by the authorization server.\n             Include a space separated list of strings representing a Base64-encoded, signed JWT.\n            ",
+      "_type": "textarea",
+      "_optional": true
+    },
+    {
+      "name": "udap_authorization_code_request_scopes",
+      "value": "patient/AllergyIntolerance.r patient/Condition.r",
+      "_title": "Scope Parameter for Authorization Request",
+      "_description": "\n              A list of space-separated scopes to include in the authorization request. If included, these may be equal\n              to or a subset of the scopes requested during registration.\n              If empty, scope will be omitted as a parameter to the authorization endpoint.\n          ",
+      "_type": "text",
+      "_optional": true
+    },
+    {
+      "name": "udap_authorization_code_request_aud",
+      "value": ["include_aud"],
+      "_title": "Audience ('aud') Parameter for Authorization Request",
+      "_description": "\n              If selected, the Base FHIR URL will be used as the 'aud' parameter in the request to the authorization\n              endpoint.\n          ",
+      "_type": "checkbox",
+      "_optional": true,
+      "_options": {
+        "list_options": [
+          {
+            "label": "Include 'aud' parameter",
+            "value": "include_aud"
+          }
+        ]
+      }
+    },
+    {
+      "name": "flow_type_client_creds",
+      "value": [
+        "client_credentials"
+      ],
+      "_title": "Required OAuth2.0 Flow Type for Client Credentials Workflow",
+      "_description": "Which grant type(s) must be supported per the returned Discovery metadata",
+      "_type": "checkbox",
+      "_optional": "false",
+      "_options": {
+        "list_options": [
+          {
+            "label": "Authorization Code",
+            "value": "authorization_code"
+          },
+          {
+            "label": "Client Credentials",
+            "value": "client_credentials"
+          }
+        ]
+      },
+      "_locked": true
+    },
+    {
+      "name": "udap_client_credentials_flow_registration_grant_type",
+      "value": "client_credentials",
+      "_title": "Client Registration Grant Type",
+      "_description": "\n            The OAuth2.0 grant type for which this client will register itself. A given client may register as either\n             option, but not both.\n          ",
+      "_type": "radio",
+      "_options": {
+        "list_options": [
+          {
+            "label": "Authorization Code",
+            "value": "authorization_code"
+          },
+          {
+            "label": "Client Credentials",
+            "value": "client_credentials"
+          }
+        ]
+      },
+      "_locked": true
+    },
+    {
+      "name": "udap_client_credentials_flow_client_registration_status",
+      "value": "update",
+      "_title": "Client Registration Status",
+      "_description": "\n            If the client's iss and certificate combination has already been registered with the authorization server\n            prior to this test run, select 'Update'.\n          ",
+      "_type": "radio",
+      "_options": {
+        "list_options": [
+          {
+            "label": "New Registration (201 Response Code Expected)",
+            "value": "new"
+          },
+          {
+            "label": "Update Registration (200 or 201 Response Code Expected)",
+            "value": "update"
+          }
+        ]
+      }
+    },
+    {
+      "name": "udap_client_credentials_flow_client_cert_pem",
+      "value": "-----BEGIN CERTIFICATE-----\nMIIF7jCCA9agAwIBAgIRANwIl2YXy2fVCASfkpDCJvMwDQYJKoZIhvcNAQELBQAw\nfjELMAkGA1UEBhMCVVMxDzANBgNVBAgTBk9yZWdvbjERMA8GA1UEBxMIUG9ydGxh\nbmQxFDASBgNVBAoTC0ZoaXIgQ29kaW5nMRUwEwYDVQQLEwxJbnRlcm1lZGlhdGUx\nHjAcBgNVBAMTFVN1cmVGaGlyLUludGVybWVkaWF0ZTAeFw0yNTAyMDMyMDU3MDZa\nFw0yNzAyMDMyMDU3MDZaMH4xCzAJBgNVBAYTAlVTMQ8wDQYDVQQIDAZPcmVnb24x\nETAPBgNVBAcMCFBvcnRsYW5kMRQwEgYDVQQKDAtGaGlyIENvZGluZzENMAsGA1UE\nCwwEVURBUDEmMCQGA1UEAwwdaHR0cHM6Ly9pbmZlcm5vLmhlYWx0aGl0Lmdvdi8w\nggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDy2kOxArrYZ2XKajkDouih\naTHHhFEI9pMdlpDkp9sYXnZRiNoQwFQ08svjrYNNzJtDFE1HNxKLzv3Ubrg2Ty7E\nEQ26kKC0ChO6oobtkXxEFGT5ynVY9WPockHQClWD00F85Sr5+ftqUBP2rBiDHuWD\n0kNmTjqEnq5G0G4mYr85V1euY/9c3Apubz5BGy1J51AI0043vV/h4baIH2hyEl5R\nEvu5XwjvAgOv6qk0+xDCTBXKxUDeOZjBelxLHxpaCs1y7uiw4Ob/r57QvHgWyerv\nofuCqyBR5mz4aZSdmREkXh2amp9uqA5zEfxrfjkMz1D6wJ43jXANNdp8GgABIOvH\nAgMBAAGjggFlMIIBYTAMBgNVHRMBAf8EAjAAMA4GA1UdDwEB/wQEAwIHgDAdBgNV\nHQ4EFgQUDbOUKAfjcENPuV+fTYDkz+TFA/AwHwYDVR0jBBgwFoAUffrWFW01n6A5\nGTggnyqUp2pxKZMwTQYDVR0fBEYwRDBCoECgPoY8aHR0cDovL2NybC5maGlyY2Vy\ndHMubmV0L2NybC9zdXJlZmhpcmxhYnNJbnRlcm1lZGlhdGVDcmwuY3JsMEoGA1Ud\nEQRDMEGGHWh0dHBzOi8vaW5mZXJuby5oZWFsdGhpdC5nb3YvhiBodHRwczovL2lu\nZmVybm8tcWEuaGVhbHRoaXQuZ292LzBmBggrBgEFBQcBAQRaMFgwVgYIKwYBBQUH\nMAKGSmh0dHA6Ly9jcmwuZmhpcmNlcnRzLm5ldC9jZXJ0cy9pbnRlcm1lZGlhdGVz\nL1N1cmVGaGlyTGFic19JbnRlcm1lZGlhdGUuY2VyMA0GCSqGSIb3DQEBCwUAA4IC\nAQC4PtCfyOouoNmNBtT7sTyv5jMXtgv+kfu9ySepV9KbpOUceQEs9qbrCf3vmn4c\n4T4VGgXtoGHc2GmqdkWFmj37uqfjfR5dQ05SmYprvrI0he5Fe3f3FxzyBhEns69g\nIUay/hMWKLemati0MQ2HOZnY3SusF6qqCYTPYEWeV9sPNDNdgsIq47gPrZsnOlsQ\n6SyFmnmid4K8mJblxZBGpfpIfW6UaluId9WZeRhY39rhKXoxFc08alBfI6WEtTPG\nI6T+azyaVtDm+ypo18d94oLI7rmr/67xEwDFUNrJ2lotueI0Fr3IA2BHNw1BdrX/\nnXr/RRCENdsRnAJ+fhWYVjDCBdqmjF1b386lBWyJSuWlh6CbcEXFDxBN0LPzyWEj\nqIENKnWCWG8QoregV3K0gu1WiHhtNdaDdBAy79sbQ+5i86jMcyjJ0bC16kLz+jeo\nqDBx0oNdH4YVum/Uscyp/bwxznQ7eAg1oyCAeywlQ3eZKTB4Ki3rhfDDnuzDdh4X\nqS7H0/euzP7VIpTy/8QRrgTXCrFubRqZY0axoPDWG6ZrXtxAillVOoUVn6ucrvxf\nLE2BtQRVgNnw58QbP1bNZei5intokoy3V/3+1/En2/HlEv/HZloooUwkbuxkQE97\nb/b3yodmo1lF1qq+zfd6zzk9ERxC+2X9c2g2VCP5LcpJJQ==\n-----END CERTIFICATE-----\n-----BEGIN CERTIFICATE-----\n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\ng+IojrfmcIE=\n-----END CERTIFICATE-----\n-----BEGIN CERTIFICATE-----\n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\n-----END CERTIFICATE-----",
+      "_title": "Client Credentials Client Certificate(s) (PEM Format)",
+      "_description": "\n            A list of one or more X.509 certificates in PEM format separated by a newline. The first (leaf) certificate\n            MUST represent the client entity Inferno will register as,\n            and the trust chain that will be built from the provided certificate(s) must resolve to a CA trusted by the\n            authorization server under test.\n          ",
+      "_type": "textarea",
+      "_optional": false
+    },
+    {
+      "name": "udap_client_credentials_flow_client_private_key",
+      "value": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDy2kOxArrYZ2XK\najkDouihaTHHhFEI9pMdlpDkp9sYXnZRiNoQwFQ08svjrYNNzJtDFE1HNxKLzv3U\nbrg2Ty7EEQ26kKC0ChO6oobtkXxEFGT5ynVY9WPockHQClWD00F85Sr5+ftqUBP2\nrBiDHuWD0kNmTjqEnq5G0G4mYr85V1euY/9c3Apubz5BGy1J51AI0043vV/h4baI\nH2hyEl5REvu5XwjvAgOv6qk0+xDCTBXKxUDeOZjBelxLHxpaCs1y7uiw4Ob/r57Q\nvHgWyervofuCqyBR5mz4aZSdmREkXh2amp9uqA5zEfxrfjkMz1D6wJ43jXANNdp8\nGgABIOvHAgMBAAECggEARNiRhhXjCERPvBFe9mPxlQiwXwJowqS8UhAEJX5cg00M\nN9MXFtafSJ9oI7Rl2+FcRqjzu3OmY1Ib7WQx/tt1w4meHbywgjm1HBzFKYYr91Tc\nx1+Y4s42M4holeTIF2YFU7XX+CPhHWN0NWLWVB2nLTanetJEjqI5f8PI5kLqOQO3\nbApR7DRGjQAKTM3ozC9ycwVUlQcOagG5VeO0pvExmj3LP1MZ/smrgnEZe+BlqRIe\nnmFfO8XR4r+G2Y8g6z6SC/C8CCHlLrBtzqRp655cKgwnYatDMIViVTngqSx+XmIa\n5a6j0RRE9H30h4E2qbxggjInArd8Qxg+XyebKWD2UQKBgQD7hjyNvvcXEXDCZGJD\nrOx0IsAwFxw98MPnaUjUJWoXXqAgKe5goAgKIyGxvdvJkx8axlORtf1dndBLd4v+\n51upncgNN0lw7XtZeYyKkLzoMQvKHuTZKxSrxWnd5r+/VxioOfxMf1PQav8oTUgF\nf8BDkdmWwZzT+6/bwP5f9cA9TwKBgQD3LIaMBh2uoTu6M1WOxFfYPagyuN1hzoBv\nNc6mHtuqULEJGSgGIZfSqgB7t2qn0t+L/jrZX8AIJjGoF1OGOuZnTSRuvymt+m1P\nH2gjbTeaxr1OO0v2tnws4zAieqV2MaGKKLkzLZvkgz7Ihga3dUMNCysp11KwV9gu\nKp8kL2v8CQKBgQCSnI+FbC/pQWBB33Or0QtPMsZmAcKTlFkM9cDe8CQkFSMvPGHX\n7tBg4FOOoIWRvPEfkUU7JSLXw9qbcsamwcMbXn4yvexQKA2DfSdfybhje9tMaK+q\nqsL00TDBiPRyGtmjjZE0IfAAB65NlqaJlgrDGCwGBTteEVJTvO5Jjx0MXwKBgQCb\nkkHJJhxOiprOMns6Vag4qW4RJrvoUJIT7Rj5A9kclJco89V2LnShmnCdba9Km/Yp\n5cTihlqWhnugobXneXEFOc+hiN5R65obP9hK2/Ywi8Ag2j+QtADqO8BTI0C7aLeU\n/ta6OI2zQUwl5/2YQM0IC6yKNEWOSmv9esQZgWOFCQKBgG0KqReVpgyWsru2echQ\nj3UGbgftBQtEssSr5Zd7ZymrIUa0na2X4c3qmAEjD5aT1RrU0xvOvOz0Ib3RS77U\nEkDFFGHsOMdo21gx+L14dJtevBtiOs4+ka18YvLxBv7L+EtJjs96rb+2vTC+hPOn\nPt+YtETr5wLxaKTolgnN3Xok\n-----END PRIVATE KEY-----",
+      "_title": "Client Credentials Client Private Key (PEM Format)",
+      "_description": "\n          The private key corresponding to the client certificate used for registration, in PEM format.  Used to sign\n          registration and/or authentication JWTs.\n          ",
+      "_type": "textarea",
+      "_optional": false
+    },
+    {
+      "name": "udap_cert_iss_client_creds_flow",
+      "value": "https://inferno-qa.healthit.gov/",
+      "_title": "Client Credentials JWT Issuer (iss) Claim",
+      "_description": "\n            MUST correspond to a unique URI entry in the Subject Alternative Name (SAN) extension of the client\n            certificate used for registration.\n          ",
+      "_type": "text",
+      "_optional": false
+    },
+    {
+      "name": "udap_client_credentials_flow_registration_scope",
+      "value": "system/*.r",
+      "_title": "Client Credentials Registration Requested Scope(s)",
+      "_description": "\n                  String containing a space delimited list of scopes requested by the client application for use in\n                  subsequent requests. The Authorization Server MAY consider this list when deciding the scopes that it\n                  will allow the application to subsequently request. Apps requesting the \"client_credentials\" grant\n                  type SHOULD request system scopes.\n                ",
+      "_type": "text"
+    },
+    {
+      "name": "udap_client_creds_flow_registration_certifications",
+      "value": null,
+      "_title": "Client Credentials UDAP Registration Certifications",
+      "_description": "\n            Additional UDAP certifications to include in registration request, if required by the authorization server.\n             Include a space separated list of strings representing a Base64-encoded, signed JWT.\n            ",
+      "_type": "textarea",
+      "_optional": true
+    }
+  ]
+}

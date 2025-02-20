@@ -1,13 +1,12 @@
 require_relative 'udap_security_test_kit/authorization_code_group'
 require_relative 'udap_security_test_kit/client_credentials_group'
-require_relative 'udap_security_test_kit/version'
 require_relative 'udap_security_test_kit/redirect_uri'
+require_relative 'udap_security_test_kit/metadata'
 
 module UDAPSecurityTestKit
   class Suite < Inferno::TestSuite
     id :udap_security
     title 'UDAP Security'
-    version VERSION
     description %(
       The User Data Access Protocol (UDAP) Security test kit verifies that systems correctly implement the
       [HL7 UDAP Security IG](http://hl7.org/fhir/us/udap-security/STU1/)
@@ -68,20 +67,19 @@ module UDAPSecurityTestKit
 
     links [
       {
-        label: 'Report Issue',
-        url: 'https://github.com/inferno-framework/udap-security-test-kit/issues'
-      },
-      {
+        type: 'source_code',
         label: 'Open Source',
-        url: 'https://github.com/inferno-framework/udap-security-test-kit'
+        url: 'https://github.com/inferno-framework/udap-security-test-kit/'
       },
       {
+        type: 'report_issue',
+        label: 'Report Issue',
+        url: 'https://github.com/inferno-framework/udap-security-test-kit/issues/'
+      },
+      {
+        type: 'download',
         label: 'Download',
-        url: 'https://github.com/inferno-framework/udap-security-test-kit/releases'
-      },
-      {
-        label: 'Implementation Guide',
-        url: 'https://hl7.org/fhir/us/udap-security/STU1'
+        url: 'https://github.com/inferno-framework/udap-security-test-kit/releases/'
       }
     ]
 

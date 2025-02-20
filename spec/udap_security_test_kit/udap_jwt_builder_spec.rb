@@ -59,7 +59,7 @@ RSpec.describe UDAPSecurityTestKit::UDAPJWTBuilder do # rubocop:disable RSpec/Sp
   end
 
   describe 'encode_jwt_with_x5c_header' do
-    it 'creates a signed, valid JWT with x5c headers using PEM-formatted strings' do
+    it 'creates a signed, valid JWT with x5c headers using PEM-formatted strings that can be base64 decoded' do
       payload = { 'test_key' => 'test_value' }
 
       encoded_jwt = described_class.encode_jwt_with_x5c_header(payload, rsa_private_string, jwt_alg,
@@ -81,6 +81,44 @@ RSpec.describe UDAPSecurityTestKit::UDAPJWTBuilder do # rubocop:disable RSpec/Sp
       cert = OpenSSL::X509::Certificate.new(Base64.decode64(jwt_header['x5c'].first))
 
       jwt_client_cert = OpenSSL::X509::Certificate.new(Base64.decode64(jwt_header['x5c'].first))
+      expect(jwt_client_cert.check_private_key(rsa_private)).to be true
+
+      ca_cert = OpenSSL::X509::Certificate.new(ca_cert_string)
+      ca_public_key = ca_cert.public_key
+
+      expect(jwt_client_cert.verify(ca_public_key)).to be true
+
+      # verify signature
+      JWT.decode(
+        encoded_jwt,
+        cert.public_key,
+        true,
+        algorithm: jwt_header['alg']
+      )
+    end
+
+    it 'creates a signed, valid JWT with x5c headers using PEM-formatted strings that can be strict base64 decoded' do
+      payload = { 'test_key' => 'test_value' }
+
+      encoded_jwt = described_class.encode_jwt_with_x5c_header(payload, rsa_private_string, jwt_alg,
+                                                               [client_cert_string])
+
+      rsa_private = described_class.generate_private_key(rsa_private_string)
+      rsa_private.public_key
+
+      # verify JWT contents
+      jwt_body, jwt_header = JWT.decode(encoded_jwt, nil, false)
+
+      expect(jwt_body).to eq(payload)
+      expect(jwt_header).to include('x5c')
+      expect(jwt_header).to include('alg')
+      expect(jwt_header['alg']).to eq(jwt_alg)
+      expect(jwt_header['x5c'].is_a?(Array)).to be true
+
+      # verify enclosed certificate
+      cert = OpenSSL::X509::Certificate.new(Base64.strict_decode64(jwt_header['x5c'].first))
+
+      jwt_client_cert = OpenSSL::X509::Certificate.new(Base64.strict_decode64(jwt_header['x5c'].first))
       expect(jwt_client_cert.check_private_key(rsa_private)).to be true
 
       ca_cert = OpenSSL::X509::Certificate.new(ca_cert_string)

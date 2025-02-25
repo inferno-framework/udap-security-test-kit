@@ -21,7 +21,7 @@ module UDAPSecurityTestKit
 
       x5c_certs_encoded = x5c_certs_pem_string.map do |cert|
         cert_pem = OpenSSL::X509::Certificate.new(cert)
-        Base64.encode64(cert_pem.to_der)
+        Base64.strict_encode64(cert_pem.to_der)
       end
 
       JWT.encode payload, private_key, alg, { x5c: x5c_certs_encoded }

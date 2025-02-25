@@ -21,7 +21,7 @@ RSpec.describe UDAPSecurityTestKit::ClientCredentialsTokenExchangeTest do
   let(:input) do
     {
       udap_token_endpoint:,
-      udap_client_id: 'CLIENT_ID',
+      udap_client_credentials_flow_client_id: 'CLIENT_ID',
       udap_client_credentials_flow_client_cert_pem:,
       udap_client_credentials_flow_client_private_key:,
       udap_jwt_signing_alg: 'RS256'

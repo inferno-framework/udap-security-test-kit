@@ -90,6 +90,9 @@ module UDAPSecurityTestKit
               },
               udap_cert_iss: {
                 name: :udap_cert_iss_client_creds_flow
+              },
+              udap_client_id: {
+                name: :udap_client_credentials_flow_client_id
               }
             }
           } do

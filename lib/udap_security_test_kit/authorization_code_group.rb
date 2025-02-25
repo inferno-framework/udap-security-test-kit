@@ -78,17 +78,6 @@ module UDAPSecurityTestKit
                 name: :udap_auth_code_flow_registration_certifications,
                 title: 'Authorization Code UDAP Registration Certifications'
               }
-            },
-            outputs: {
-              udap_client_cert_pem: {
-                name: :udap_auth_code_flow_client_cert_pem
-              },
-              udap_client_private_key_pem: {
-                name: :udap_auth_code_flow_client_private_key
-              },
-              udap_cert_iss: {
-                name: :udap_auth_code_flow_cert_iss
-              }
             }
           } do
       input_order :udap_registration_endpoint,

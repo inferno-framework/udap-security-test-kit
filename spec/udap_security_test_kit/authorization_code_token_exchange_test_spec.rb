@@ -23,7 +23,7 @@ RSpec.describe UDAPSecurityTestKit::AuthorizationCodeTokenExchangeTest do
     {
       udap_authorization_code: 'CODE',
       udap_token_endpoint:,
-      udap_authorization_code_flow_client_id: 'CLIENT_ID',
+      udap_client_id: 'CLIENT_ID',
       udap_auth_code_flow_client_cert_pem:,
       udap_auth_code_flow_client_private_key:,
       udap_jwt_signing_alg: 'RS256'

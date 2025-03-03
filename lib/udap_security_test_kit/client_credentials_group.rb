@@ -80,20 +80,6 @@ module UDAPSecurityTestKit
                 name: :udap_client_creds_flow_registration_certifications,
                 title: 'Client Credentials UDAP Registration Certifications'
               }
-            },
-            outputs: {
-              udap_client_cert_pem: {
-                name: :udap_client_credentials_flow_client_cert_pem
-              },
-              udap_client_private_key_pem: {
-                name: :udap_client_credentials_flow_client_private_key
-              },
-              udap_cert_iss: {
-                name: :udap_cert_iss_client_creds_flow
-              },
-              udap_client_id: {
-                name: :udap_client_credentials_flow_client_id
-              }
             }
           } do
       input_order :udap_registration_endpoint,

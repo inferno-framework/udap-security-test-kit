@@ -17,7 +17,7 @@ module UDAPSecurityTestKit
     id :udap_authorization_code_token_exchange
 
     input :udap_authorization_code,
-          :udap_authorization_code_flow_client_id
+          :udap_client_id
 
     input :udap_token_endpoint,
           title: 'Token Endpoint',
@@ -64,7 +64,7 @@ module UDAPSecurityTestKit
 
     run do
       client_assertion_payload = UDAPClientAssertionPayloadBuilder.build(
-        udap_authorization_code_flow_client_id,
+        udap_client_id,
         udap_token_endpoint,
         nil
       )

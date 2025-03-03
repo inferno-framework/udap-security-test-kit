@@ -17,7 +17,7 @@ module UDAPSecurityTestKit
           title: 'Authorization Endpoint',
           description: 'The full URL from which Inferno will request an authorization code.'
 
-    input :udap_authorization_code_flow_client_id,
+    input :udap_client_id,
           title: 'Client ID',
           description: 'Client ID as registered with the authorization server.'
 
@@ -94,7 +94,7 @@ module UDAPSecurityTestKit
 
       oauth2_params = {
         'response_type' => 'code',
-        'client_id' => udap_authorization_code_flow_client_id,
+        'client_id' => udap_client_id,
         'redirect_uri' => config.options[:redirect_uri],
         'state' => udap_authorization_code_state,
         'scope' => udap_authorization_code_request_scopes,

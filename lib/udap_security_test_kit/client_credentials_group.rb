@@ -107,6 +107,13 @@ module UDAPSecurityTestKit
     end
 
     group from: :udap_client_credentials_authentication_group,
-          run_as_group: true
+          run_as_group: true,
+          config: {
+            inputs: {
+              udap_client_id: {
+                name: :udap_client_credentials_flow_client_id
+              }
+            }
+          }
   end
 end

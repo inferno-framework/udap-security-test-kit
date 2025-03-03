@@ -105,6 +105,13 @@ module UDAPSecurityTestKit
     end
 
     group from: :udap_authorization_code_authentication_group,
-          run_as_group: true
+          run_as_group: true,
+          config: {
+            inputs: {
+              udap_client_id: {
+                name: :udap_authorization_code_flow_client_id
+              }
+            }
+          }
   end
 end

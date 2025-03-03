@@ -30,7 +30,7 @@ module UDAPSecurityTestKit
     )
     id :udap_client_credentials_token_exchange
 
-    input :udap_client_credentials_flow_client_id,
+    input :udap_client_id,
           title: 'Client ID',
           description: 'Client ID as registered with the authorization server.'
 
@@ -92,7 +92,7 @@ module UDAPSecurityTestKit
       }
 
       client_assertion_payload = UDAPClientAssertionPayloadBuilder.build(
-        udap_client_credentials_flow_client_id,
+        udap_client_id,
         udap_token_endpoint,
         extensions.to_json
       )

@@ -78,6 +78,11 @@ module UDAPSecurityTestKit
                 name: :udap_auth_code_flow_registration_certifications,
                 title: 'Authorization Code UDAP Registration Certifications'
               }
+            },
+            outputs: {
+              udap_client_id: {
+                name: :udap_authorization_code_flow_client_id
+              }
             }
           } do
       input_order :udap_registration_endpoint,

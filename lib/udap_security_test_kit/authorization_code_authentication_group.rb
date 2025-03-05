@@ -14,45 +14,40 @@ module UDAPSecurityTestKit
     )
     id :udap_authorization_code_authentication_group
 
+    config(
+      requests: {
+        token_exchange: {
+          name: :udap_auth_code_flow_token_exchange
+        }
+      },
+      inputs: {
+        udap_client_id: {
+          name: :udap_authorization_code_flow_client_id
+        },
+        token_response_body: {
+          name: :udap_auth_code_flow_token_exchange_response_body
+        }
+      },
+      outputs: {
+        udap_access_token: {
+          name: :udap_auth_code_flow_access_token
+        },
+        udap_expires_in: {
+          name: :udap_auth_code_flow_expires_in
+        },
+        udap_received_scopes: {
+          name: :udap_auth_code_flow_received_scopes
+        },
+        udap_refresh_token: {
+          name: :udap_auth_code_flow_refresh_token
+        }
+      }
+    )
+
     test from: :udap_authorization_code_redirect
     test from: :udap_authorization_code_received
-    test from: :udap_authorization_code_token_exchange,
-         config: {
-           requests: {
-             token_exchange: {
-               name: :udap_auth_code_flow_token_exchange
-             }
-           }
-         }
-    test from: :udap_token_exchange_response_body,
-         config: {
-           inputs: {
-             token_response_body: {
-               name: :udap_auth_code_flow_token_exchange_response_body
-             }
-           },
-           outputs: {
-             udap_access_token: {
-               name: :udap_auth_code_flow_access_token
-             },
-             udap_expires_in: {
-               name: :udap_auth_code_flow_expires_in
-             },
-             udap_received_scopes: {
-               name: :udap_auth_code_flow_received_scopes
-             },
-             udap_refresh_token: {
-               name: :udap_auth_code_flow_refresh_token
-             }
-           }
-         }
-    test from: :udap_token_exchange_response_headers,
-         config: {
-           requests: {
-             token_exchange: {
-               name: :udap_auth_code_flow_token_exchange
-             }
-           }
-         }
+    test from: :udap_authorization_code_token_exchange
+    test from: :udap_token_exchange_response_body
+    test from: :udap_token_exchange_response_headers
   end
 end

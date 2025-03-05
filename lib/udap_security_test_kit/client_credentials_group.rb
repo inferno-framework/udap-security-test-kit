@@ -80,6 +80,11 @@ module UDAPSecurityTestKit
                 name: :udap_client_creds_flow_registration_certifications,
                 title: 'Client Credentials UDAP Registration Certifications'
               }
+            },
+            outputs: {
+              udap_client_id: {
+                name: :udap_client_credentials_flow_client_id
+              }
             }
           } do
       input_order :udap_registration_endpoint,

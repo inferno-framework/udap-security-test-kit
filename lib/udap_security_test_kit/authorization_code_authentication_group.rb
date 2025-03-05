@@ -14,6 +14,12 @@ module UDAPSecurityTestKit
     )
     id :udap_authorization_code_authentication_group
 
+    config inputs: {
+      udap_client_id: {
+        name: :udap_authorization_code_flow_client_id
+      }
+    }
+
     test from: :udap_authorization_code_redirect
     test from: :udap_authorization_code_received
     test from: :udap_authorization_code_token_exchange,

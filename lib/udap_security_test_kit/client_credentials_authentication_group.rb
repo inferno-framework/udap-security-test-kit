@@ -12,6 +12,12 @@ module UDAPSecurityTestKit
     )
     id :udap_client_credentials_authentication_group
 
+    config inputs: {
+      udap_client_id: {
+        name: :udap_client_credentials_flow_client_id
+      }
+    }
+
     test from: :udap_client_credentials_token_exchange,
          config: {
            requests: {

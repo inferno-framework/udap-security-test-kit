@@ -3,7 +3,7 @@ require_relative 'version'
 module UDAPSecurityTestKit
   class Metadata < Inferno::TestKit
     id :udap_security
-    title 'UDAP Security'
+    title 'UDAP Security Test Kit'
     description <<~DESCRIPTION
       This is a collection of tests to verify server conformance to the [HL7 UDAP Security
       STU 1.0 IG](https://hl7.org/fhir/us/udap-security/STU1/index.html)

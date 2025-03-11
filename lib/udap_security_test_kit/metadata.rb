@@ -23,7 +23,7 @@ module UDAPSecurityTestKit
     DESCRIPTION
     suite_ids [:udap_security]
     tags ['UDAP Security']
-    last_updated '2025-01-09'
+    last_updated LAST_UPDATED
     version VERSION
     maturity 'Low'
     authors 'inferno@groups.mitre.org'

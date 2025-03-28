@@ -73,7 +73,7 @@ module UDAPSecurityTestKit
       File.read(
         ENV.fetch('UDAP_TEST_KIT_CERT_FILE',
                   File.join(__dir__, '..',
-                            'certs', 'TestKit.pem'))
+                            'certs', 'TestClient.pem'))
       )
     end
 
@@ -81,7 +81,7 @@ module UDAPSecurityTestKit
       File.read(
         ENV.fetch('UDAP_TEST_KIT_PRIVATE_KEY_FILE',
                   File.join(__dir__, '..',
-                            'certs', 'TestKitPrivateKey.key'))
+                            'certs', 'TestClientPrivateKey.key'))
       )
     end
 
@@ -115,11 +115,11 @@ module UDAPSecurityTestKit
     end
 
     def client_uri_to_client_id(client_uri)
-      Base64.strict_encode64(client_uri)
+      Base64.urlsafe_encode64(client_uri, padding: false)
     end
 
     def client_id_to_client_uri(client_id)
-      Base64.decode64(client_id)
+      Base64.urlsafe_decode64(client_id)
     end
 
     def client_id_to_token(client_id, exp_min)
@@ -129,11 +129,11 @@ module UDAPSecurityTestKit
         nonce: SecureRandom.hex(8)
       }.to_json
 
-      Base64.strict_encode64(token_structure)
+      Base64.urlsafe_encode64(token_structure, padding: false)
     end
 
     def decode_token(token)
-      JSON.parse(Base64.decode64(token))
+      JSON.parse(Base64.urlsafe_decode64(token))
     rescue JSON::ParserError
       nil
     end

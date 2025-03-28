@@ -12,23 +12,35 @@ module UDAPSecurityTestKit
       using a UDAP token obtained
     )
     input :client_id,
+          title: 'Client Id',
+          type: 'text',
+          locked: true,
+          description: %(
+            The registered Client Id for use in obtaining access tokens.
+            Run the **1** Client Registration group populate or update this input.
+          )
+    input :echoed_fhir_response,
+          title: 'FHIR Response to Echo',
+          type: 'textarea',
+          description: %(
+            JSON representation of a FHIR resource for Inferno to echo when a request
+            is made to the simulated FHIR server. The provided content will be echoed
+            back exactly and no check will be made that it is appropriate for the request
+            made. If nothing is provided, an OperationOutcome will be returned.
+          ),
           optional: true
-    input :echoed_fhir_response
 
     run do
-      omit_if client_id.blank?,
-              'Not configured for UDAP authentication.'
-
       wait(
         identifier: client_id,
         message: %(
             **Access**
 
             Use the registered client id (#{client_id}) to obtain an access
-            token using the B2B client credentials flow and use that token
-            to access a FHIR endpoint under the simulated server's base URL
+            token using the [UDAP B2B client credentials flow](https://hl7.org/fhir/us/udap-security/STU1/b2b.html)
+            and use that token to access a FHIR endpoint under the simulated server's base URL
 
-            #{fhir_base_url}`
+            `#{fhir_base_url}`
 
             Inferno will echo the response provided in the **FHIR Response to Echo** input.
 

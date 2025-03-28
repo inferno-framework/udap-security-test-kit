@@ -13,6 +13,8 @@ module UDAPSecurityTestKit
       and that a token returned from a token request was used on an access request.
     )
 
+    run_as_group
+
     test from: :udap_client_access_interaction
     test from: :udap_client_token_request
     test from: :udap_client_token_use

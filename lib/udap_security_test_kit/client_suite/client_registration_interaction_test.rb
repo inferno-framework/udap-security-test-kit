@@ -29,8 +29,17 @@ module UDAPSecurityTestKit
         message: %(
             **UDAP Registration**
 
-            Make a UDAP dyanmic registration request for Client URI `#{udap_client_uri}`
-            to the discover endpoint:`#{udap_discovery_url}`
+            Make a UDAP dyanmic registration request for Client URI
+
+            `#{udap_client_uri}`
+
+            To the UDAP-protected FHIR Server at
+
+            `#{fhir_base_url}`
+
+            UDAP details can be found at
+
+            `#{udap_discovery_url}`
 
             [Click here](#{resume_pass_url}?token=#{generated_client_id}) once you have
             succesfully completed the registration.

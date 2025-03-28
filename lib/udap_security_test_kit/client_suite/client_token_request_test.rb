@@ -3,7 +3,7 @@ require_relative '../urls'
 require_relative '../endpoints/mock_udap_server'
 
 module UDAPSecurityTestKit
-  class UDAPTokenRequest < Inferno::Test
+  class UDAPClientTokenRequest < Inferno::Test
     include URLs
 
     id :udap_client_token_request
@@ -12,24 +12,29 @@ module UDAPSecurityTestKit
         Check that UDAP token requests are conformant.
       )
 
-    input :client_id
-
     run do
       load_tagged_requests(REGISTRATION_TAG, UDAP_TAG)
       omit_if requests.blank?, 'UDAP Authentication not demonstrated as a part of this test session.'
       registration_request = requests.last
+      registration_assertion = MockUdapServer.parsed_request_body(registration_request)['software_statement']
+      registration_token =
+        begin
+          JWT::EncodedToken.new(registration_assertion)
+        rescue StandardError => e
+          assert false, "Registration request parsing failed: #{e}"
+        end
+      registered_client_id = JSON.parse(registration_request.response_body)['client_id']
 
       requests.clear
       load_tagged_requests(TOKEN_TAG, UDAP_TAG)
-
       skip_if requests.blank?, 'No UDAP token requests made.'
 
       jti_list = []
       requests.each_with_index do |token_request, index|
         request_params = URI.decode_www_form(token_request.request_body).to_h
-        check_request_params(request_params, index)
-        check_client_assertion(request_params['client_assertion'], index, jti_list, registration_request,
-                               token_request.url)
+        check_request_params(request_params, index + 1)
+        check_client_assertion(request_params['client_assertion'], index + 1, jti_list, registration_token,
+                               token_request.url, registered_client_id)
       end
 
       assert messages.none? { |msg|
@@ -57,7 +62,7 @@ module UDAPSecurityTestKit
                   "but got '#{params['udap']}'")
     end
 
-    def check_client_assertion(assertion, index, jti_list, registration_request, endpoint_aud)
+    def check_client_assertion(assertion, index, jti_list, registration_token, endpoint_aud, registered_client_id)
       decoded_token =
         begin
           JWT::EncodedToken.new(assertion)
@@ -69,19 +74,19 @@ module UDAPSecurityTestKit
       return unless decoded_token.present?
 
       # header checked with signature
-      check_jwt_payload(decoded_token.payload, index, jti_list, endpoint_aud)
-      check_jwt_signature(decoded_token, registration_request, index)
+      check_jwt_payload(decoded_token.payload, index, jti_list, endpoint_aud, registered_client_id)
+      check_jwt_signature(decoded_token, registration_token, index)
     end
 
-    def check_jwt_payload(claims, index, jti_list, endpoint_aud)
-      if claims['iss'] != client_id
+    def check_jwt_payload(claims, index, jti_list, endpoint_aud, registered_client_id)
+      if claims['iss'] != registered_client_id
         add_message('error', "client assertion jwt on token request #{index} has an incorrect `iss` claim: " \
-                             "expected '#{client_id}', got '#{claims['iss']}'")
+                             "expected '#{registered_client_id}', got '#{claims['iss']}'")
       end
 
-      if claims['sub'] != client_id
+      if claims['sub'] != registered_client_id
         add_message('error', "client assertion jwt on token request #{index} has an incorrect `sub` claim: " \
-                             "expected '#{client_id}', got '#{claims['sub']}'")
+                             "expected '#{registered_client_id}', got '#{claims['sub']}'")
       end
 
       if claims['aud'] != endpoint_aud
@@ -102,7 +107,7 @@ module UDAPSecurityTestKit
         jti_list << claims['jti']
       end
 
-      check_b2b_auth_extension(claim.dig('extension', 'hl7-b2b'), index)
+      check_b2b_auth_extension(claims.dig('extensions', 'hl7-b2b'), index)
     end
 
     def check_b2b_auth_extension(b2b_auth, index)
@@ -130,6 +135,14 @@ module UDAPSecurityTestKit
       end
 
       nil
+    end
+
+    def check_jwt_signature(encoded_token, registration_token, index)
+      error = MockUdapServer.udap_assertion_signature_verification(encoded_token.jwt, registration_token.jwt)
+
+      return unless error.present?
+
+      add_message('error', "Signature validation failed on token request #{index}: #{error}")
     end
   end
 end

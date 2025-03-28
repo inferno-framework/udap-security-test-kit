@@ -1,0 +1,20 @@
+{
+  "title": "Demo: Run against UDAP Server Tests",
+  "id": "udap_run_client_against_server",
+  "test_suite_id": "udap_security_client",
+  "inputs": [
+    {
+      "name": "udap_client_uri",
+      "description": "The UDAP Client URI that will be used to register with Inferno's simulated UDAP server.",
+      "optional": true,
+      "title": "UDAP Client URI",
+      "type": "text",
+      "value": "http://localhost:4567/custom/udap_security/fhir"
+    },
+    {
+      "name": "echoed_fhir_response",
+      "type": "text",
+      "value": "{ \"resourceType\": \"Patient\" }"
+    }
+  ]
+}

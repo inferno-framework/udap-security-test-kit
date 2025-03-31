@@ -25,7 +25,8 @@ RSpec.describe UDAPSecurityTestKit::UDAPClientRegistrationVerification do # rubo
       client_name: 'Test Client',
       grant_types: ['client_credentials'],
       token_endpoint_auth_method: 'private_key_jwt',
-      scope: 'system/*.read'
+      scope: 'system/*.read',
+      contacts: ['mailto:test@inferno.healthit.gov']
     }
   end
   let(:reg_ss) do

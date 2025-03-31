@@ -7,7 +7,7 @@ require_relative 'udap_security_test_kit/metadata'
 module UDAPSecurityTestKit
   class Suite < Inferno::TestSuite
     id :udap_security
-    title 'UDAP Security'
+    title 'UDAP Security Server'
     description %(
       The User Data Access Protocol (UDAP) Security test kit verifies that systems correctly implement the
       [HL7 UDAP Security IG](http://hl7.org/fhir/us/udap-security/STU1/)
@@ -29,7 +29,7 @@ module UDAPSecurityTestKit
       Testers may test one or both flows based on their system under test.
 
       This test suite does NOT assess [Tiered OAuth for User Authentication](https://hl7.org/fhir/us/udap-security/STU1/user.html)
-      (which is not a required capability) or client conformance to the HL7 UDAP IG.
+      (which is not a required capability).
     )
 
     input_instructions %(
@@ -75,6 +75,11 @@ module UDAPSecurityTestKit
         type: 'download',
         label: 'Download',
         url: 'https://github.com/inferno-framework/udap-security-test-kit/releases/'
+      },
+      {
+        type: 'ig',
+        label: 'Implementation Guide',
+        url: 'https://hl7.org/fhir/us/udap-security/STU1/'
       }
     ]
 

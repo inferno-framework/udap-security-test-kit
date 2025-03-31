@@ -37,7 +37,7 @@ module UDAPSecurityTestKit
 
             `#{fhir_base_url}`
 
-            UDAP details can be found at
+            Metadata on Inferno's simulated UDAP server can be found at
 
             `#{udap_discovery_url}`
 

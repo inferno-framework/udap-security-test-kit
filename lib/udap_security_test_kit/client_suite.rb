@@ -38,6 +38,11 @@ module UDAPSecurityTestKit
         type: 'download',
         label: 'Download',
         url: 'https://github.com/inferno-framework/udap-security-test-kit/releases/'
+      },
+      {
+        type: 'ig',
+        label: 'Implementation Guide',
+        url: 'https://hl7.org/fhir/us/udap-security/STU1/'
       }
     ]
 
@@ -69,7 +74,17 @@ module UDAPSecurityTestKit
       request.query_parameters['token']
     end
 
-    group from: :udap_client_registration
-    group from: :udap_client_access
+    group do
+      title 'UDAP Client Credentials Flow'
+      description %(
+        During these tests, the client will use the UDAP Client Credentials
+        flow as specified in the [B2B section of the IG](https://hl7.org/fhir/us/udap-security/STU1/b2b.html)
+        to access a FHIR API. Clients will register, obtain an access token,
+        and use the access token when making a request to a FHIR API.
+      )
+
+      group from: :udap_client_registration
+      group from: :udap_client_access
+    end
   end
 end

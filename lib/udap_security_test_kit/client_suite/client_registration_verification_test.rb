@@ -23,7 +23,7 @@ module UDAPSecurityTestKit
       skip_if requests.empty?, 'No UDAP Registration Requests made.'
 
       verified_request = requests.last
-      parsed_body = MockUdapServer.parsed_request_body(verified_request)
+      parsed_body = MockUDAPServer.parsed_request_body(verified_request)
       assert parsed_body.present?, 'Registration request body is not valid JSON.'
 
       check_request_body(parsed_body)
@@ -266,7 +266,7 @@ module UDAPSecurityTestKit
     end
 
     def check_jwt_signature(jwt)
-      error = MockUdapServer.udap_assertion_signature_verification(jwt)
+      error = MockUDAPServer.udap_assertion_signature_verification(jwt)
 
       return unless error.present?
 

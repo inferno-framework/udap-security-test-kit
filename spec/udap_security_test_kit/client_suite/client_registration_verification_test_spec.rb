@@ -11,8 +11,8 @@ RSpec.describe UDAPSecurityTestKit::UDAPClientRegistrationVerification do # rubo
   let(:results_repo) { Inferno::Repositories::Results.new }
   let(:dummy_result) { repo_create(:result, test_session_id: test_session.id) }
   let(:udap_client_uri) { 'urn:test' }
-  let(:key) { UDAPSecurityTestKit::MockUdapServer.test_kit_private_key }
-  let(:cert) { UDAPSecurityTestKit::MockUdapServer.test_kit_cert }
+  let(:key) { UDAPSecurityTestKit::MockUDAPServer.test_kit_private_key }
+  let(:cert) { UDAPSecurityTestKit::MockUDAPServer.test_kit_cert }
   let(:reg_url) { registration_url }
   let(:reg_claims) do
     {

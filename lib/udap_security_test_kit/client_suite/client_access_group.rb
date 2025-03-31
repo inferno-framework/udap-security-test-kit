@@ -1,9 +1,9 @@
 require_relative 'client_access_interaction_test'
-require_relative 'client_token_request_test'
-require_relative 'client_token_use_test'
+require_relative 'client_token_request_verification_test'
+require_relative 'client_token_use_verification_test'
 
 module UDAPSecurityTestKit
-  class UDAPClientAccessGroup < Inferno::TestGroup
+  class UDAPClientAccess < Inferno::TestGroup
     id :udap_client_access
     title 'Client Access'
     description %(
@@ -16,7 +16,7 @@ module UDAPSecurityTestKit
     run_as_group
 
     test from: :udap_client_access_interaction
-    test from: :udap_client_token_request
-    test from: :udap_client_token_use
+    test from: :udap_client_token_request_verification
+    test from: :udap_client_token_use_verification
   end
 end

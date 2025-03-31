@@ -3,15 +3,15 @@ require_relative '../../../lib/udap_security_test_kit/udap_jwt_builder'
 require_relative '../../../lib/udap_security_test_kit/udap_client_assertion_payload_builder'
 require_relative '../../../lib/udap_security_test_kit/endpoints/mock_udap_server'
 
-RSpec.describe UDAPSecurityTestKit::UDAPClientTokenRequest do # rubocop:disable RSpec/SpecFilePathFormat
+RSpec.describe UDAPSecurityTestKit::UDAPClientTokenRequestVerification do # rubocop:disable RSpec/SpecFilePathFormat
   let(:suite_id) { 'udap_security_client' }
   let(:test) { described_class }
   let(:results_repo) { Inferno::Repositories::Results.new }
   let(:dummy_result) { repo_create(:result, test_session_id: test_session.id) }
   let(:udap_client_uri) { 'urn:test' }
-  let(:client_id) { UDAPSecurityTestKit::MockUdapServer.client_uri_to_client_id(udap_client_uri) }
-  let(:key) { UDAPSecurityTestKit::MockUdapServer.test_kit_private_key }
-  let(:cert) { UDAPSecurityTestKit::MockUdapServer.test_kit_cert }
+  let(:client_id) { UDAPSecurityTestKit::MockUDAPServer.client_uri_to_client_id(udap_client_uri) }
+  let(:key) { UDAPSecurityTestKit::MockUDAPServer.test_kit_private_key }
+  let(:cert) { UDAPSecurityTestKit::MockUDAPServer.test_kit_cert }
   let(:token_url) { 'https://inferno.healthit.gov/suites/custom/udap_security_client/auth/token' }
   let(:reg_claims) do
     {

@@ -7,10 +7,12 @@ require_relative 'mock_udap_server'
 module UDAPSecurityTestKit
   class EchoingFHIRResponderEndpoint < Inferno::DSL::SuiteEndpoint
     def test_run_identifier
-      MockUdapServer.token_to_client_id(request.headers['authorization']&.delete_prefix('Bearer '))
+      MockUDAPServer.token_to_client_id(request.headers['authorization']&.delete_prefix('Bearer '))
     end
 
     def make_response
+      return if response.status == 401 # set in update_result (expired token handling there)
+
       response.content_type = 'application/fhir+json'
 
       # If the tester provided a response, echo it
@@ -34,6 +36,11 @@ module UDAPSecurityTestKit
     end
 
     def update_result
+      if MockUDAPServer.request_has_expired_token?(request)
+        MockUDAPServer.update_response_for_expired_token(response)
+        return
+      end
+
       nil # never update for now
     end
 

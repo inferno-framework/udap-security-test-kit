@@ -3,10 +3,10 @@ require_relative '../urls'
 require_relative '../endpoints/mock_udap_server'
 
 module UDAPSecurityTestKit
-  class UDAPTokenUseTest < Inferno::Test
+  class UDAPTokenUseVerification < Inferno::Test
     include URLs
 
-    id :udap_client_token_use
+    id :udap_client_token_use_verification
     title 'Verify UDAP Token Use'
     description %(
         Check that a UDAP token returne to the client was used for request
@@ -19,10 +19,10 @@ module UDAPSecurityTestKit
 
       requests.clear
       token_requests = load_tagged_requests(TOKEN_TAG, UDAP_TAG)
-      access_requests = load_tagged_requests(ACCESS_TAG)
+      access_requests = load_tagged_requests(ACCESS_TAG).reject { |access| access.status == 401 }
 
       skip_if token_requests.blank?, 'No token requests made.'
-      skip_if access_requests.blank?, 'No access requests made.'
+      skip_if access_requests.blank?, 'No successful access requests made.'
 
       used_tokens = access_requests.map do |access_request|
         access_request.request_headers.find do |header|

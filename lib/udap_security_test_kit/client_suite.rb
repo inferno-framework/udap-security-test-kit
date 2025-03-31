@@ -46,9 +46,9 @@ module UDAPSecurityTestKit
       }
     ]
 
-    route(:get, UDAP_DISCOVERY_PATH, MockUdapServer.method(:udap_server_metadata))
-    suite_endpoint :post, REGISTRATION_PATH, MockUdapServer::RegistrationEndpoint
-    suite_endpoint :post, TOKEN_PATH, MockUdapServer::TokenEndpoint
+    route(:get, UDAP_DISCOVERY_PATH, MockUDAPServer.method(:udap_server_metadata))
+    suite_endpoint :post, REGISTRATION_PATH, MockUDAPServer::RegistrationEndpoint
+    suite_endpoint :post, TOKEN_PATH, MockUDAPServer::TokenEndpoint
     suite_endpoint :get, FHIR_PATH, EchoingFHIRResponderEndpoint
     suite_endpoint :post, FHIR_PATH, EchoingFHIRResponderEndpoint
     suite_endpoint :put, FHIR_PATH, EchoingFHIRResponderEndpoint

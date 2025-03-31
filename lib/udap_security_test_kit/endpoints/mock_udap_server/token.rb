@@ -5,7 +5,7 @@ require_relative '../../tags'
 require_relative '../mock_udap_server'
 
 module UDAPSecurityTestKit
-  module MockUdapServer
+  module MockUDAPServer
     class TokenEndpoint < Inferno::DSL::SuiteEndpoint
       def test_run_identifier
         client_id_from_client_assertion(request.params[:client_assertion])
@@ -15,17 +15,17 @@ module UDAPSecurityTestKit
         assertion = request.params[:client_assertion]
         client_id = client_id_from_client_assertion(assertion)
 
-        software_statement = MockUdapServer.udap_registration_software_statement(test_run.test_session_id)
-        signature_error = MockUdapServer.udap_assertion_signature_verification(assertion, software_statement)
+        software_statement = MockUDAPServer.udap_registration_software_statement(test_run.test_session_id)
+        signature_error = MockUDAPServer.udap_assertion_signature_verification(assertion, software_statement)
 
         if signature_error.present?
-          MockUdapServer.update_response_for_invalid_assertion(response, signature_error)
+          MockUDAPServer.update_response_for_invalid_assertion(response, signature_error)
           return
         end
 
         exp_min = 60
         response_body = {
-          access_token: MockUdapServer.client_id_to_token(client_id, exp_min),
+          access_token: MockUDAPServer.client_id_to_token(client_id, exp_min),
           token_type: 'Bearer',
           expires_in: 60 * exp_min
         }
@@ -51,7 +51,7 @@ module UDAPSecurityTestKit
       def client_id_from_client_assertion(client_assertion_jwt)
         return unless client_assertion_jwt.present?
 
-        MockUdapServer.jwt_claims(client_assertion_jwt)&.dig('iss')
+        MockUDAPServer.jwt_claims(client_assertion_jwt)&.dig('iss')
       end
     end
   end

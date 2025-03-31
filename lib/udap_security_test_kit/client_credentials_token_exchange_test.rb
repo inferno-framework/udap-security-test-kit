@@ -94,7 +94,7 @@ module UDAPSecurityTestKit
       client_assertion_payload = UDAPClientAssertionPayloadBuilder.build(
         udap_client_id,
         udap_token_endpoint,
-        extensions.to_json
+        extensions
       )
 
       x5c_certs = UDAPJWTBuilder.split_user_input_cert_string(

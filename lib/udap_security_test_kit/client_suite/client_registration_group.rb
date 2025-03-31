@@ -2,7 +2,7 @@ require_relative 'client_registration_interaction_test'
 require_relative 'client_registration_verification_test'
 
 module UDAPSecurityTestKit
-  class UDAPClientRegistrationGroup < Inferno::TestGroup
+  class UDAPClientRegistration < Inferno::TestGroup
     id :udap_client_registration
     title 'Client Registration'
     description %(

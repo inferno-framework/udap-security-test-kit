@@ -3,10 +3,10 @@ require_relative '../urls'
 require_relative '../endpoints/mock_udap_server'
 
 module UDAPSecurityTestKit
-  class UDAPClientTokenRequest < Inferno::Test
+  class UDAPClientTokenRequestVerification < Inferno::Test
     include URLs
 
-    id :udap_client_token_request
+    id :udap_client_token_request_verification
     title 'Verify UDAP Token Requests'
     description %(
         Check that UDAP token requests are conformant.
@@ -16,7 +16,7 @@ module UDAPSecurityTestKit
       load_tagged_requests(REGISTRATION_TAG, UDAP_TAG)
       omit_if requests.blank?, 'UDAP Authentication not demonstrated as a part of this test session.'
       registration_request = requests.last
-      registration_assertion = MockUdapServer.parsed_request_body(registration_request)['software_statement']
+      registration_assertion = MockUDAPServer.parsed_request_body(registration_request)['software_statement']
       registration_token =
         begin
           JWT::EncodedToken.new(registration_assertion)
@@ -78,7 +78,7 @@ module UDAPSecurityTestKit
       check_jwt_signature(decoded_token, registration_token, index)
     end
 
-    def check_jwt_payload(claims, index, jti_list, endpoint_aud, registered_client_id)
+    def check_jwt_payload(claims, index, jti_list, endpoint_aud, registered_client_id) # rubocop:disable Metrics/CyclomaticComplexity
       if claims['iss'] != registered_client_id
         add_message('error', "client assertion jwt on token request #{index} has an incorrect `iss` claim: " \
                              "expected '#{registered_client_id}', got '#{claims['iss']}'")
@@ -107,7 +107,16 @@ module UDAPSecurityTestKit
         jti_list << claims['jti']
       end
 
-      check_b2b_auth_extension(claims.dig('extensions', 'hl7-b2b'), index)
+      if claims['extensions'].present?
+        if claims['extensions'].is_a?(Hash)
+          check_b2b_auth_extension(claims.dig('extensions', 'hl7-b2b'), index)
+        else
+          add_message('error', "client assertion jwt on token request #{index} has an `extensions` claim that is " \
+                               'not a json object.')
+        end
+      else
+        add_message('error', "client assertion jwt on token request #{index} missing the `hl7-b2b` extension.")
+      end
     end
 
     def check_b2b_auth_extension(b2b_auth, index)
@@ -138,7 +147,7 @@ module UDAPSecurityTestKit
     end
 
     def check_jwt_signature(encoded_token, registration_token, index)
-      error = MockUdapServer.udap_assertion_signature_verification(encoded_token.jwt, registration_token.jwt)
+      error = MockUDAPServer.udap_assertion_signature_verification(encoded_token.jwt, registration_token.jwt)
 
       return unless error.present?
 

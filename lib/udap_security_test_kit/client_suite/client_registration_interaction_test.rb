@@ -21,7 +21,7 @@ module UDAPSecurityTestKit
       omit_if udap_client_uri.blank?,
               'Not configured for UDAP authentication.'
 
-      generated_client_id = MockUdapServer.client_uri_to_client_id(udap_client_uri)
+      generated_client_id = MockUDAPServer.client_uri_to_client_id(udap_client_uri)
       output client_id: generated_client_id
 
       wait(

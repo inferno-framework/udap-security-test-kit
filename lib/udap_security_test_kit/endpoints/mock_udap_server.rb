@@ -6,7 +6,7 @@ require_relative '../tags'
 require_relative '../udap_jwt_builder'
 
 module UDAPSecurityTestKit
-  module MockUdapServer
+  module MockUDAPServer
     include Inferno::DSL::HTTPClient
     SUPPORTED_SCOPES = ['openid', 'system/*.read', 'user/*.read', 'patient/*.read'].freeze
 
@@ -142,51 +142,6 @@ module UDAPSecurityTestKit
       decode_token(token)&.dig('client_id')
     end
 
-    def jwk_set(jku, warning_messages = [])
-      jwk_set = JWT::JWK::Set.new
-
-      if jku.blank?
-        warning_messages << 'No key set input.'
-        return jwk_set
-      end
-
-      jwk_body = # try as raw jwk set
-        begin
-          JSON.parse(jku)
-        rescue JSON::ParserError
-          nil
-        end
-
-      if jwk_body.blank?
-        retrieved = Faraday.get(jku) # try as url pointing to a jwk set
-        jwk_body =
-          begin
-            JSON.parse(retrieved.body)
-          rescue JSON::ParserError
-            warning_messages << "Failed to fetch valid json from jwks uri #{jwk_set}."
-            nil
-          end
-      else
-        warning_messages << 'Providing the JWK Set directly is strongly discouraged.'
-      end
-
-      return jwk_set if jwk_body.blank?
-
-      jwk_body['keys']&.each_with_index do |key_hash, index|
-        parsed_key =
-          begin
-            JWT::JWK.new(key_hash)
-          rescue JWT::JWKError => e
-            id = key_hash['kid'] | index
-            warning_messages << "Key #{id} invalid: #{e}"
-            nil
-          end
-        jwk_set << parsed_key unless parsed_key.blank?
-      end
-
-      jwk_set
-    end
-
     def request_has_expired_token?(request)
       return false if request.params[:session_path].present?
 
@@ -235,7 +190,7 @@ module UDAPSecurityTestKit
         Inferno::Repositories::Requests.new.tagged_requests(test_session_id, [UDAP_TAG, REGISTRATION_TAG])
       return unless registration_requests.present?
 
-      parsed_body = MockUdapServer.parsed_request_body(registration_requests.last)
+      parsed_body = MockUDAPServer.parsed_request_body(registration_requests.last)
       parsed_body&.dig('software_statement')
     end
 

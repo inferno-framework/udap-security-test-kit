@@ -34,6 +34,33 @@ module UDAPSecurityTestKit
       [200, { 'Content-Type' => 'application/json', 'Access-Control-Allow-Origin' => '*' }, [response_body]]
     end
 
+    def make_udap_token_response(request, response)
+      assertion = request.params[:client_assertion]
+      client_id = client_id_from_client_assertion(assertion)
+
+      software_statement = udap_registration_software_statement(test_run.test_session_id)
+      signature_error = udap_assertion_signature_verification(assertion, software_statement)
+
+      if signature_error.present?
+        update_response_for_invalid_assertion(response, signature_error)
+        return
+      end
+
+      exp_min = 60
+      response_body = {
+        access_token: client_id_to_token(client_id, exp_min),
+        token_type: 'Bearer',
+        expires_in: 60 * exp_min
+      }
+
+      response.body = response_body.to_json
+      response.headers['Cache-Control'] = 'no-store'
+      response.headers['Pragma'] = 'no-cache'
+      response.headers['Access-Control-Allow-Origin'] = '*'
+      response.content_type = 'application/json'
+      response.status = 200
+    end
+
     def udap_signed_metadata_jwt(base_url)
       jwt_claim_hash = {
         iss: base_url + FHIR_PATH,
@@ -198,6 +225,12 @@ module UDAPSecurityTestKit
       response.status = 401
       response.format = :json
       response.body = { error: 'invalid_client', error_description: error_message }.to_json
+    end
+
+    def client_id_from_client_assertion(client_assertion_jwt)
+      return unless client_assertion_jwt.present?
+
+      jwt_claims(client_assertion_jwt)&.dig('iss')
     end
   end
 end

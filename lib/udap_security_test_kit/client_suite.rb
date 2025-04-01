@@ -9,19 +9,7 @@ module UDAPSecurityTestKit
   class UDAPSecurityClientTestSuite < Inferno::TestSuite
     id :udap_security_client
     title 'UDAP Security Client'
-    description %(
-      The User Data Access Protocol (UDAP) Security Client test kit verifies that client systems correctly
-      implement the [STU 1 version of HL7 UDAP Security IG](http://hl7.org/fhir/us/udap-security/STU1/)
-      for extending OAuth 2.0 using [UDAP workflows](https://www.udap.org/index.html).
-
-      There are three steps to the UDAP workflow:
-      1. Discovery
-      2. Dynamic Client Registration
-      3. Authorization & Authentication
-
-      In this test suite, Inferno acts as a mock UDAP server to test *client conformance* to the HL7 UDAP IG.
-      Currently, only the [B2B](https://hl7.org/fhir/us/udap-security/STU1/b2b.html) Client Credentials flow is tested.
-    )
+    description File.read(File.join(__dir__, 'docs', 'udap_client_suite_description.md'))
 
     links [
       {

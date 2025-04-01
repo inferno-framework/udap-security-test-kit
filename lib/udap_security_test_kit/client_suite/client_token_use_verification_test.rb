@@ -9,7 +9,7 @@ module UDAPSecurityTestKit
     id :udap_client_token_use_verification
     title 'Verify UDAP Token Use'
     description %(
-        Check that a UDAP token returne to the client was used for request
+        Check that a UDAP token returned to the client was used for request
         authentication.
       )
 

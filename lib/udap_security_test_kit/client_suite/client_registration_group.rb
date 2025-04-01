@@ -17,7 +17,8 @@ module UDAPSecurityTestKit
           type: 'text',
           description: %(
             The UDAP Client URI that will be used to register with Inferno's simulated UDAP server.
-          )
+          ),
+          optional: false
 
     test from: :udap_client_registration_interaction
     test from: :udap_client_registration_verification

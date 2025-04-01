@@ -1,5 +1,5 @@
 {
-  "title": "Demo: Run against UDAP Client Tests",
+  "title": "Demo: Run Against the UDAP Security Client Suite",
   "id": "udap_run_server_against_client",
   "test_suite_id": "udap_security",
   "inputs": [

@@ -29,6 +29,7 @@ module UDAPSecurityTestKit
             details: FHIR::CodeableConcept.new(text: 'No response provided to echo.')
           )
         ).to_json
+        return
       end
 
       response.status = 200

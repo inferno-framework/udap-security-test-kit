@@ -13,13 +13,24 @@ module UDAPSecurityTestKit
         authentication.
       )
 
+    def access_request_tags
+      return config.options[:access_request_tags] if config.options[:access_request_tags].present?
+
+      [ACCESS_TAG]
+    end
+
     run do
       load_tagged_requests(REGISTRATION_TAG, UDAP_TAG)
       omit_if requests.blank?, 'UDAP Authentication not demonstrated as a part of this test session.'
 
       requests.clear
       token_requests = load_tagged_requests(TOKEN_TAG, UDAP_TAG)
-      access_requests = load_tagged_requests(ACCESS_TAG).reject { |access| access.status == 401 }
+
+      puts access_request_tags
+      puts config.options
+      access_requests = access_request_tags.map do |access_request_tag|
+        load_tagged_requests(access_request_tag).reject { |access| access.status == 401 }
+      end.flatten
 
       skip_if token_requests.blank?, 'No token requests made.'
       skip_if access_requests.blank?, 'No successful access requests made.'

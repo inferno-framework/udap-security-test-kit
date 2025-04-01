@@ -34,11 +34,11 @@ module UDAPSecurityTestKit
       [200, { 'Content-Type' => 'application/json', 'Access-Control-Allow-Origin' => '*' }, [response_body]]
     end
 
-    def make_udap_token_response(request, response)
+    def make_udap_token_response(request, response, test_session_id)
       assertion = request.params[:client_assertion]
       client_id = client_id_from_client_assertion(assertion)
 
-      software_statement = udap_registration_software_statement(test_run.test_session_id)
+      software_statement = udap_registration_software_statement(test_session_id)
       signature_error = udap_assertion_signature_verification(assertion, software_statement)
 
       if signature_error.present?

@@ -12,7 +12,7 @@ module UDAPSecurityTestKit
       end
 
       def make_response
-        make_udap_token_response(request, response)
+        make_udap_token_response(request, response, test_run.test_session_id)
       end
 
       def update_result

@@ -8,11 +8,11 @@ module UDAPSecurityTestKit
   module MockUDAPServer
     class TokenEndpoint < Inferno::DSL::SuiteEndpoint
       def test_run_identifier
-        client_id_from_client_assertion(request.params[:client_assertion])
+        MockUDAPServer.client_id_from_client_assertion(request.params[:client_assertion])
       end
 
       def make_response
-        make_udap_token_response(request, response, test_run.test_session_id)
+        MockUDAPServer.make_udap_token_response(request, response, test_run.test_session_id)
       end
 
       def update_result

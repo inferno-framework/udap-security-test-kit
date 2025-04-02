@@ -20,10 +20,10 @@ RSpec.describe UDAPSecurityTestKit::MockUDAPServer, :request, :runnable do # rub
     }
   end
   let(:root_cert) do
-    File.read(File.join(__dir__, '..', '..', '..', 'lib', 'udap_security_test_kit', 'certs', 'infernoCA.pem'))
+    File.read(File.join(__dir__, '..', '..', '..', 'lib', 'udap_security_test_kit', 'certs', 'InfernoCA.pem'))
   end
   let(:root_key) do
-    File.read(File.join(__dir__, '..', '..', '..', 'lib', 'udap_security_test_kit', 'certs', 'infernoCA.key'))
+    File.read(File.join(__dir__, '..', '..', '..', 'lib', 'udap_security_test_kit', 'certs', 'InfernoCA.key'))
   end
   let(:leaf_cert) do
     File.read(File.join(__dir__, '..', '..', '..', 'lib', 'udap_security_test_kit', 'certs', 'TestClient.pem'))

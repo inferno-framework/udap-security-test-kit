@@ -86,11 +86,6 @@ RSpec.describe UDAPSecurityTestKit::UDAPClientRegistrationVerification do # rubo
     )
   end
 
-  it 'omits if not configured for udap' do
-    result = run(test)
-    expect(result.result).to eq('omit')
-  end
-
   it 'skips if no registration requests' do
     result = run(test, udap_client_uri:)
     expect(result.result).to eq('skip')

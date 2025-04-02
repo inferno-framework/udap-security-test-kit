@@ -108,8 +108,8 @@ module UDAPSecurityTestKit
         if claims['extensions'].is_a?(Hash)
           check_b2b_auth_extension(claims.dig('extensions', 'hl7-b2b'), request_num)
         else
-          add_message('error', "client assertion jwt on token request #{request_num} has an `extensions` claim that is " \
-                               'not a json object.')
+          add_message('error', "client assertion jwt on token request #{request_num} has an `extensions` claim that " \
+                               'is not a json object.')
         end
       else
         add_message('error', "client assertion jwt on token request #{request_num} missing the `hl7-b2b` extension.")

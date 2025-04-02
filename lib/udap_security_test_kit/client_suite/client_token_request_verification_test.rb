@@ -123,21 +123,21 @@ module UDAPSecurityTestKit
       end
 
       if b2b_auth['version'].blank?
-        add_message('error', "the `hl7-b2b` extension on client assertion jwt on token request #{request_num} is missing " \
-                             'the required `version` key.')
+        add_message('error', "the `hl7-b2b` extension on client assertion jwt on token request #{request_num} is " \
+                             'missing the required `version` key.')
       elsif b2b_auth['version'].to_s != '1'
         add_message('error', "the `hl7-b2b` extension on client assertion jwt on token request #{request_num} has an " \
                              "incorrect `version` value: expected `1`, got #{b2b_auth['version']}.")
       end
 
       if b2b_auth['organization_id'].blank?
-        add_message('error', "the `hl7-b2b` extension on client assertion jwt on token request #{request_num} is missing " \
-                             'the required `organization_id` key.')
+        add_message('error', "the `hl7-b2b` extension on client assertion jwt on token request #{request_num} is " \
+                             'missing the required `organization_id` key.')
       end
 
       if b2b_auth['purpose_of_use'].blank?
-        add_message('error', "the `hl7-b2b` extension on client assertion jwt on token request #{request_num} is missing " \
-                             'the required `purpose_of_use` key.')
+        add_message('error', "the `hl7-b2b` extension on client assertion jwt on token request #{request_num} is " \
+                             'missing the required `purpose_of_use` key.')
       end
 
       nil

@@ -11,8 +11,8 @@ module UDAPSecurityTestKit
 
     module_function
 
-    def udap_server_metadata(env)
-      base_url = env_base_url(env, UDAP_DISCOVERY_PATH)
+    def udap_server_metadata(suite_id)
+      base_url = "#{Inferno::Application['base_url']}/custom/#{suite_id}"
       response_body = {
         udap_versions_supported: ['1'],
         udap_profiles_supported: ['udap_dcr', 'udap_authn', 'udap_authz'],
@@ -109,14 +109,6 @@ module UDAPSecurityTestKit
                   File.join(__dir__, '..',
                             'certs', 'TestClientPrivateKey.key'))
       )
-    end
-
-    def env_base_url(env, endpoint_path)
-      protocol = env['rack.url_scheme']
-      host = env['HTTP_HOST']
-      path = env['REQUEST_PATH'] || env['PATH_INFO']
-      path.gsub!(%r{#{endpoint_path}(/)?}, '')
-      "#{protocol}://#{host + path}"
     end
 
     def parsed_request_body(request)

@@ -9,7 +9,7 @@ module UDAPSecurityTestKit
     title 'Perform UDAP-secured Access'
     description %(
       During this test, Inferno will wait for the client to access data
-      using a UDAP token obtained
+      using a UDAP token obtained during an earlier test.
     )
     input :client_id,
           title: 'Client Id',
@@ -40,11 +40,11 @@ module UDAPSecurityTestKit
             token using the [UDAP B2B client credentials flow](https://hl7.org/fhir/us/udap-security/STU1/b2b.html)
             and use that token to access a FHIR endpoint under the simulated server's base URL
 
-            `#{fhir_base_url}`
+            `#{client_fhir_base_url}`
 
             Inferno will echo the response provided in the **FHIR Response to Echo** input.
 
-            [Click here](#{resume_pass_url}?token=#{client_id}) once you performed
+            [Click here](#{client_resume_pass_url}?token=#{client_id}) once you performed
             the access.
           )
       )

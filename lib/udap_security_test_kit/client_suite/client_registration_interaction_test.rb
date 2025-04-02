@@ -13,12 +13,12 @@ module UDAPSecurityTestKit
         using UDAP dynamic registration.
       )
     input :udap_client_uri,
-          optional: true
+          optional: false
 
     output :client_id
 
     run do
-      omit_if udap_client_uri.blank?,
+      omit_if udap_client_uri.blank?, # for re-use: mark the udap_client_uri input as optional when importing to enable
               'Not configured for UDAP authentication.'
 
       generated_client_id = MockUDAPServer.client_uri_to_client_id(udap_client_uri)
@@ -35,13 +35,13 @@ module UDAPSecurityTestKit
 
             To the UDAP-protected FHIR Server at
 
-            `#{fhir_base_url}`
+            `#{client_fhir_base_url}`
 
             Metadata on Inferno's simulated UDAP server can be found at
 
-            `#{udap_discovery_url}`
+            `#{client_udap_discovery_url}`
 
-            [Click here](#{resume_pass_url}?token=#{generated_client_id}) once you have
+            [Click here](#{client_resume_pass_url}?token=#{generated_client_id}) once you have
             succesfully completed the registration.
           )
       )

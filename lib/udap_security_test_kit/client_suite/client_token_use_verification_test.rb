@@ -1,11 +1,8 @@
 require_relative '../tags'
-require_relative '../urls'
 require_relative '../endpoints/mock_udap_server'
 
 module UDAPSecurityTestKit
   class UDAPTokenUseVerification < Inferno::Test
-    include URLs
-
     id :udap_client_token_use_verification
     title 'Verify UDAP Token Use'
     description %(

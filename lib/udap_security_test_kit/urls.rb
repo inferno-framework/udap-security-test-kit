@@ -10,36 +10,36 @@ module UDAPSecurityTestKit
   REGISTRATION_PATH = "#{AUTH_SERVER_PATH}/register".freeze
 
   module URLs
-    def base_url
-      @base_url ||= "#{Inferno::Application['base_url']}/custom/#{suite_id}"
+    def client_base_url
+      @client_base_url ||= "#{Inferno::Application['base_url']}/custom/#{client_suite_id}"
     end
 
-    def fhir_base_url
-      @fhir_base_url ||= base_url + FHIR_PATH
+    def client_fhir_base_url
+      @client_fhir_base_url ||= client_base_url + FHIR_PATH
     end
 
-    def resume_pass_url
-      @resume_pass_url ||= base_url + RESUME_PASS_PATH
+    def client_resume_pass_url
+      @client_resume_pass_url ||= client_base_url + RESUME_PASS_PATH
     end
 
-    def resume_fail_url
-      @resume_fail_url ||= base_url + RESUME_FAIL_PATH
+    def client_resume_fail_url
+      @client_resume_fail_url ||= client_base_url + RESUME_FAIL_PATH
     end
 
-    def udap_discovery_url
-      @udap_discovery_url ||= base_url + UDAP_DISCOVERY_PATH
+    def client_udap_discovery_url
+      @client_udap_discovery_url ||= client_base_url + UDAP_DISCOVERY_PATH
     end
 
-    def token_url
-      @token_url ||= base_url + TOKEN_PATH
+    def client_token_url
+      @client_token_url ||= client_base_url + TOKEN_PATH
     end
 
-    def registration_url
-      @registration_url ||= base_url + REGISTRATION_PATH
+    def client_registration_url
+      @client_registration_url ||= client_base_url + REGISTRATION_PATH
     end
 
-    def suite_id
-      self.class.suite.id
+    def client_suite_id
+      UDAPSecurityTestKit::UDAPSecurityClientTestSuite.id
     end
   end
 end

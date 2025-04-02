@@ -1,11 +1,8 @@
 require_relative '../tags'
-require_relative '../urls'
 require_relative '../endpoints/mock_udap_server'
 
 module UDAPSecurityTestKit
   class UDAPClientTokenRequestVerification < Inferno::Test
-    include URLs
-
     id :udap_client_token_request_verification
     title 'Verify UDAP Token Requests'
     description %(
@@ -42,66 +39,66 @@ module UDAPSecurityTestKit
       }, 'Invalid token requests detected. See messages for details.'
     end
 
-    def check_request_params(params, index)
+    def check_request_params(params, request_num)
       if params['grant_type'] != 'client_credentials'
         add_message('error',
-                    "Token request #{index} had an incorrect `grant_type`: expected 'client_credentials', " \
+                    "Token request #{request_num} had an incorrect `grant_type`: expected 'client_credentials', " \
                     "but got '#{params['grant_type']}'")
       end
       if params['client_assertion_type'] != 'urn:ietf:params:oauth:client-assertion-type:jwt-bearer'
         add_message('error',
-                    "Token request #{index} had an incorrect `client_assertion_type`: " \
+                    "Token request #{request_num} had an incorrect `client_assertion_type`: " \
                     "expected 'urn:ietf:params:oauth:client-assertion-type:jwt-bearer', " \
                     "but got '#{params['client_assertion_type']}'")
       end
       return unless params['udap'].to_s != '1'
 
       add_message('error',
-                  "Token request #{index} had an incorrect `udap`: " \
+                  "Token request #{request_num} had an incorrect `udap`: " \
                   "expected '1', " \
                   "but got '#{params['udap']}'")
     end
 
-    def check_client_assertion(assertion, index, jti_list, registration_token, endpoint_aud, registered_client_id)
+    def check_client_assertion(assertion, request_num, jti_list, registration_token, endpoint_aud, registered_client_id)
       decoded_token =
         begin
           JWT::EncodedToken.new(assertion)
         rescue StandardError => e
-          add_message('error', "Token request #{index} contained an invalid client assertion jwt: #{e}")
+          add_message('error', "Token request #{request_num} contained an invalid client assertion jwt: #{e}")
           nil
         end
 
       return unless decoded_token.present?
 
       # header checked with signature
-      check_jwt_payload(decoded_token.payload, index, jti_list, endpoint_aud, registered_client_id)
-      check_jwt_signature(decoded_token, registration_token, index)
+      check_jwt_payload(decoded_token.payload, request_num, jti_list, endpoint_aud, registered_client_id)
+      check_jwt_signature(decoded_token, registration_token, request_num)
     end
 
-    def check_jwt_payload(claims, index, jti_list, endpoint_aud, registered_client_id) # rubocop:disable Metrics/CyclomaticComplexity
+    def check_jwt_payload(claims, request_num, jti_list, endpoint_aud, registered_client_id) # rubocop:disable Metrics/CyclomaticComplexity
       if claims['iss'] != registered_client_id
-        add_message('error', "client assertion jwt on token request #{index} has an incorrect `iss` claim: " \
+        add_message('error', "client assertion jwt on token request #{request_num} has an incorrect `iss` claim: " \
                              "expected '#{registered_client_id}', got '#{claims['iss']}'")
       end
 
       if claims['sub'] != registered_client_id
-        add_message('error', "client assertion jwt on token request #{index} has an incorrect `sub` claim: " \
+        add_message('error', "client assertion jwt on token request #{request_num} has an incorrect `sub` claim: " \
                              "expected '#{registered_client_id}', got '#{claims['sub']}'")
       end
 
       if claims['aud'] != endpoint_aud
-        add_message('error', "client assertion jwt on token request #{index} has an incorrect `aud` claim: " \
+        add_message('error', "client assertion jwt on token request #{request_num} has an incorrect `aud` claim: " \
                              "expected '#{endpoint_aud}', got '#{claims['aud']}'")
       end
 
       if claims['exp'].blank?
-        add_message('error', "client assertion jwt on token request #{index} is missing the `exp` claim.")
+        add_message('error', "client assertion jwt on token request #{request_num} is missing the `exp` claim.")
       end
 
       if claims['jti'].blank?
-        add_message('error', "client assertion jwt on token request #{index} is missing the `jti` claim.")
+        add_message('error', "client assertion jwt on token request #{request_num} is missing the `jti` claim.")
       elsif jti_list.include?(claims['jti'])
-        add_message('error', "client assertion jwt on token request #{index} has a `jti` claim that was " \
+        add_message('error', "client assertion jwt on token request #{request_num} has a `jti` claim that was " \
                              "previouly used: '#{claims['jti']}'.")
       else
         jti_list << claims['jti']
@@ -109,49 +106,49 @@ module UDAPSecurityTestKit
 
       if claims['extensions'].present?
         if claims['extensions'].is_a?(Hash)
-          check_b2b_auth_extension(claims.dig('extensions', 'hl7-b2b'), index)
+          check_b2b_auth_extension(claims.dig('extensions', 'hl7-b2b'), request_num)
         else
-          add_message('error', "client assertion jwt on token request #{index} has an `extensions` claim that is " \
+          add_message('error', "client assertion jwt on token request #{request_num} has an `extensions` claim that is " \
                                'not a json object.')
         end
       else
-        add_message('error', "client assertion jwt on token request #{index} missing the `hl7-b2b` extension.")
+        add_message('error', "client assertion jwt on token request #{request_num} missing the `hl7-b2b` extension.")
       end
     end
 
-    def check_b2b_auth_extension(b2b_auth, index)
+    def check_b2b_auth_extension(b2b_auth, request_num)
       if b2b_auth.blank?
-        add_message('error', "client assertion jwt on token request #{index} missing the `hl7-b2b` extension.")
+        add_message('error', "client assertion jwt on token request #{request_num} missing the `hl7-b2b` extension.")
         return
       end
 
       if b2b_auth['version'].blank?
-        add_message('error', "the `hl7-b2b` extension on client assertion jwt on token request #{index} is missing " \
+        add_message('error', "the `hl7-b2b` extension on client assertion jwt on token request #{request_num} is missing " \
                              'the required `version` key.')
       elsif b2b_auth['version'].to_s != '1'
-        add_message('error', "the `hl7-b2b` extension on client assertion jwt on token request #{index} has an " \
+        add_message('error', "the `hl7-b2b` extension on client assertion jwt on token request #{request_num} has an " \
                              "incorrect `version` value: expected `1`, got #{b2b_auth['version']}.")
       end
 
       if b2b_auth['organization_id'].blank?
-        add_message('error', "the `hl7-b2b` extension on client assertion jwt on token request #{index} is missing " \
+        add_message('error', "the `hl7-b2b` extension on client assertion jwt on token request #{request_num} is missing " \
                              'the required `organization_id` key.')
       end
 
       if b2b_auth['purpose_of_use'].blank?
-        add_message('error', "the `hl7-b2b` extension on client assertion jwt on token request #{index} is missing " \
+        add_message('error', "the `hl7-b2b` extension on client assertion jwt on token request #{request_num} is missing " \
                              'the required `purpose_of_use` key.')
       end
 
       nil
     end
 
-    def check_jwt_signature(encoded_token, registration_token, index)
+    def check_jwt_signature(encoded_token, registration_token, request_num)
       error = MockUDAPServer.udap_assertion_signature_verification(encoded_token.jwt, registration_token.jwt)
 
       return unless error.present?
 
-      add_message('error', "Signature validation failed on token request #{index}: #{error}")
+      add_message('error', "Signature validation failed on token request #{request_num}: #{error}")
     end
   end
 end

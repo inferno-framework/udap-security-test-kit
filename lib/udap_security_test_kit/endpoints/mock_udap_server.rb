@@ -7,7 +7,6 @@ require_relative '../udap_jwt_builder'
 
 module UDAPSecurityTestKit
   module MockUDAPServer
-    include Inferno::DSL::HTTPClient
     SUPPORTED_SCOPES = ['openid', 'system/*.read', 'user/*.read', 'patient/*.read'].freeze
 
     module_function

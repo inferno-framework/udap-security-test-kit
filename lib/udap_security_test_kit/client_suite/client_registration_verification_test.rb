@@ -13,10 +13,10 @@ module UDAPSecurityTestKit
         registration request is conformant.
       )
     input :udap_client_uri,
-          optional: true
+          optional: false
 
     run do
-      omit_if udap_client_uri.blank?,
+      omit_if udap_client_uri.blank?, # for re-use: mark the udap_client_uri input as optional when importing to enable
               'Not configured for UDAP authentication.'
 
       load_tagged_requests(UDAP_TAG, REGISTRATION_TAG)
@@ -84,10 +84,10 @@ module UDAPSecurityTestKit
                     'Registration software statement `sub` claim is incorrect: ' \
                     "expected '#{udap_client_uri}', got '#{claims['sub']}'")
       end
-      unless claims['aud'] == registration_url
+      unless claims['aud'] == client_registration_url
         add_message('error',
                     'Registration software statement `aud` claim is incorrect: ' \
-                    "expected '#{registration_url}', got '#{claims['aud']}'")
+                    "expected '#{client_registration_url}', got '#{claims['aud']}'")
       end
 
       check_software_statement_timing(claims['iat'], claims['exp'], request_time)

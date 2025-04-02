@@ -13,7 +13,7 @@ RSpec.describe UDAPSecurityTestKit::UDAPClientRegistrationVerification do # rubo
   let(:udap_client_uri) { 'urn:test' }
   let(:key) { UDAPSecurityTestKit::MockUDAPServer.test_kit_private_key }
   let(:cert) { UDAPSecurityTestKit::MockUDAPServer.test_kit_cert }
-  let(:reg_url) { registration_url }
+  let(:reg_url) { client_registration_url }
   let(:reg_claims) do
     {
       iss: udap_client_uri,

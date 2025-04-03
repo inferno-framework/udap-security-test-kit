@@ -8,7 +8,7 @@
       "description": "Base FHIR URL of FHIR Server. Discovery request will be sent to {baseURL}/.well-known/udap",
       "title": "FHIR Server Base URL",
       "type": "text",
-      "value": "http://localhost:4567/custom/udap_security_client/fhir"
+      "value": "<%= Inferno::Application['base_url'] %>/custom/udap_security_client/fhir"
     },
     {
       "name": "udap_community_parameter",
@@ -251,7 +251,7 @@
       "description": "MUST correspond to a unique URI entry in the Subject Alternative Name (SAN) extension of the client certificate used for registration.",
       "title": "Client Credentials JWT Issuer (iss) Claim",
       "type": "text",
-      "value": "http://localhost:4567/custom/udap_security/fhir"
+      "value": "<%= Inferno::Application['base_url'] %>/custom/udap_security/fhir"
     },
     {
       "name": "udap_client_credentials_flow_registration_scope",

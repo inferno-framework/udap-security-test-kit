@@ -10,6 +10,10 @@ module UDAPSecurityTestKit
         authentication.
       )
 
+    input :udap_demonstrated # from test :udap_client_token_request_verification based on registrations
+    input :udap_tokens,
+          optional: true
+
     def access_request_tags
       return config.options[:access_request_tags] if config.options[:access_request_tags].present?
 
@@ -17,19 +21,14 @@ module UDAPSecurityTestKit
     end
 
     run do
-      load_tagged_requests(REGISTRATION_TAG, UDAP_TAG)
-      omit_if requests.blank?, 'UDAP Authentication not demonstrated as a part of this test session.'
+      omit_if udap_demonstrated == 'No', 'UDAP Authentication not demonstrated as a part of this test session.'
 
-      requests.clear
-      token_requests = load_tagged_requests(TOKEN_TAG, UDAP_TAG)
-
-      puts access_request_tags
-      puts config.options
       access_requests = access_request_tags.map do |access_request_tag|
         load_tagged_requests(access_request_tag).reject { |access| access.status == 401 }
       end.flatten
+      obtained_tokens = udap_tokens&.split("\n")
 
-      skip_if token_requests.blank?, 'No token requests made.'
+      skip_if obtained_tokens.blank?, 'No token requests made.'
       skip_if access_requests.blank?, 'No successful access requests made.'
 
       used_tokens = access_requests.map do |access_request|
@@ -38,11 +37,7 @@ module UDAPSecurityTestKit
         end&.value&.delete_prefix('Bearer ')
       end.compact
 
-      request_with_used_token = token_requests.find do |token_request|
-        used_tokens.include?(JSON.parse(token_request.response_body)&.dig('access_token'))
-      end
-
-      assert request_with_used_token.present?, 'Returned tokens never used in any requests.'
+      assert (used_tokens & obtained_tokens).present?, 'Returned tokens never used in any requests.'
     end
   end
 end

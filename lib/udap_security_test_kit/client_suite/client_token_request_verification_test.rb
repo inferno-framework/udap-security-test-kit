@@ -6,11 +6,15 @@ module UDAPSecurityTestKit
     id :udap_client_token_request_verification
     title 'Verify UDAP Token Requests'
     description %(
-        Check that UDAP token requests are conformant.
-      )
+      Check that UDAP token requests are conformant.
+    )
+
+    output :udap_demonstrated
+    output :udap_tokens
 
     run do
       load_tagged_requests(REGISTRATION_TAG, UDAP_TAG)
+      output udap_demonstrated: requests.present? ? 'Yes' : 'No'
       omit_if requests.blank?, 'UDAP Authentication not demonstrated as a part of this test session.'
       registration_request = requests.last
       registration_assertion = MockUDAPServer.parsed_request_body(registration_request)['software_statement']
@@ -27,12 +31,16 @@ module UDAPSecurityTestKit
       skip_if requests.blank?, 'No UDAP token requests made.'
 
       jti_list = []
+      token_list = []
       requests.each_with_index do |token_request, index|
         request_params = URI.decode_www_form(token_request.request_body).to_h
         check_request_params(request_params, index + 1)
         check_client_assertion(request_params['client_assertion'], index + 1, jti_list, registration_token,
                                token_request.url, registered_client_id)
+        token_list << extract_token_from_response(token_request)
       end
+
+      output udap_tokens: token_list.compact.join("\n")
 
       assert messages.none? { |msg|
         msg[:type] == 'error'
@@ -149,6 +157,14 @@ module UDAPSecurityTestKit
       return unless error.present?
 
       add_message('error', "Signature validation failed on token request #{request_num}: #{error}")
+    end
+
+    def extract_token_from_response(request)
+      return unless request.status == 200
+
+      JSON.parse(request.response_body)&.dig('access_token')
+    rescue StandardError
+      nil
     end
   end
 end

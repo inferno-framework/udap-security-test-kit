@@ -90,6 +90,7 @@ module UDAPSecurityTestKit
                     "expected '#{client_registration_url}', got '#{claims['aud']}'")
       end
 
+      check_software_statement_grant_types(claims)
       MockUDAPServer.check_jwt_timing(claims['iat'], claims['exp'], request_time)
 
       add_message('error', 'Registration software statement `jti` claim is missing.') unless claims['jti'].present?
@@ -134,8 +135,8 @@ module UDAPSecurityTestKit
         return
       end
 
-      has_client_credentials = claims['grant_types'].include?['client_credentials']
-      has_authorization_code = claims['grant_types'].include?['authorization_code']
+      has_client_credentials = claims['grant_types'].include?('client_credentials')
+      has_authorization_code = claims['grant_types'].include?('authorization_code')
 
       unless has_client_credentials || has_authorization_code
         add_message('error', 'Registration software statement `grant_types` claim must contain one of ' \
@@ -162,49 +163,51 @@ module UDAPSecurityTestKit
       nil
     end
 
-    def check_client_credentials_software_statement(claims) # rubocop:disable Metrics/CyclomaticComplexity
-      unless claims['redirect_uris'].present?
+    def check_authorization_code_software_statement(claims) # rubocop:disable Metrics/CyclomaticComplexity
+      if claims['redirect_uris'].blank?
         add_message('error', 'Registration software statement `redirect_uris` must be present when' \
                              "the 'authorization_code' `grant_type` is requested.")
-      end
-      unless claims['redirect_uris'].is_a?(Array)
+      elsif !claims['redirect_uris'].is_a?(Array)
         add_message('error', 'Registration software statement `redirect_uris` must be a list when' \
                              "the 'authorization_code' `grant_type` is requested.")
-      end
-      claims['redirect_uris'].each do |redirect_uri|
-        unless valid_uri?(redirect_uri, required_scheme: 'https')
-          add_message('error', "Registration software statement `redirect_uris` entry #{index + 1} is invalid: " \
-                               'it is not a valid https uri.')
+      else
+        claims['redirect_uris'].each do |redirect_uri|
+          unless valid_uri?(redirect_uri, required_scheme: 'https')
+            add_message('error', "Registration software statement `redirect_uris` entry #{index + 1} is invalid: " \
+                                 'it is not a valid https uri.')
+          end
         end
       end
 
-      unless claims['logo_uri'].present?
+      if claims['logo_uri'].blank?
         add_message('error', 'Registration software statement `logo_uri` must be present when' \
                              "the 'authorization_code' `grant_type` is requested.")
-      end
-      unless valid_uri?(claims['logo_uri'], required_scheme: 'https')
-        dd_message('error', 'Registration software statement `logo_uri` is invalid: it is not a valid https uri.')
-      end
-      unless ['gif', 'jpg', 'jpeg', 'png'].include?(claims['logo_uri'].split['.'].last.downcase)
-        dd_message('error', 'Registration software statement `logo_uri` is invalid: it must point to a ' \
-                            'PNG, JPG, or GIF file.')
+      else
+        unless valid_uri?(claims['logo_uri'], required_scheme: 'https')
+          add_message('error', 'Registration software statement `logo_uri` is invalid: it is not a valid https uri.')
+        end
+        unless ['gif', 'jpg', 'jpeg', 'png'].include?(claims['logo_uri'].split['.'].last.downcase)
+          add_message('error', 'Registration software statement `logo_uri` is invalid: it must point to a ' \
+                               'PNG, JPG, or GIF file.')
+        end
       end
 
-      unless claims['response_types'].present?
+      if claims['response_types'].blank?
         add_message('error', 'Registration software statement `response_types` must be present when' \
                              "the 'authorization_code' `grant_type` is requested.")
-      end
-      unless claims['response_types'].is_a?(Array) &&
-             claims['response_types'].size == 1 &&
-             claims['response_types'][0] == 'code'
-        add_message('error', 'Registration software statement `response_types` claim is invalid: ' \
-                             "must contain exactly one entry with the value 'code'.")
+      else
+        unless claims['response_types'].is_a?(Array) &&
+               claims['response_types'].size == 1 &&
+               claims['response_types'][0] == 'code'
+          add_message('error', 'Registration software statement `response_types` claim is invalid: ' \
+                               "must contain exactly one entry with the value 'code'.")
+        end
       end
 
       nil
     end
 
-    def check_authorization_code_software_statement(claims)
+    def check_client_credentials_software_statement(claims)
       unless claims['redirect_uris'].nil?
         add_message('error', 'Registration software statement `redirect_uris` must not be present when' \
                              "the 'client_credentials' `grant_type` is requested.")

@@ -22,10 +22,14 @@ requirements and may change the test verification logic.
 
 For these tests Inferno simulates a UDAP server that supports the business-to-business
 client credentials flow. Testers will
-1. Provide to Inferno the Client URI that they will register their system using and then
-   make a dynamic registration request.
-2. Request an access token using the registered JWKS and client id.
-3. Use that access token on a FHIR API request.
+1. Provide to Inferno the client URI with which they will register their system.
+2. Make a dynamic registration request to Inferno using the provided client URI
+   and including the X.509 certificate used to sign the registeration and subsequent
+   token requests which must also have the client URI as a Subject Alternative Name (SAN)
+   value in the certificate.
+3. Obtain an access token with a request using the client Id returned during registration
+   and signed using same X.509 certificate supplied during registration.
+4. Use that access token on a FHIR API request.
 
 The simulated UDAP server is relatively permissive in the sense that it will often
 provide successful responses even when the request is not conformant. When
@@ -41,7 +45,7 @@ fully conformant.
 
 The following inputs must be provided by the tester at a minimum to execute
 any tests in this suite:
-1. **SUDAP Client URI**: The UDAP Client URI that will be used to register with
+1. **UDAP Client URI**: The UDAP Client URI that will be used to register with
    Inferno's simulated UDAP server.
 
 The *Additional Inputs* section below describes options available to customize
@@ -98,12 +102,12 @@ The following sections list other known gaps and limitations.
 ### UDAP Server Simulation Limitations
 
 This test suite contains a simulation of a UDAP server which is not fully
-general and not all conformant clients may be able to interact with it. However, the intention
-is not to prevent systems from passing for making conformant choices that Inferno's simulation
-does not support. One specific example is that the UDAP configuration metadata available at
+general and not all conformant clients may be able to interact with it. One
+specific example is that the UDAP configuration metadata available at
 `.well-known/udap` for the simulated server is fixed and cannot be changed by
-testers at this time. Please report any issues that prevent conformant systems from passing in
-the [github repository's issues page](https://github.com/inferno-framework/udap-security-test-kit/issues/).
+testers at this time. Despite the current limitations, the intention is for Inferno to
+support a variety of conformant choices, so please report issues that prevent conformant
+systems from passing in the [github repository's issues page](https://github.com/inferno-framework/udap-security-test-kit/issues/).
 
 ### FHIR Server Simulation Limitations
 

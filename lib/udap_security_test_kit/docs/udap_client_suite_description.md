@@ -56,8 +56,8 @@ the behavior of Inferno's server simulation.
 To try out these tests without a UDAP client implementation, these tests can be exercised
 using the UDAP Security server test suite and a simple HTTP request generator. The following
 steps use [Postman](https://www.postman.com/) to generate the access request using 
-[this collection](https://github.com/inferno-framework/udap-security-test-kit/blob/main/lib/udap_security_test_kit/docs/demo/FHIR%20Request.postman_collection.json). Install the app and import the collection before following these
-steps.
+[this collection](https://github.com/inferno-framework/udap-security-test-kit/blob/main/lib/udap_security_test_kit/docs/demo/FHIR%20Request.postman_collection.json).
+Install the app and import the collection before following these steps.
 
 1. Start an instance of the UDAP Security Client test suite.
 2. From the drop down in the upper left, select preset "Demo: Run Against the UDAP Security Server Suite".
@@ -71,8 +71,10 @@ steps.
    test **2.3.01** OAuth token exchange request succeeds when supplied correct information, click
    on the "REQUESTS" tab, clicking on the "DETAILS" button, and expanding the "Response Body".
    Copy the "access_token" value, which will be a ~100 character string of letters and numbers (e.g., eyJjbGllbnRfaWQiOiJzbWFydF9jbGllbnRfdGVzdF9kZW1vIiwiZXhwaXJhdGlvbiI6MTc0MzUxNDk4Mywibm9uY2UiOiJlZDI5MWIwNmZhMTE4OTc4In0)
-9. Open Postman and open the "FHIR Request" Collection. Click the "Variables" tab and add the copied access token
-   as the current value of the "bearer_token" variable. Save the collection.
+9. Open Postman and open the "FHIR Request" Collection. Click the "Variables" tab and add the
+   copied access token as the current value of the `bearer_token` variable. Also update the
+   `base_url` value for where the test is running (see details on the "Overview" tab).
+   Save the collection.
 10. Select the "Patient Read" request and click "Send". A FHIR Patient resource should be returned.
 11. Return to the client tests and click the link to continue and complete the tests.
 

@@ -24,7 +24,7 @@ module UDAPSecurityTestKit
         scopes_supported: SUPPORTED_SCOPES,
         token_endpoint: base_url + TOKEN_PATH,
         token_endpoint_auth_methods_supported: ['private_key_jwt'],
-        token_endpoint_auth_signing_alg_values_supported: ['RS384', 'ES384'],
+        token_endpoint_auth_signing_alg_values_supported: ['RS256', 'RS384', 'ES384'],
         registration_endpoint: base_url + REGISTRATION_PATH,
         registration_endpoint_jwt_signing_alg_values_supported: ['RS384', 'ES384'],
         signed_metadata: udap_signed_metadata_jwt(base_url)
@@ -222,6 +222,48 @@ module UDAPSecurityTestKit
       return unless client_assertion_jwt.present?
 
       jwt_claims(client_assertion_jwt)&.dig('iss')
+    end
+
+    def check_jwt_timing(issue_claim, expiration_claim, request_time) # rubocop:disable Metrics/CyclomaticComplexity
+      add_message('error', 'Registration software statement `iat` claim is missing') unless issue_claim.present?
+      add_message('error', 'Registration software statement `exp` claim is missing') unless expiration_claim.present?
+      return unless issue_claim.present? && expiration_claim.present?
+
+      unless issue_claim.is_a?(Numeric)
+        add_message('error',
+                    "Registration software statement `iat` claim is invalid: expected a number, got '#{issue_claim}'")
+      end
+      unless expiration_claim.is_a?(Numeric)
+        add_message('error',
+                    'Registration software statement `exp` claim is invalid: ' \
+                    "expected a number, got '#{expiration_claim}'")
+      end
+      return unless issue_claim.is_a?(Numeric) && expiration_claim.is_a?(Numeric)
+
+      issue_time = Time.at(issue_claim)
+      expiration_time = Time.at(expiration_claim)
+      unless expiration_time > issue_time
+        add_message('error',
+                    'Registration software statement `exp` claim is invalid: ' \
+                    'cannot be before the `iat` claim.')
+      end
+      unless expiration_time <= issue_time + 5.minutes
+        add_message('error',
+                    'Registration software statement `exp` claim is invalid: ' \
+                    'cannot be more than 5 minutes after the `iat` claim.')
+      end
+      unless issue_time <= request_time
+        add_message('error',
+                    'Registration software statement `iat` claim is invalid: ' \
+                    'cannot be after the request time.')
+      end
+      unless expiration_time > request_time
+        add_message('error',
+                    'Registration software statement `exp` claim is invalid: ' \
+                    'it has expired.')
+      end
+
+      nil
     end
   end
 end

@@ -39,7 +39,7 @@ module UDAPSecurityTestKit
         request_params = URI.decode_www_form(token_request.request_body).to_h
         check_request_params(request_params, index + 1)
         check_client_assertion(request_params['client_assertion'], index + 1, jti_list, registration_token,
-                               registered_client_id)
+                               registered_client_id, token_request.created_at)
         token_list << extract_token_from_response(token_request)
       end
 
@@ -70,7 +70,7 @@ module UDAPSecurityTestKit
                   "but got '#{params['udap']}'")
     end
 
-    def check_client_assertion(assertion, request_num, jti_list, registration_token, registered_client_id)
+    def check_client_assertion(assertion, request_num, jti_list, registration_token, registered_client_id, request_time)
       decoded_token =
         begin
           JWT::EncodedToken.new(assertion)
@@ -82,11 +82,11 @@ module UDAPSecurityTestKit
       return unless decoded_token.present?
 
       # header checked with signature
-      check_jwt_payload(decoded_token.payload, request_num, jti_list, registered_client_id)
+      check_jwt_payload(decoded_token.payload, request_num, jti_list, registered_client_id, request_time)
       check_jwt_signature(decoded_token, registration_token, request_num)
     end
 
-    def check_jwt_payload(claims, request_num, jti_list, registered_client_id) # rubocop:disable Metrics/CyclomaticComplexity
+    def check_jwt_payload(claims, request_num, jti_list, registered_client_id, request_time) # rubocop:disable Metrics/CyclomaticComplexity
       if claims['iss'] != registered_client_id
         add_message('error', "client assertion jwt on token request #{request_num} has an incorrect `iss` claim: " \
                              "expected '#{registered_client_id}', got '#{claims['iss']}'")
@@ -102,9 +102,7 @@ module UDAPSecurityTestKit
                              "expected '#{client_token_url}', got '#{claims['aud']}'")
       end
 
-      if claims['exp'].blank?
-        add_message('error', "client assertion jwt on token request #{request_num} is missing the `exp` claim.")
-      end
+      MockUDAPServer.check_jwt_timing(claims['iat'], claims['exp'], request_time)
 
       if claims['jti'].blank?
         add_message('error', "client assertion jwt on token request #{request_num} is missing the `jti` claim.")
@@ -144,6 +142,13 @@ module UDAPSecurityTestKit
       if b2b_auth['organization_id'].blank?
         add_message('error', "the `hl7-b2b` extension on client assertion jwt on token request #{request_num} is " \
                              'missing the required `organization_id` key.')
+      else
+        begin
+          URI.parse(b2b_auth['organization_id'])
+        rescue URI::InvalidURIError
+          add_message('error', 'the `organization_id` key in the `hl7-b2b` extension on client assertion jwt on ' \
+                               "token request #{request_num} is not a valid URI.")
+        end
       end
 
       if b2b_auth['purpose_of_use'].blank?

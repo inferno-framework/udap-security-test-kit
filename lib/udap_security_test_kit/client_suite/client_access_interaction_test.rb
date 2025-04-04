@@ -17,7 +17,7 @@ module UDAPSecurityTestKit
           locked: true,
           description: %(
             The registered Client Id for use in obtaining access tokens.
-            Run the **1.1** Client Registration group to populate or update this input.
+            Create a new session if you need to change this value.
           )
     input :echoed_fhir_response,
           title: 'FHIR Response to Echo',

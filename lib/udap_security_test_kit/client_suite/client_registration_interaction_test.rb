@@ -29,13 +29,13 @@ module UDAPSecurityTestKit
         message: %(
             **UDAP Registration**
 
-            Make a UDAP dyanmic registration request for Client URI
-
-            `#{udap_client_uri}`
-
-            To the UDAP-protected FHIR Server at
+            Make a UDAP dyanmic registration request to the UDAP-protected FHIR Server at
 
             `#{client_fhir_base_url}`
+
+            For Client URI
+
+            `#{udap_client_uri}`
 
             Metadata on Inferno's simulated UDAP server can be found at
 

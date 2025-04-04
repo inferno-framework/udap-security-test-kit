@@ -12,7 +12,7 @@ RSpec.describe UDAPSecurityTestKit::UDAPClientTokenRequestVerification do # rubo
   let(:client_id) { UDAPSecurityTestKit::MockUDAPServer.client_uri_to_client_id(udap_client_uri) }
   let(:key) { UDAPSecurityTestKit::MockUDAPServer.test_kit_private_key }
   let(:cert) { UDAPSecurityTestKit::MockUDAPServer.test_kit_cert }
-  let(:token_url) { 'https://inferno.healthit.gov/suites/custom/udap_security_client/auth/token' }
+  let(:token_url) { "#{Inferno::Application['base_url']}/custom/udap_security_client/auth/token" }
   let(:access_token) { 'xyz' }
   let(:reg_claims) do
     {

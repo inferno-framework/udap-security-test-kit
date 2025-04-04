@@ -1,8 +1,11 @@
 require_relative '../tags'
+require_relative '../urls'
 require_relative '../endpoints/mock_udap_server'
 
 module UDAPSecurityTestKit
   class UDAPClientTokenRequestVerification < Inferno::Test
+    include URLs
+
     id :udap_client_token_request_verification
     title 'Verify UDAP Token Requests'
     description %(
@@ -36,7 +39,7 @@ module UDAPSecurityTestKit
         request_params = URI.decode_www_form(token_request.request_body).to_h
         check_request_params(request_params, index + 1)
         check_client_assertion(request_params['client_assertion'], index + 1, jti_list, registration_token,
-                               token_request.url, registered_client_id)
+                               registered_client_id)
         token_list << extract_token_from_response(token_request)
       end
 
@@ -67,7 +70,7 @@ module UDAPSecurityTestKit
                   "but got '#{params['udap']}'")
     end
 
-    def check_client_assertion(assertion, request_num, jti_list, registration_token, endpoint_aud, registered_client_id)
+    def check_client_assertion(assertion, request_num, jti_list, registration_token, registered_client_id)
       decoded_token =
         begin
           JWT::EncodedToken.new(assertion)
@@ -79,11 +82,11 @@ module UDAPSecurityTestKit
       return unless decoded_token.present?
 
       # header checked with signature
-      check_jwt_payload(decoded_token.payload, request_num, jti_list, endpoint_aud, registered_client_id)
+      check_jwt_payload(decoded_token.payload, request_num, jti_list, registered_client_id)
       check_jwt_signature(decoded_token, registration_token, request_num)
     end
 
-    def check_jwt_payload(claims, request_num, jti_list, endpoint_aud, registered_client_id) # rubocop:disable Metrics/CyclomaticComplexity
+    def check_jwt_payload(claims, request_num, jti_list, registered_client_id) # rubocop:disable Metrics/CyclomaticComplexity
       if claims['iss'] != registered_client_id
         add_message('error', "client assertion jwt on token request #{request_num} has an incorrect `iss` claim: " \
                              "expected '#{registered_client_id}', got '#{claims['iss']}'")
@@ -94,9 +97,9 @@ module UDAPSecurityTestKit
                              "expected '#{registered_client_id}', got '#{claims['sub']}'")
       end
 
-      if claims['aud'] != endpoint_aud
+      if claims['aud'] != client_token_url
         add_message('error', "client assertion jwt on token request #{request_num} has an incorrect `aud` claim: " \
-                             "expected '#{endpoint_aud}', got '#{claims['aud']}'")
+                             "expected '#{client_token_url}', got '#{claims['aud']}'")
       end
 
       if claims['exp'].blank?

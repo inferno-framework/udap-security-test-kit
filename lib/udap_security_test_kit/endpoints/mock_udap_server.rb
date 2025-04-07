@@ -26,7 +26,7 @@ module UDAPSecurityTestKit
         token_endpoint_auth_methods_supported: ['private_key_jwt'],
         token_endpoint_auth_signing_alg_values_supported: ['RS256', 'RS384', 'ES384'],
         registration_endpoint: base_url + REGISTRATION_PATH,
-        registration_endpoint_jwt_signing_alg_values_supported: ['RS384', 'ES384'],
+        registration_endpoint_jwt_signing_alg_values_supported: ['RS256', 'RS384', 'ES384'],
         signed_metadata: udap_signed_metadata_jwt(base_url)
       }.to_json
 

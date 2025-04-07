@@ -160,7 +160,7 @@ module UDAPSecurityTestKit
     end
 
     def check_jwt_signature(encoded_token, registration_token, request_num)
-      error = MockUDAPServer.udap_assertion_signature_verification(encoded_token.jwt, registration_token.jwt)
+      error = MockUDAPServer.udap_token_signature_verification(encoded_token.jwt, registration_token.jwt)
 
       return unless error.present?
 

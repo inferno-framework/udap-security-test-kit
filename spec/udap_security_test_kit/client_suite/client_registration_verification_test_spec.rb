@@ -92,6 +92,7 @@ RSpec.describe UDAPSecurityTestKit::UDAPClientRegistrationVerification do # rubo
   end
 
   it 'passes if the registration request is valid' do
+    allow_any_instance_of(OpenSSL::X509::Extension).to receive(:value).and_return("URI:#{udap_client_uri}")
     create_reg_request(reg_request_body)
     result = run(test, udap_client_uri:)
     expect(result.result).to eq('pass')

@@ -227,7 +227,7 @@ module UDAPSecurityTestKit
     end
 
     def check_jwt_signature(jwt)
-      error = MockUDAPServer.udap_assertion_signature_verification(jwt)
+      error = MockUDAPServer.udap_reg_signature_verification(jwt)
 
       return unless error.present?
 

@@ -38,7 +38,7 @@ module UDAPSecurityTestKit
       client_id = client_id_from_client_assertion(assertion)
 
       software_statement = udap_registration_software_statement(test_session_id)
-      signature_error = udap_assertion_signature_verification(assertion, software_statement)
+      signature_error = udap_token_signature_verification(assertion, software_statement)
 
       if signature_error.present?
         update_response_for_invalid_assertion(response, signature_error)
@@ -179,28 +179,60 @@ module UDAPSecurityTestKit
       ).to_json
     end
 
-    def udap_assertion_signature_verification(assertion_jwt, registration_jwt = nil)
-      _assertion_body, assertion_header = JWT.decode(assertion_jwt, nil, false)
+    def udap_reg_signature_verification(assertion_jwt)
+      assertion_body, assertion_header = JWT.decode(assertion_jwt, nil, false)
       return 'missing `x5c` header' if assertion_header['x5c'].blank?
-      return 'missing `alg` header' if assertion_header['alg'].blank?
 
       leaf_cert_der = Base64.decode64(assertion_header['x5c'].first)
       leaf_cert = OpenSSL::X509::Certificate.new(leaf_cert_der)
-      signature_validation_result = UDAPSecurityTestKit::UDAPJWTValidator.validate_signature(
-        assertion_jwt,
-        assertion_header['alg'],
-        leaf_cert
-      )
-      return signature_validation_result[:error_message] unless signature_validation_result[:success]
-      return unless registration_jwt
+
+      signature_error = udap_assertion_signature_verification(assertion_jwt, leaf_cert, assertion_header['alg'])
+      return signature_error if signature_error.present?
+
+      # check the certificate's SAN extension for the issuer name
+      issuer = assertion_body['iss']
+      begin
+        alt_names =
+          leaf_cert.extensions
+            .find { |extension| extension.oid == 'subjectAltName' }.value
+      rescue NoMethodError
+        return 'Could not find Subject Alternative Name extension in leaf certificate'
+      end
+      return if alt_names.include?("URI:#{issuer}")
+
+      "`iss` claim `#{issuer}` not found in Subject Alternative Name extension " \
+        "from the `x5c` JWT header: `#{alt_names}`"
+    end
+
+    def udap_token_signature_verification(assertion_jwt, registration_jwt)
+      _assertion_body, assertion_header = JWT.decode(assertion_jwt, nil, false)
+      return 'missing `x5c` header' if assertion_header['x5c'].blank?
+
+      leaf_cert_der = Base64.decode64(assertion_header['x5c'].first)
+      leaf_cert = OpenSSL::X509::Certificate.new(leaf_cert_der)
+
+      signature_error = udap_assertion_signature_verification(assertion_jwt, leaf_cert, assertion_header['alg'])
+      return signature_error if signature_error.present?
+      return unless registration_jwt.present?
 
       # check trust
       _registration_body, registration_header = JWT.decode(registration_jwt, nil, false)
-      unless assertion_header['x5c'].first == registration_header['x5c'].first
-        return 'signing cert does not match registration cert'
-      end
+      return if assertion_header['x5c'].first == registration_header['x5c'].first
 
-      nil
+      'signing cert does not match registration cert'
+    end
+
+    def udap_assertion_signature_verification(assertion_jwt, signing_cert, algorithm)
+      return 'missing `alg` header' unless algorithm.present?
+
+      signature_validation_result = UDAPSecurityTestKit::UDAPJWTValidator.validate_signature(
+        assertion_jwt,
+        algorithm,
+        signing_cert
+      )
+      return if signature_validation_result[:success]
+
+      signature_validation_result[:error_message]
     end
 
     def udap_registration_software_statement(test_session_id)

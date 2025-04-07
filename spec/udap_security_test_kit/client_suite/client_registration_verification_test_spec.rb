@@ -98,6 +98,13 @@ RSpec.describe UDAPSecurityTestKit::UDAPClientRegistrationVerification do # rubo
     expect(result.result).to eq('pass')
   end
 
+  it 'fails if the certification SAN doesn\' match the issuer' do
+    allow_any_instance_of(OpenSSL::X509::Extension).to receive(:value).and_return('URI:not_the_client_uri')
+    create_reg_request(reg_request_body)
+    result = run(test, udap_client_uri:)
+    expect(result.result).to eq('fail')
+  end
+
   it 'fails if the registration request has the wrong aud' do
     create_reg_request(reg_request_body_bad)
     result = run(test, udap_client_uri:)

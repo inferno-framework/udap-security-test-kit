@@ -1,5 +1,5 @@
-require_relative 'endpoints/mock_udap_server/registration'
-require_relative 'endpoints/mock_udap_server/token'
+require_relative 'endpoints/mock_udap_server/registration_endpoint'
+require_relative 'endpoints/mock_udap_server/token_endpoint'
 require_relative 'endpoints/echoing_fhir_responder'
 require_relative 'urls'
 require_relative 'client_suite/client_registration_group'

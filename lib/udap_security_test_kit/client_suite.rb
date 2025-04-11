@@ -1,6 +1,7 @@
 require_relative 'endpoints/mock_udap_server/registration_endpoint'
+require_relative 'endpoints/mock_udap_server/authorization_endpoint'
 require_relative 'endpoints/mock_udap_server/token_endpoint'
-require_relative 'endpoints/echoing_fhir_responder'
+require_relative 'endpoints/echoing_fhir_responder_endpoint'
 require_relative 'urls'
 require_relative 'client_suite/client_registration_group'
 require_relative 'client_suite/client_access_group'
@@ -36,6 +37,8 @@ module UDAPSecurityTestKit
 
     route(:get, UDAP_DISCOVERY_PATH, ->(_env) { MockUDAPServer.udap_server_metadata(id) })
     suite_endpoint :post, REGISTRATION_PATH, MockUDAPServer::RegistrationEndpoint
+    suite_endpoint :get, AUTHORIZATION_PATH, MockUDAPServer::AuthorizationEndpoint
+    suite_endpoint :post, AUTHORIZATION_PATH, MockUDAPServer::AuthorizationEndpoint
     suite_endpoint :post, TOKEN_PATH, MockUDAPServer::TokenEndpoint
     suite_endpoint :get, FHIR_PATH, EchoingFHIRResponderEndpoint
     suite_endpoint :post, FHIR_PATH, EchoingFHIRResponderEndpoint

@@ -95,28 +95,28 @@
       "description": "A list of one or more X.509 certificates in PEM format separated by a newline. The first (leaf) certificate MUST represent the client entity Inferno will register as, and the trust chain that will be built from the provided certificate(s) must resolve to a CA trusted by the authorization server under test.",
       "title": "Authorization Code Client Certificate(s) (PEM Format)",
       "type": "textarea",
-      "value": ""
+      "value": "-----BEGIN CERTIFICATE-----\nMIIFcjCCA1qgAwIBAgIUbdCfB3IJ9bdOPGQVtxJHhMxUWv0wDQYJKoZIhvcNAQEL\nBQAwgYYxCzAJBgNVBAYTAlVTMQswCQYDVQQIDAJNQTEQMA4GA1UEBwwHQmVkZm9y\nZDEQMA4GA1UECgwHSW5mZXJubzEdMBsGA1UEAwwUSW5mZXJuby1VREFQLVJvb3Qt\nQ0ExJzAlBgkqhkiG9w0BCQEWGGluZmVybm9AZ3JvdXBzLm1pdHJlLm9yZzAeFw0y\nNDA4MTIyMzU4MTBaFw0zNDA4MTAyMzU4MTBaMGExCzAJBgNVBAYTAlVTMQswCQYD\nVQQIDAJNQTEQMA4GA1UEBwwHQmVkZm9yZDEQMA4GA1UECgwHSW5mZXJubzEhMB8G\nA1UEAwwYVURBUCBFeGFtcGxlIFRlc3QgQ2xpZW50MIIBIjANBgkqhkiG9w0BAQEF\nAAOCAQ8AMIIBCgKCAQEAnfqzJCyeFNRhlcsrUPiO2LQtudObDHUKj4Q7fkYPUf9X\necTMckfPKd8UJ7x8Vb5o1zmR3hsMoo1A7IkwBkmK2BXvxq243cCGO1q4w/jdL/EG\nDiIZjTr7qvkawyeh9cAaApOrBlD4gnOxB05GjingDZgiT7GqBwrpEB2XJ4tw4idS\nB3W9Rv0ynbgqPKgGw9hnEef+uNAvFIvSbfdz1n4xHNP0GuMuAX+edFCyxYFmDe74\n8pl3TH9dxkoM945r5tHmuJS9n1pXkTB9L5RVbqH77dIyOBobehHHpT4D3zjdSFmh\nfta5NnDi5/iqRcFz7FVO79jJIoAqN+mWBlVH0yyfYQIDAQABo4H7MIH4MC8GA1Ud\nEQQoMCaGJGh0dHBzOi8vaW5mZXJuby5jb20vdWRhcF9zZWN1cml0eS9hYzAxBgNV\nHSUEKjAoBggrBgEFBQcDAQYIKwYBBQUHAwIGCCsGAQUFBwMDBggrBgEFBQcDBDA6\nBgNVHR8EMzAxMC+gLaArhilodHRwczovL2luZmVybm8uY29tL21vY2tfY3JsX2Vu\nZHBvaW50LmNybDAJBgNVHRMEAjAAMAsGA1UdDwQEAwIHgDAdBgNVHQ4EFgQU6Eo2\nHE37gpSaW9zBGf0t7XfYnfIwHwYDVR0jBBgwFoAUNOqoPKju4u9y9JAuAfnSAcFb\nNKAwDQYJKoZIhvcNAQELBQADggIBACh2uQ1Krkw6F3Gq0HG3ohCm2j1ynmLSJwGE\nHvPlkiBcs8RBPxZzJOZJBMxGmjTPga2Kt6zsBlmjLg++C7C5/8JruwrMtrBuTtHx\nKky0Qw+YJm81IgATeDIU/qkJB8LcnHgkQbu3nyoyeKocx9XSW8nlEm4FkyREXxfC\nrSVCoc70GGg2vSnSkRikNjxwKGnHvmEDUOW2bBbbzvTGKlTKSIF50NiNPM3Fi7vF\nbOfi1aZh6m8IKVaI2KUXVFHco1qB3QDK5BUEimko+EyaWSZPvP83PE2+TIdapRrw\nHxQQJEr774GUNH1/hdW0qlP4u3CMMMAjS2H4dOsRYOOmgC6iEewFEBQqTRLkEfgP\npMxYhGAVAmrglLLr4t+ZF9KOmifvB6f18qF352Bj1D0TMB+oLy67kFw3s2ah21la\n3Xm6hQt+M5mZ/EYZIOUPxMHtqVt5DSJdMENHO2cjcRARyeD/BGYnJqnf6yA1LL2V\nTK+jhC/C/Dcv0hHQnVWlUGlwoFMOOzfsr2K3mXYezAuHASP8LIAyjodPpd6cLQu2\nSZTVVobSebaNmZ2UeX8Bc9bcobM2bbVb2c3UeezEJWOpt5cSOeEScEiwkaktxD5p\nix1K3KkIg2yDP176ILlVqBBA0X2FqTSSvFbTa5us3XIwkDfARJBpLnA7OfmsO61+\nIj5io7+X\n-----END CERTIFICATE-----"
     },
     {
       "name": "udap_auth_code_flow_client_private_key",
       "description": "The private key corresponding to the client certificate used for registration, in PEM format.  Used to sign registration and/or authentication JWTs.",
       "title": "Authorization Code Client Private Key (PEM Format)",
       "type": "textarea",
-      "value": ""
+      "value": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCd+rMkLJ4U1GGV\nyytQ+I7YtC2505sMdQqPhDt+Rg9R/1d5xMxyR88p3xQnvHxVvmjXOZHeGwyijUDs\niTAGSYrYFe/GrbjdwIY7WrjD+N0v8QYOIhmNOvuq+RrDJ6H1wBoCk6sGUPiCc7EH\nTkaOKeANmCJPsaoHCukQHZcni3DiJ1IHdb1G/TKduCo8qAbD2GcR5/640C8Ui9Jt\n93PWfjEc0/Qa4y4Bf550ULLFgWYN7vjymXdMf13GSgz3jmvm0ea4lL2fWleRMH0v\nlFVuofvt0jI4Ght6EcelPgPfON1IWaF+1rk2cOLn+KpFwXPsVU7v2MkigCo36ZYG\nVUfTLJ9hAgMBAAECggEAApTpPosYHkEGQztpvs4BD5uKL8I8g2yaOpQvoLWmZHGm\nzU+hA7EWuplxq+CRq5kL/5BqSNXqU/G5AOSRC1lCUpuxKm8GWWFfEDNAV7uGadUn\ngy2de0heeoHNpSjNpcV451fgcJ78IK2hU/w8fPBEQBSfYuwFWk4cVu4U3UmTE68I\nO7PpCdTjk70IOsLT8uBagAOw92Fj0mGU7agCdWfJ+LjPRUtg+PhVvODatL3taG+l\nFAParsomiRqKGINyn8vALXNISuBYHVDUzv93P10gG5rA2sJ7953/+++Hr9DoLpmL\nSH/q/LebFzPJ2u6KzLc6bam1YX0w/MSNTJVIxA5V/QKBgQDU+iFXdShLwvEXGVtb\nFdZuRk3XsN+yfkFyM9SZrmaLF2VBALkC5pd+rYkXSaTA/cbs623VOYpoJhVmjL8d\nVvTlN/G+8TzfdsmOlAXiOSiUn3VKM/Othu5l9k0AgylU8aXBWTUv5FzmV8gMn+/s\n9oOucAVFa60LdkR2d609y/tKnwKBgQC95Gviall3E/+7drT05KxPPGDKRUjhCLBe\nBNj2+ttSt4+v+E5v3K+LSd11VfGkvLkDvkhjiJlVamf+XgLne3TLrEThAKq8ySUr\nXKBRi+nfmisUHSrMGljHw500Rx+MR/LEpfEERMosLQWTrOTz5VG2RueVHbWbD622\nWitr8tnV/wKBgGDYUNr9GlLBFXJEhIc5ueUxMOp4sm/u+4Gb0fwEEvsCq3dQhdCs\n3IytCp69TR65B4DqWWpRHP/Y+XhFXg5QYVHuC46hEeYnlOWxp69EAJD8pZAVaaQp\nrDRPOJqYCe5nZ9Ew6H+bnybbGcur2qTtP9nNdIgpu2lv4RfhubRVEjLPAoGAXqzb\nSSii8GbNMwcNU6gLbPn6e/6tRl1RqZ6bGhCadxREFIUlfko2T6kFPDIcZ3kceYxO\nhSme4WJK9RykMAtygPWj5daySauz13m4CNBMS4qO/dlI9DgSmY6i+2SWixd4J6lg\nkDNH5VyREj66bAuigNG7NrJ4UBYyEt/EFG8hQrsCgYEAyLwk7f2Wgu9ykdwSrrQE\nTBK0iOVUcwPhxj1UbFyDxPdO0EspyKtIFD5w/sbBtQbJGSUFd7ZPoCsYkT2yAsDp\n3cI/ubRxA+/GaqUo84QxvJ4Uqdu8YS8C0FCEnhXGjA60Y5HFzufJF5EqfzwNctCr\nG0cRyX/4Ut4BNUcir/CRVL0=\n-----END PRIVATE KEY-----"
     },
     {
       "name": "udap_auth_code_flow_cert_iss",
       "description": "MUST correspond to a unique URI entry in the Subject Alternative Name (SAN) extension of the client certificate used for registration.",
       "title": "Authorization Code JWT Issuer (iss) Claim",
       "type": "text",
-      "value": ""
+      "value": "<%= Inferno::Application['base_url'] %>/custom/udap_security/fhir"
     },
     {
       "name": "udap_auth_code_flow_registration_scope",
       "description": "String containing a space delimited list of scopes requested by the client application for use in subsequent requests. The Authorization Server MAY consider this list when deciding the scopes that it will allow the application to subsequently request. Apps requesting the \"authorization_code\" grant type SHOULD request user or patient scopes.",
       "title": "Authorization Code Registration Requested Scope(s)",
       "type": "text",
-      "value": ""
+      "value": "system/*.read"
     },
     {
       "name": "udap_jwt_signing_alg",

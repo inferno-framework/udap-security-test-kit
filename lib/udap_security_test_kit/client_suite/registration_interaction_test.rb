@@ -13,14 +13,15 @@ module UDAPSecurityTestKit
         using UDAP dynamic registration.
       )
     input :udap_client_uri,
-          optional: false
+          title: 'UDAP Client URI',
+          type: 'text',
+          description: %(
+            The UDAP Client URI that will be used to register with Inferno's simulated UDAP server.
+          )
 
     output :client_id
 
     run do
-      omit_if udap_client_uri.blank?, # for re-use: mark the udap_client_uri input as optional when importing to enable
-              'Not configured for UDAP authentication.'
-
       generated_client_id = MockUDAPServer.client_uri_to_client_id(udap_client_uri)
       output client_id: generated_client_id
 

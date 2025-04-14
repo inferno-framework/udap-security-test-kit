@@ -20,44 +20,33 @@ module UDAPSecurityTestKit
         udap_authorization_extensions_required: [],
         udap_certifications_supported: [],
         udap_certifications_required: [],
-        grant_types_supported: ['client_credentials'],
+        grant_types_supported: ['authorization_code', 'client_credentials'],
         scopes_supported: SUPPORTED_SCOPES,
+        registration_endpoint: base_url + REGISTRATION_PATH,
+        registration_endpoint_jwt_signing_alg_values_supported: ['RS256', 'RS384', 'ES384'],
+        authorization_endpoint: base_url + AUTHORIZATION_PATH,
         token_endpoint: base_url + TOKEN_PATH,
         token_endpoint_auth_methods_supported: ['private_key_jwt'],
         token_endpoint_auth_signing_alg_values_supported: ['RS256', 'RS384', 'ES384'],
-        registration_endpoint: base_url + REGISTRATION_PATH,
-        registration_endpoint_jwt_signing_alg_values_supported: ['RS256', 'RS384', 'ES384'],
         signed_metadata: udap_signed_metadata_jwt(base_url)
       }.to_json
 
       [200, { 'Content-Type' => 'application/json', 'Access-Control-Allow-Origin' => '*' }, [response_body]]
     end
 
-    def make_udap_token_response(request, response, test_session_id)
-      assertion = request.params[:client_assertion]
-      client_id = client_id_from_client_assertion(assertion)
-
-      software_statement = udap_registration_software_statement(test_session_id)
-      signature_error = udap_token_signature_verification(assertion, software_statement)
-
-      if signature_error.present?
-        update_response_for_invalid_assertion(response, signature_error)
-        return
-      end
-
-      exp_min = 60
+    def openid_connect_metadata(suite_id)
+      base_url = "#{Inferno::Application['base_url']}/custom/#{suite_id}"
       response_body = {
-        access_token: client_id_to_token(client_id, exp_min),
-        token_type: 'Bearer',
-        expires_in: 60 * exp_min
-      }
+        issuer: base_url + FHIR_PATH,
+        authorization_endpoint: base_url + AUTHORIZATION_PATH,
+        token_endpoint: base_url + TOKEN_PATH,
+        jwks_uri: base_url + OIDC_JWKS_PATH,
+        response_types_supported: ['code', 'id_token', 'token id_token'],
+        subject_types_supported: ['pairwise', 'public'],
+        id_token_signing_alg_values_supported: ['RS256']
+      }.to_json
 
-      response.body = response_body.to_json
-      response.headers['Cache-Control'] = 'no-store'
-      response.headers['Pragma'] = 'no-cache'
-      response.headers['Access-Control-Allow-Origin'] = '*'
-      response.content_type = 'application/json'
-      response.status = 200
+      [200, { 'Content-Type' => 'application/json', 'Access-Control-Allow-Origin' => '*' }, [response_body]]
     end
 
     def udap_signed_metadata_jwt(base_url)
@@ -68,6 +57,7 @@ module UDAPSecurityTestKit
         iat: Time.now.to_i,
         jti: SecureRandom.hex(32),
         token_endpoint: base_url + TOKEN_PATH,
+        authorization_endpoint: base_url + AUTHORIZATION_PATH,
         registration_endpoint: base_url + REGISTRATION_PATH
       }.compact
 
@@ -156,26 +146,43 @@ module UDAPSecurityTestKit
       nil
     end
 
-    def token_to_client_id(token)
+    def issued_token_to_client_id(token)
       decode_token(token)&.dig('client_id')
+    end
+
+    def issued_token_is_refresh_token(token)
+      token.end_with?('_rt')
+    end
+
+    def authorization_code_to_refresh_token(code)
+      "#{code}_rt"
+    end
+
+    def refresh_token_to_authorization_code(refresh_token)
+      refresh_token[..-4]
     end
 
     def request_has_expired_token?(request)
       return false if request.params[:session_path].present?
 
       token = request.headers['authorization']&.delete_prefix('Bearer ')
+      token_expired?(token)
+    end
+
+    def token_expired?(token, check_time = nil)
       decoded_token = decode_token(token)
       return false unless decoded_token&.dig('expiration').present?
 
-      decoded_token['expiration'] < Time.now.to_i
+      check_time = Time.now.to_i unless check_time.present?
+      decoded_token['expiration'] < check_time
     end
 
-    def update_response_for_expired_token(response)
+    def update_response_for_expired_token(response, type)
       response.status = 401
       response.format = :json
       response.body = FHIR::OperationOutcome.new(
         issue: FHIR::OperationOutcome::Issue.new(severity: 'fatal', code: 'expired',
-                                                 details: FHIR::CodeableConcept.new(text: 'Bearer token has expired'))
+                                                 details: FHIR::CodeableConcept.new(text: "#{type}has expired"))
       ).to_json
     end
 
@@ -296,6 +303,65 @@ module UDAPSecurityTestKit
       end
 
       nil
+    end
+
+    def pkce_error(verifier, challenge, method)
+      if verifier.blank?
+        'pkce check failed: no verifier provided'
+      elsif challenge.blank?
+        'pkce check failed: no challenge code provided'
+      elsif method == 'plain'
+        return nil unless challenge != verifier
+
+        "invalid plain pkce verifier: got '#{verifier}' expected '#{challenge}'"
+      elsif method == 'S256'
+        return nil unless challenge != calculate_s256_challenge(verifier)
+
+        "invalid S256 pkce verifier: got '#{calculate_s256_challenge(verifier)}' " \
+          "expected '#{challenge}'"
+      else
+        "invalid pkce challenge method '#{method}'"
+      end
+    end
+
+    def pkce_valid?(verifier, challenge, method, response)
+      pkce_error = pkce_error(verifier, challenge, method)
+
+      if pkce_error.present?
+        update_response_for_invalid_assertion(response, pkce_error)
+        false
+      else
+        true
+      end
+    end
+
+    def calculate_s256_challenge(verifier)
+      Base64.urlsafe_encode64(Digest::SHA256.digest(verifier), padding: false)
+    end
+
+    def authorization_request_for_code(code, test_session_id) # rubocop:disable Metrics/CyclomaticComplexity
+      authorization_requests = Inferno::Repositories::Requests.new.tagged_requests(test_session_id,
+                                                                                   [UDAP_TAG, AUTHORIZATION_TAG])
+      authorization_requests.find do |request|
+        location_header = request.response_headers.find { |header| header.name.downcase == 'location' }
+        if location_header.present? && location_header.value.present?
+          CGI.parse(URI(location_header.value)&.query)&.dig('code')&.first == code
+        else
+          false
+        end
+      end
+    end
+
+    def authorization_code_request_details(inferno_request)
+      details_hash =
+        if inferno_request.verb.downcase == 'get'
+          CGI.parse(inferno_request.url.split('?')[1])
+        elsif inferno_request.verb.downcase == 'post'
+          CGI.parse(inferno_request.request_body)
+        end
+
+      details_hash&.keys&.each { |key| details_hash[key] = details_hash[key].first }
+      details_hash
     end
   end
 end

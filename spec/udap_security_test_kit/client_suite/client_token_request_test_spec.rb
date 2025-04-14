@@ -31,7 +31,7 @@ RSpec.describe UDAPSecurityTestKit::UDAPClientTokenRequestVerification do # rubo
   end
   let(:reg_response_body) do
     {
-      client_id: client_id,
+      client_id:,
       software_statement: reg_ss
     }.to_json
   end
@@ -64,20 +64,6 @@ RSpec.describe UDAPSecurityTestKit::UDAPClientTokenRequestVerification do # rubo
     )
   end
 
-  def create_reg_request(request_body, response_body)
-    repo_create(
-      :request,
-      direction: 'incoming',
-      url: 'test',
-      result: dummy_result,
-      test_session_id: test_session.id,
-      request_body:,
-      response_body:,
-      status: 200,
-      tags: [UDAPSecurityTestKit::REGISTRATION_TAG, UDAPSecurityTestKit::UDAP_TAG]
-    )
-  end
-
   def create_token_request(request_body)
     repo_create(
       :request,
@@ -92,34 +78,25 @@ RSpec.describe UDAPSecurityTestKit::UDAPClientTokenRequestVerification do # rubo
     )
   end
 
+  before do
+    allow(UDAPSecurityTestKit::UDAPClientOptions).to receive(:oauth_flow)
+      .and_return(UDAPSecurityTestKit::CLIENT_CREDENTIALS_TAG)
+  end
+
   it 'omits if no registration requests for udap' do
     result = run(test)
-    expect(result.result).to eq('omit')
-    udap_demonstrated_output = JSON.parse(result.output_json).find do |output|
-      output['name'] == 'udap_demonstrated'
-    end&.dig('value')
-    expect(udap_demonstrated_output).to eq('No')
+    expect(result.result).to eq('skip')
   end
 
   it 'skips if no token requests' do
-    create_reg_request(reg_request_body, reg_response_body)
-    result = run(test)
+    result = run(test, udap_registration_jwt: reg_ss, client_id:)
     expect(result.result).to eq('skip')
-    udap_demonstrated_output = JSON.parse(result.output_json).find do |output|
-      output['name'] == 'udap_demonstrated'
-    end&.dig('value')
-    expect(udap_demonstrated_output).to eq('Yes')
   end
 
   it 'passes for a valid request' do
-    create_reg_request(reg_request_body, reg_response_body)
     create_token_request(token_request_hash_valid)
-    result = run(test)
+    result = run(test, udap_registration_jwt: reg_ss, client_id:)
     expect(result.result).to eq('pass')
-    udap_demonstrated_output = JSON.parse(result.output_json).find do |output|
-      output['name'] == 'udap_demonstrated'
-    end&.dig('value')
-    expect(udap_demonstrated_output).to eq('Yes')
     output_tokens = JSON.parse(result.output_json).find { |output| output['name'] == 'udap_tokens' }&.dig('value')
     expect(output_tokens).to eq(access_token)
   end

@@ -86,6 +86,11 @@ RSpec.describe UDAPSecurityTestKit::UDAPClientRegistrationVerification do # rubo
     )
   end
 
+  before do
+    allow(UDAPSecurityTestKit::UDAPClientOptions).to receive(:oauth_flow)
+      .and_return(UDAPSecurityTestKit::CLIENT_CREDENTIALS_TAG)
+  end
+
   it 'skips if no registration requests' do
     result = run(test, udap_client_uri:)
     expect(result.result).to eq('skip')

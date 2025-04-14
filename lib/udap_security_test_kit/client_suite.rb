@@ -3,8 +3,8 @@ require_relative 'endpoints/mock_udap_server/authorization_endpoint'
 require_relative 'endpoints/mock_udap_server/token_endpoint'
 require_relative 'endpoints/echoing_fhir_responder_endpoint'
 require_relative 'urls'
-require_relative 'client_suite/client_registration_group'
-require_relative 'client_suite/client_access_group'
+require_relative 'client_suite/registration_group'
+require_relative 'client_suite/access_group'
 
 module UDAPSecurityTestKit
   class UDAPSecurityClientTestSuite < Inferno::TestSuite
@@ -35,7 +35,27 @@ module UDAPSecurityTestKit
       }
     ]
 
+    suite_option :client_type,
+                 title: 'UDAP Client Type',
+                 list_options: [
+                   {
+                     label: 'UDAP Authorization Code Client',
+                     value: UDAPClientOptions::UDAP_AUTHORIZATION_CODE
+                   },
+                   {
+                     label: 'UDAP Client Credentials Client',
+                     value: UDAPClientOptions::UDAP_CLIENT_CREDENTIALS
+                   }
+                 ]
+
     route(:get, UDAP_DISCOVERY_PATH, ->(_env) { MockUDAPServer.udap_server_metadata(id) })
+    route(:get, OIDC_DISCOVERY_PATH, ->(_env) { MockUDAPServer.openid_connect_metadata(id) })
+    route(
+      :get,
+      OIDC_JWKS_PATH,
+      ->(_env) { [200, { 'Content-Type' => 'application/json' }, [OIDCJWKS.jwks_json]] }
+    )
+
     suite_endpoint :post, REGISTRATION_PATH, MockUDAPServer::RegistrationEndpoint
     suite_endpoint :get, AUTHORIZATION_PATH, MockUDAPServer::AuthorizationEndpoint
     suite_endpoint :post, AUTHORIZATION_PATH, MockUDAPServer::AuthorizationEndpoint
@@ -65,17 +85,7 @@ module UDAPSecurityTestKit
       request.query_parameters['token']
     end
 
-    group do
-      title 'UDAP Client Credentials Flow'
-      description %(
-        During these tests, the client will use the UDAP Client Credentials
-        flow as specified in the [B2B section of the IG](https://hl7.org/fhir/us/udap-security/STU1/b2b.html)
-        to access a FHIR API. Clients will register, obtain an access token,
-        and use the access token when making a request to a FHIR API.
-      )
-
-      group from: :udap_client_registration
-      group from: :udap_client_access
-    end
+    group from: :udap_client_registration
+    group from: :udap_client_access
   end
 end

@@ -1,6 +1,6 @@
 RSpec.describe UDAPSecurityTestKit::MockUDAPServer, :request, :runnable do # rubocop:disable RSpec/SpecFilePathFormat
   let(:suite_id) { 'udap_security_client' }
-  let(:test) { suite.children[0].children[1].children[0] } # access test
+  let(:test) { suite.children[1].children[0] } # access test
   let(:results_repo) { Inferno::Repositories::Results.new }
   let(:dummy_result) { repo_create(:result, test_session_id: test_session.id) }
   let(:token_url) { "/custom/#{suite_id}#{UDAPSecurityTestKit::TOKEN_PATH}" }
@@ -52,19 +52,19 @@ RSpec.describe UDAPSecurityTestKit::MockUDAPServer, :request, :runnable do # rub
     )
   end
   let(:udap_token_request_body_sig_invalid) do
-    { grant_type: 'invalid',
+    { grant_type: 'client_credentials',
       client_assertion_type: 'invalid',
       client_assertion: "#{udap_assertion_correct_cert}bad",
       udap: 1 }
   end
   let(:udap_token_request_body_sig_valid) do
-    { grant_type: 'invalid',
+    { grant_type: 'client_credentials',
       client_assertion_type: 'invalid',
       client_assertion: udap_assertion_correct_cert,
       udap: 1 }
   end
   let(:udap_token_request_body_wrong_cert) do
-    { grant_type: 'invalid',
+    { grant_type: 'client_credentials',
       client_assertion_type: 'invalid',
       client_assertion: udap_assertion_wrong_cert,
       udap: 1 }
@@ -89,6 +89,11 @@ RSpec.describe UDAPSecurityTestKit::MockUDAPServer, :request, :runnable do # rub
     )
   end
 
+  before do
+    allow(UDAPSecurityTestKit::UDAPClientOptions).to receive(:oauth_flow)
+      .and_return(UDAPSecurityTestKit::CLIENT_CREDENTIALS_TAG)
+  end
+
   describe 'when generating token responses for UDAP' do
     it 'returns 401 when the signature is invalid' do
       create_reg_request(udap_reg_request_valid)
@@ -104,7 +109,7 @@ RSpec.describe UDAPSecurityTestKit::MockUDAPServer, :request, :runnable do # rub
       expect(result.result).to eq('wait')
     end
 
-    it 'returns 401 when the signatured used a cert that was not registered' do
+    it 'returns 401 when the signature used a cert that was not registered' do
       create_reg_request(udap_reg_request_valid)
       inputs = { client_id: udap_client_id }
       result = run(test, inputs)

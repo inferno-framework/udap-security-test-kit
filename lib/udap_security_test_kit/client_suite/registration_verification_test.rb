@@ -14,6 +14,7 @@ module UDAPSecurityTestKit
       )
     input :udap_client_uri,
           optional: false
+    output :udap_registration_jwt
 
     run do
       omit_if udap_client_uri.blank?, # for re-use: mark the udap_client_uri input as optional when importing to enable
@@ -28,6 +29,7 @@ module UDAPSecurityTestKit
 
       check_request_body(parsed_body)
       check_software_statement(parsed_body['software_statement'], verified_request.created_at)
+      output udap_registration_jwt: parsed_body['software_statement']
 
       assert messages.none? { |msg|
         msg[:type] == 'error'
@@ -46,7 +48,7 @@ module UDAPSecurityTestKit
       return unless request_body['certifications'].present?
 
       request_body['certifications'].each_with_index do |certification_jwt, index|
-        JWT.decond(certification_jwt)
+        JWT.decode(certification_jwt, nil, false)
       rescue StandardError => e
         add_message('error',
                     "Certification #{index + 1} in the registration request is not a valid signed jwt: #{e}")
@@ -157,6 +159,16 @@ module UDAPSecurityTestKit
                              "'authorization_code', 'client_credentials', and 'refresh_token")
       end
 
+      oauth_flow = UDAPClientOptions.oauth_flow(suite_options)
+
+      if oauth_flow == CLIENT_CREDENTIALS_TAG && !has_client_credentials
+        add_message('error', 'Registration software statement `grant_types` must contain ' \
+                             "''client_credentials' when testing the client credentials flow.")
+      end
+      if oauth_flow == AUTHORIZATION_CODE_TAG && !has_authorization_code
+        add_message('error', 'Registration software statement `grant_types` must contain ' \
+                             "''authorization_code' when testing the authorization code flow.")
+      end
       check_client_credentials_software_statement(claims) if has_client_credentials
       check_authorization_code_software_statement(claims) if has_authorization_code
 
@@ -171,7 +183,7 @@ module UDAPSecurityTestKit
         add_message('error', 'Registration software statement `redirect_uris` must be a list when' \
                              "the 'authorization_code' `grant_type` is requested.")
       else
-        claims['redirect_uris'].each do |redirect_uri|
+        claims['redirect_uris'].each_with_index do |redirect_uri, index|
           unless valid_uri?(redirect_uri, required_scheme: 'https')
             add_message('error', "Registration software statement `redirect_uris` entry #{index + 1} is invalid: " \
                                  'it is not a valid https uri.')
@@ -186,7 +198,7 @@ module UDAPSecurityTestKit
         unless valid_uri?(claims['logo_uri'], required_scheme: 'https')
           add_message('error', 'Registration software statement `logo_uri` is invalid: it is not a valid https uri.')
         end
-        unless ['gif', 'jpg', 'jpeg', 'png'].include?(claims['logo_uri'].split['.'].last.downcase)
+        unless ['gif', 'jpg', 'jpeg', 'png'].include?(claims['logo_uri'].split('.').last.downcase)
           add_message('error', 'Registration software statement `logo_uri` is invalid: it must point to a ' \
                                'PNG, JPG, or GIF file.')
         end

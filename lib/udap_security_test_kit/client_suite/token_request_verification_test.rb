@@ -1,6 +1,8 @@
 require_relative '../tags'
 require_relative '../urls'
 require_relative '../endpoints/mock_udap_server'
+require_relative 'client_descriptions'
+require_relative 'client_options'
 
 module UDAPSecurityTestKit
   class UDAPClientTokenRequestVerification < Inferno::Test
@@ -12,24 +14,26 @@ module UDAPSecurityTestKit
       Check that UDAP token requests are conformant.
     )
 
-    output :udap_demonstrated
+    input :client_id,
+          title: 'Client Id',
+          type: 'text',
+          locked: true,
+          description: INPUT_CLIENT_ID_DESCRIPTION_LOCKED
+    input :udap_registration_jwt,
+          title: 'Registered UDAP Software Statement',
+          type: 'textarea',
+          locked: 'true',
+          description: INPUT_UDAP_REGISTRATION_JWT_DESCRIPTION_LOCKED
     output :udap_tokens
 
     run do
-      load_tagged_requests(REGISTRATION_TAG, UDAP_TAG)
-      output udap_demonstrated: requests.present? ? 'Yes' : 'No'
-      omit_if requests.blank?, 'UDAP Authentication not demonstrated as a part of this test session.'
-      registration_request = requests.last
-      registration_assertion = MockUDAPServer.parsed_request_body(registration_request)['software_statement']
       registration_token =
         begin
-          JWT::EncodedToken.new(registration_assertion)
+          JWT::EncodedToken.new(udap_registration_jwt)
         rescue StandardError => e
           assert false, "Registration request parsing failed: #{e}"
         end
-      registered_client_id = JSON.parse(registration_request.response_body)['client_id']
 
-      requests.clear
       load_tagged_requests(TOKEN_TAG, UDAP_TAG)
       skip_if requests.blank?, 'No UDAP token requests made.'
 
@@ -39,7 +43,7 @@ module UDAPSecurityTestKit
         request_params = URI.decode_www_form(token_request.request_body).to_h
         check_request_params(request_params, index + 1)
         check_client_assertion(request_params['client_assertion'], index + 1, jti_list, registration_token,
-                               registered_client_id, token_request.created_at)
+                               client_id, token_request.created_at)
         token_list << extract_token_from_response(token_request)
       end
 
@@ -51,9 +55,11 @@ module UDAPSecurityTestKit
     end
 
     def check_request_params(params, request_num)
-      if params['grant_type'] != 'client_credentials'
+      oauth_flow = UDAPClientOptions.oauth_flow(suite_options)
+
+      if params['grant_type'] != oauth_flow
         add_message('error',
-                    "Token request #{request_num} had an incorrect `grant_type`: expected 'client_credentials', " \
+                    "Token request #{request_num} had an incorrect `grant_type`: expected '#{oauth_flow}', " \
                     "but got '#{params['grant_type']}'")
       end
       if params['client_assertion_type'] != 'urn:ietf:params:oauth:client-assertion-type:jwt-bearer'
@@ -62,12 +68,48 @@ module UDAPSecurityTestKit
                     "expected 'urn:ietf:params:oauth:client-assertion-type:jwt-bearer', " \
                     "but got '#{params['client_assertion_type']}'")
       end
-      return unless params['udap'].to_s != '1'
+      unless params['udap'].to_s == '1'
+        add_message('error',
+                    "Token request #{request_num} had an incorrect `udap`: " \
+                    "expected '1', " \
+                    "but got '#{params['udap']}'")
+      end
 
-      add_message('error',
-                  "Token request #{request_num} had an incorrect `udap`: " \
-                  "expected '1', " \
-                  "but got '#{params['udap']}'")
+      check_authorization_code_request_params(params, request_num) if oauth_flow == AUTHORIZATION_CODE_TAG
+
+      nil
+    end
+
+    def check_authorization_code_request_params(params, request_num)
+      if params['code'].present?
+
+        authorization_request = MockUDAPServer.authorization_request_for_code(params['code'], test_session_id)
+
+        if authorization_request.present?
+          authorization_body = MockUDAPServer.authorization_code_request_details(authorization_request)
+
+          if params['redirect_uri'] != authorization_body['redirect_uri']
+            add_message('error', "Authorization code token request #{request_num} included an incorrect " \
+                                 "`redirect_uri` value: expected '#{authorization_body['redirect_uri']} " \
+                                 "but got '#{params['redirect_uri']}'")
+          end
+
+          return unless params['code_verifier'].present? # optional in UDAP
+
+          pkce_error = MockUDAPServer.pkce_error(params['code_verifier'],
+                                                 authorization_body['code_challenge'],
+                                                 authorization_body['code_challenge_method'])
+          if pkce_error.present?
+            add_message('error', 'Error performing pkce verification on the `code_verifier` value in ' \
+                                 "authorization code token request #{request_num}: #{pkce_error}")
+          end
+        else
+          add_message('error', "Authorization code token request #{request_num} included a code not " \
+                               "issued during this test session: '#{params['code']}'")
+        end
+      else
+        add_message('error', "Authorization code token request #{request_num} missing a `code`")
+      end
     end
 
     def check_client_assertion(assertion, request_num, jti_list, registration_token, registered_client_id, request_time)
@@ -112,6 +154,8 @@ module UDAPSecurityTestKit
       else
         jti_list << claims['jti']
       end
+
+      return unless UDAPClientOptions.oauth_flow(suite_options) == CLIENT_CREDENTIALS_TAG
 
       if claims['extensions'].present?
         if claims['extensions'].is_a?(Hash)

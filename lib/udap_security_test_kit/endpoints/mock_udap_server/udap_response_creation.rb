@@ -1,0 +1,301 @@
+require_relative '../../urls'
+require_relative '../../tags'
+require_relative '../mock_udap_server'
+require_relative '../../client_suite/oidc_jwks'
+
+module UDAPSecurityTestKit
+  module MockUDAPServer
+    module UDAPResponseCreation
+      def make_udap_registration_response
+        parsed_body = MockUDAPServer.parsed_io_body(request)
+        client_id = MockUDAPServer.client_uri_to_client_id(client_uri_from_registration_payload(parsed_body))
+        ss_jwt = request_software_statement_jwt(parsed_body)
+
+        response_body = {
+          client_id:,
+          software_statement: ss_jwt
+        }
+        response_body.merge!(MockUDAPServer.jwt_claims(ss_jwt).except(['iss', 'sub', 'exp', 'iat', 'jti']))
+
+        response.body = response_body.to_json
+        response.headers['Cache-Control'] = 'no-store'
+        response.headers['Pragma'] = 'no-cache'
+        response.headers['Access-Control-Allow-Origin'] = '*'
+        response.content_type = 'application/json'
+        response.status = 201
+      end
+
+      def client_uri_from_registration_payload(reg_body)
+        software_statement_jwt = request_software_statement_jwt(reg_body)
+        return unless software_statement_jwt.present?
+
+        MockUDAPServer.jwt_claims(software_statement_jwt)&.dig('iss')
+      end
+
+      def request_software_statement_jwt(reg_body)
+        reg_body&.dig('software_statement')
+      end
+
+      def make_udap_authorization_response
+        redirect_uri = request.params[:redirect_uri]
+        registered_redirect_uri_list = registered_redirect_uris
+
+        if redirect_uri.blank?
+          # need one from the registered list
+          if registered_redirect_uri_list.blank?
+            response.status = 400
+            response.body = {
+              error: 'Bad request',
+              message: 'Missing required redirect_uri parameter with no default provided in the registration.'
+            }.to_json
+            response.content_type = 'application/json'
+            return
+          elsif registered_redirect_uri_list.length > 1
+            response.status = 400
+            response.body = {
+              error: 'Bad request',
+              message: 'Missing required redirect_uri parameter with multiple options provided in the registration.'
+            }.to_json
+            response.content_type = 'application/json'
+            return
+          else
+            redirect_uri = registered_redirect_uri_list.first
+          end
+        end
+
+        client_id = request.params[:client_id]
+        state = request.params[:state]
+
+        exp_min = 10
+        token = MockUDAPServer.client_id_to_token(client_id, exp_min)
+        code_query_string = "code=#{ERB::Util.url_encode(token)}"
+        query_string =
+          if state.present?
+            "#{code_query_string}&state=#{ERB::Util.url_encode(state)}"
+          else
+            code_query_string
+          end
+        response.headers['Location'] = "#{redirect_uri}#{redirect_uri.include?('?') ? '&' : '?'}#{query_string}"
+        response.status = 302
+      end
+
+      def registered_redirect_uris
+        registered_software_statement = MockUDAPServer.udap_registration_software_statement(test_run.test_session_id)
+        registration_jwt_body, _registration_jwt_header = JWT.decode(registered_software_statement, nil, false)
+        return [] unless registration_jwt_body['redirect'].present?
+        return registration_jwt_body['redirect'] if registration_jwt_body['redirect'].is_a?(Array)
+
+        # invalid registration, but we'll succeed here and fail during registration verification
+        [registration_jwt_body['redirect']]
+      end
+
+      def make_udap_authorization_code_token_response # rubocop:disable Metrics/CyclomaticComplexity
+        authorization_code = request.params[:code]
+        client_id = MockUDAPServer.issued_token_to_client_id(authorization_code)
+        software_statement = MockUDAPServer.udap_registration_software_statement(test_run.test_session_id)
+        return unless authenticated?(request.params[:client_assertion], software_statement)
+
+        if MockUDAPServer.token_expired?(authorization_code)
+          MockUDAPServer.update_response_for_expired_token(response, 'Authorization code')
+          return
+        end
+
+        return if request.params[:code_verifier].present? && !pkce_valid?(authorization_code)
+
+        exp_min = 60
+        response_body = {
+          access_token: MockUDAPServer.client_id_to_token(client_id, exp_min),
+          token_type: 'Bearer',
+          expires_in: 60 * exp_min
+        }
+
+        launch_context =
+          begin
+            input_string = JSON.parse(result.input_json)&.find do |input|
+              input['name'] == 'launch_context'
+            end&.dig('value')
+            JSON.parse(input_string) if input_string.present?
+          rescue JSON::ParserError
+            nil
+          end
+        additional_context = requested_scope_context(registered_scope(software_statement), authorization_code,
+                                                     launch_context)
+
+        response.body = additional_context.merge(response_body).to_json # response body values take priority
+        response.headers['Cache-Control'] = 'no-store'
+        response.headers['Pragma'] = 'no-cache'
+        response.headers['Access-Control-Allow-Origin'] = '*'
+        response.content_type = 'application/json'
+        response.status = 200
+      end
+
+      def make_udap_refresh_token_response # rubocop:disable Metrics/CyclomaticComplexity
+        refresh_token = request.params[:refresh_token]
+        authorization_code = MockUDAPServer.refresh_token_to_authorization_code(refresh_token)
+        client_id = MockUDAPServer.issued_token_to_client_id(authorization_code)
+        software_statement = MockUDAPServer.udap_registration_software_statement(test_run.test_session_id)
+        return unless authenticated?(request.params[:client_assertion], software_statement)
+
+        # no expiration checks for refresh tokens
+
+        authorization_request = MockUDAPServer.authorization_request_for_code(authorization_code,
+                                                                              test_run.test_session_id)
+        if authorization_request.blank?
+          MockUDAPServer.update_response_for_invalid_assertion(
+            response,
+            "no authorization request found for refresh token #{refresh_token}"
+          )
+          return
+        end
+        auth_code_request_inputs = MockUDAPServer.authorization_code_request_details(authorization_request)
+        if auth_code_request_inputs.blank?
+          MockUDAPServer.update_response_for_invalid_assertion(
+            response,
+            'invalid authorization request details'
+          )
+          return
+        end
+
+        exp_min = 60
+        response_body = {
+          access_token: MockUDAPServer.client_id_to_token(client_id, exp_min),
+          token_type: 'Bearer',
+          expires_in: 60 * exp_min
+        }
+
+        launch_context =
+          begin
+            input_string = JSON.parse(result.input_json)&.find do |input|
+              input['name'] == 'launch_context'
+            end&.dig('value')
+            JSON.parse(input_string)
+          rescue JSON::ParserError
+            nil
+          end
+        additional_context = requested_scope_context(registered_scope(software_statement), authorization_code,
+                                                     launch_context)
+
+        response.body = additional_context.merge(response_body).to_json # response body values take priority
+        response.headers['Cache-Control'] = 'no-store'
+        response.headers['Pragma'] = 'no-cache'
+        response.headers['Access-Control-Allow-Origin'] = '*'
+        response.content_type = 'application/json'
+        response.status = 200
+      end
+
+      def make_udap_client_credential_token_response
+        assertion = request.params[:client_assertion]
+        client_id = MockUDAPServer.client_id_from_client_assertion(assertion)
+        software_statement = MockUDAPServer.udap_registration_software_statement(test_run.test_session_id)
+        return unless authenticated?(request.params[:client_assertion], software_statement)
+
+        exp_min = 60
+        response_body = {
+          access_token: MockUDAPServer.client_id_to_token(client_id, exp_min),
+          token_type: 'Bearer',
+          expires_in: 60 * exp_min
+        }
+
+        response.body = response_body.to_json
+        response.headers['Cache-Control'] = 'no-store'
+        response.headers['Pragma'] = 'no-cache'
+        response.headers['Access-Control-Allow-Origin'] = '*'
+        response.content_type = 'application/json'
+        response.status = 200
+      end
+
+      def authenticated?(assertion, software_statement)
+        signature_error = MockUDAPServer.udap_token_signature_verification(assertion, software_statement)
+
+        if signature_error.present?
+          MockUDAPServer.update_response_for_invalid_assertion(response, signature_error)
+          return false
+        end
+
+        true
+      end
+
+      def requested_scope_context(requested_scopes, authorization_code, launch_context)
+        context = launch_context.present? ? launch_context : {}
+        scopes_list = requested_scopes.split
+
+        if scopes_list.include?('offline_access') || scopes_list.include?('online_access')
+          context[:refresh_token] = MockUDAPServer.authorization_code_to_refresh_token(authorization_code)
+        end
+
+        context[:id_token] = construct_id_token(scopes_list.include?('fhirUser')) if scopes_list.include?('openid')
+
+        context
+      end
+
+      def construct_id_token(include_fhir_user) # rubocop:disable Metrics/CyclomaticComplexity
+        client_id = JSON.parse(result.input_json)&.find do |input|
+          input['name'] == 'client_id'
+        end&.dig('value')
+        fhir_user_relative_reference = JSON.parse(result.input_json)&.find do |input|
+          input['name'] == 'fhir_user_relative_reference'
+        end&.dig('value')
+        # TODO: how to generate the id - is this ok?
+        subject_id = if fhir_user_relative_reference.present?
+                       fhir_user_relative_reference.downcase.gsub('/', '-')
+                     else
+                       SecureRandom.uuid
+                     end
+
+        claims = {
+          iss: client_fhir_base_url,
+          sub: subject_id,
+          aud: client_id,
+          exp: 1.year.from_now.to_i,
+          iat: Time.now.to_i
+        }
+        if include_fhir_user && fhir_user_relative_reference.present?
+          claims[:fhirUser] = "#{fhir_user_relative_reference}/#{fhir_user_relative_reference}"
+        end
+
+        algorithm = 'RS256'
+        private_key = OIDCJWKS.jwks
+          .select { |key| key[:key_ops]&.include?('sign') }
+          .select { |key| key[:alg] == algorithm }
+          .first
+
+        JWT.encode claims, private_key.signing_key, algorithm, { alg: algorithm, kid: private_key.kid, typ: 'JWT' }
+      end
+
+      def pkce_valid?(authorization_code)
+        authorization_request = MockUDAPServer.authorization_request_for_code(authorization_code,
+                                                                              test_run.test_session_id)
+        if authorization_request.blank?
+          MockUDAPServer.update_response_for_invalid_assertion(
+            response,
+            "Could not check code_verifier: no authorization request found that returned code #{authorization_code}"
+          )
+          return false
+        end
+        auth_code_request_inputs = MockUDAPServer.authorization_code_request_details(authorization_request)
+        if auth_code_request_inputs.blank?
+          MockUDAPServer.update_response_for_invalid_assertion(
+            response,
+            "Could not check code_verifier: invalid authorization request details for code #{authorization_code}"
+          )
+          return false
+        end
+
+        verifier = request.params[:code_verifier]
+        challenge = auth_code_request_inputs&.dig('code_challenge')
+        method = auth_code_request_inputs&.dig('code_challenge_method')
+        MockUDAPServer.pkce_valid?(verifier, challenge, method, response)
+      end
+
+      def registered_scope(software_statement_jwt)
+        claims, _headers = begin
+          JWT.decode(software_statement_jwt, nil, false)
+        rescue StandardError
+          return nil
+        end
+
+        claims['scope']
+      end
+    end
+  end
+end

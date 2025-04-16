@@ -3,37 +3,24 @@ require_relative '../urls'
 require_relative '../endpoints/mock_udap_server'
 
 module UDAPSecurityTestKit
-  class UDAPClientRegistrationVerification < Inferno::Test
-    include URLs
-
-    id :udap_client_registration_verification
-    title 'Verify UDAP Registration'
-    description %(
-        During this test, Inferno will verify that the client's UDAP
-        registration request is conformant.
-      )
-    input :udap_client_uri,
-          optional: false
-    output :udap_registration_jwt
-
-    run do
-      omit_if udap_client_uri.blank?, # for re-use: mark the udap_client_uri input as optional when importing to enable
-              'Not configured for UDAP authentication.'
-
+  module RegistrationVerification
+    def load_registration_requests_for_client_uri(client_uri)
       load_tagged_requests(UDAP_TAG, REGISTRATION_TAG)
-      skip_if requests.empty?, 'No UDAP Registration Requests made.'
+      requests.select do |reg_request|
+        registered_uri = MockUDAPServer.udap_client_uri_from_registration_payload(
+          MockUDAPServer.parsed_request_body(reg_request)
+        )
+        client_uri == registered_uri
+      end
+    end
 
-      verified_request = requests.last
+    def verify_registration_request(oauth_flow, verified_request)
       parsed_body = MockUDAPServer.parsed_request_body(verified_request)
       assert parsed_body.present?, 'Registration request body is not valid JSON.'
 
       check_request_body(parsed_body)
-      check_software_statement(parsed_body['software_statement'], verified_request.created_at)
+      check_software_statement(oauth_flow, parsed_body['software_statement'], verified_request.created_at)
       output udap_registration_jwt: parsed_body['software_statement']
-
-      assert messages.none? { |msg|
-        msg[:type] == 'error'
-      }, 'Invalid registration request. See messages for details.'
     end
 
     def check_request_body(request_body)
@@ -55,7 +42,7 @@ module UDAPSecurityTestKit
       end
     end
 
-    def check_software_statement(software_statement_jwt, request_time)
+    def check_software_statement(oauth_flow, software_statement_jwt, request_time)
       unless software_statement_jwt.present?
         add_message('error',
                     'Registration is missing a `software_statement` key')
@@ -71,11 +58,11 @@ module UDAPSecurityTestKit
       end
 
       # headers checked with signature
-      check_software_statement_claims(claims, request_time)
+      check_software_statement_claims(oauth_flow, claims, request_time)
       check_jwt_signature(software_statement_jwt)
     end
 
-    def check_software_statement_claims(claims, request_time) # rubocop:disable Metrics/CyclomaticComplexity
+    def check_software_statement_claims(oauth_flow, claims, request_time) # rubocop:disable Metrics/CyclomaticComplexity
       unless claims['iss'] == udap_client_uri
         add_message('error',
                     'Registration software statement `iss` claim is incorrect: ' \
@@ -92,7 +79,7 @@ module UDAPSecurityTestKit
                     "expected '#{client_registration_url}', got '#{claims['aud']}'")
       end
 
-      check_software_statement_grant_types(claims)
+      check_software_statement_grant_types(oauth_flow, claims)
       MockUDAPServer.check_jwt_timing(claims['iat'], claims['exp'], request_time)
 
       add_message('error', 'Registration software statement `jti` claim is missing.') unless claims['jti'].present?
@@ -126,7 +113,7 @@ module UDAPSecurityTestKit
       nil
     end
 
-    def check_software_statement_grant_types(claims) # rubocop:disable Metrics/CyclomaticComplexity
+    def check_software_statement_grant_types(oauth_flow, claims) # rubocop:disable Metrics/CyclomaticComplexity
       unless claims['grant_types'].present?
         add_message('error', 'Registration software statement `grant_types` claim is missing')
         return
@@ -158,8 +145,6 @@ module UDAPSecurityTestKit
         add_message('error', 'Registration software statement `grant_types` claim cannot contain values beyond ' \
                              "'authorization_code', 'client_credentials', and 'refresh_token")
       end
-
-      oauth_flow = UDAPClientOptions.oauth_flow(suite_options)
 
       if oauth_flow == CLIENT_CREDENTIALS_TAG && !has_client_credentials
         add_message('error', 'Registration software statement `grant_types` must contain ' \

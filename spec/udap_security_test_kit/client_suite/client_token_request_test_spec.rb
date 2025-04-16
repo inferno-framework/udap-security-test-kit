@@ -3,7 +3,7 @@ require_relative '../../../lib/udap_security_test_kit/udap_jwt_builder'
 require_relative '../../../lib/udap_security_test_kit/udap_client_assertion_payload_builder'
 require_relative '../../../lib/udap_security_test_kit/endpoints/mock_udap_server'
 
-RSpec.describe UDAPSecurityTestKit::UDAPClientTokenRequestVerification do # rubocop:disable RSpec/SpecFilePathFormat
+RSpec.describe UDAPSecurityTestKit::UDAPClientTokenRequestClientCredentialsVerification do # rubocop:disable RSpec/SpecFilePathFormat
   let(:suite_id) { 'udap_security_client' }
   let(:test) { described_class }
   let(:results_repo) { Inferno::Repositories::Results.new }
@@ -74,7 +74,7 @@ RSpec.describe UDAPSecurityTestKit::UDAPClientTokenRequestVerification do # rubo
       request_body: URI.encode_www_form(request_body),
       response_body: { access_token: }.to_json,
       status: 200,
-      tags: [UDAPSecurityTestKit::TOKEN_TAG, UDAPSecurityTestKit::UDAP_TAG]
+      tags: [UDAPSecurityTestKit::TOKEN_TAG, UDAPSecurityTestKit::UDAP_TAG, UDAPSecurityTestKit::CLIENT_CREDENTIALS_TAG]
     )
   end
 

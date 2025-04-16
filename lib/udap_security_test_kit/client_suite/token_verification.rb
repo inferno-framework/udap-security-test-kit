@@ -1,32 +1,6 @@
-require_relative '../tags'
-require_relative '../urls'
-require_relative '../endpoints/mock_udap_server'
-require_relative 'client_descriptions'
-require_relative 'client_options'
-
 module UDAPSecurityTestKit
-  class UDAPClientTokenRequestVerification < Inferno::Test
-    include URLs
-
-    id :udap_client_token_request_verification
-    title 'Verify UDAP Token Requests'
-    description %(
-      Check that UDAP token requests are conformant.
-    )
-
-    input :client_id,
-          title: 'Client Id',
-          type: 'text',
-          locked: true,
-          description: INPUT_CLIENT_ID_DESCRIPTION_LOCKED
-    input :udap_registration_jwt,
-          title: 'Registered UDAP Software Statement',
-          type: 'textarea',
-          locked: 'true',
-          description: INPUT_UDAP_REGISTRATION_JWT_DESCRIPTION_LOCKED
-    output :udap_tokens
-
-    run do
+  module TokenVerification
+    def verify_token_requests(oauth_flow)
       registration_token =
         begin
           JWT::EncodedToken.new(udap_registration_jwt)
@@ -34,29 +8,20 @@ module UDAPSecurityTestKit
           assert false, "Registration request parsing failed: #{e}"
         end
 
-      load_tagged_requests(TOKEN_TAG, UDAP_TAG)
-      skip_if requests.blank?, 'No UDAP token requests made.'
-
       jti_list = []
       token_list = []
       requests.each_with_index do |token_request, index|
         request_params = URI.decode_www_form(token_request.request_body).to_h
-        check_request_params(request_params, index + 1)
-        check_client_assertion(request_params['client_assertion'], index + 1, jti_list, registration_token,
+        check_request_params(oauth_flow, request_params, index + 1)
+        check_client_assertion(oauth_flow, request_params['client_assertion'], index + 1, jti_list, registration_token,
                                client_id, token_request.created_at)
         token_list << extract_token_from_response(token_request)
       end
 
       output udap_tokens: token_list.compact.join("\n")
-
-      assert messages.none? { |msg|
-        msg[:type] == 'error'
-      }, 'Invalid token requests detected. See messages for details.'
     end
 
-    def check_request_params(params, request_num)
-      oauth_flow = UDAPClientOptions.oauth_flow(suite_options)
-
+    def check_request_params(oauth_flow, params, request_num)
       if params['grant_type'] != oauth_flow
         add_message('error',
                     "Token request #{request_num} had an incorrect `grant_type`: expected '#{oauth_flow}', " \
@@ -112,7 +77,8 @@ module UDAPSecurityTestKit
       end
     end
 
-    def check_client_assertion(assertion, request_num, jti_list, registration_token, registered_client_id, request_time)
+    def check_client_assertion(oauth_flow, assertion, request_num, jti_list, registration_token, registered_client_id,
+                               request_time)
       decoded_token =
         begin
           JWT::EncodedToken.new(assertion)
@@ -124,11 +90,11 @@ module UDAPSecurityTestKit
       return unless decoded_token.present?
 
       # header checked with signature
-      check_jwt_payload(decoded_token.payload, request_num, jti_list, registered_client_id, request_time)
+      check_jwt_payload(oauth_flow, decoded_token.payload, request_num, jti_list, registered_client_id, request_time)
       check_jwt_signature(decoded_token, registration_token, request_num)
     end
 
-    def check_jwt_payload(claims, request_num, jti_list, registered_client_id, request_time) # rubocop:disable Metrics/CyclomaticComplexity
+    def check_jwt_payload(oauth_flow, claims, request_num, jti_list, registered_client_id, request_time) # rubocop:disable Metrics/CyclomaticComplexity
       if claims['iss'] != registered_client_id
         add_message('error', "client assertion jwt on token request #{request_num} has an incorrect `iss` claim: " \
                              "expected '#{registered_client_id}', got '#{claims['iss']}'")
@@ -155,7 +121,7 @@ module UDAPSecurityTestKit
         jti_list << claims['jti']
       end
 
-      return unless UDAPClientOptions.oauth_flow(suite_options) == CLIENT_CREDENTIALS_TAG
+      return unless oauth_flow == CLIENT_CREDENTIALS_TAG
 
       if claims['extensions'].present?
         if claims['extensions'].is_a?(Hash)

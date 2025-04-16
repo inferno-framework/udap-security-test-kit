@@ -122,6 +122,21 @@ module UDAPSecurityTestKit
       JWT.decode(encoded_jwt, nil, false)[0]
     end
 
+    def udap_client_uri_from_registration_payload(reg_body)
+      udap_claim_from_registration_payload(reg_body, 'iss')
+    end
+
+    def udap_claim_from_registration_payload(reg_body, claim_key)
+      software_statement_jwt = udap_software_statement_jwt(reg_body)
+      return unless software_statement_jwt.present?
+
+      jwt_claims(software_statement_jwt)&.dig(claim_key)
+    end
+
+    def udap_software_statement_jwt(reg_body)
+      reg_body&.dig('software_statement')
+    end
+
     def client_uri_to_client_id(client_uri)
       Base64.urlsafe_encode64(client_uri, padding: false)
     end

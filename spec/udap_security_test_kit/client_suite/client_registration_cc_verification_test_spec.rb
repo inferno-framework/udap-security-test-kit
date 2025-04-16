@@ -4,7 +4,7 @@ require_relative '../../../lib/udap_security_test_kit/udap_jwt_builder'
 require_relative '../../../lib/udap_security_test_kit/udap_client_assertion_payload_builder'
 require_relative '../../../lib/udap_security_test_kit/endpoints/mock_udap_server'
 
-RSpec.describe UDAPSecurityTestKit::UDAPClientRegistrationVerification do # rubocop:disable RSpec/SpecFilePathFormat
+RSpec.describe UDAPSecurityTestKit::UDAPClientRegistrationClientCredentialsVerification do # rubocop:disable RSpec/SpecFilePathFormat
   include UDAPSecurityTestKit::URLs
   let(:suite_id) { 'udap_security_client' }
   let(:test) { described_class }

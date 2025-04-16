@@ -8,7 +8,9 @@ module UDAPSecurityTestKit
     module UDAPResponseCreation
       def make_udap_registration_response
         parsed_body = MockUDAPServer.parsed_io_body(request)
-        client_id = MockUDAPServer.client_uri_to_client_id(udap_client_uri_from_registration_payload(parsed_body))
+        client_id = MockUDAPServer.client_uri_to_client_id(
+          MockUDAPServer.udap_client_uri_from_registration_payload(parsed_body)
+        )
         ss_jwt = udap_software_statement_jwt(parsed_body)
 
         response_body = {
@@ -23,17 +25,6 @@ module UDAPSecurityTestKit
         response.headers['Access-Control-Allow-Origin'] = '*'
         response.content_type = 'application/json'
         response.status = 201
-      end
-
-      def udap_client_uri_from_registration_payload(reg_body)
-        software_statement_jwt = udap_software_statement_jwt(reg_body)
-        return unless software_statement_jwt.present?
-
-        MockUDAPServer.jwt_claims(software_statement_jwt)&.dig('iss')
-      end
-
-      def udap_software_statement_jwt(reg_body)
-        reg_body&.dig('software_statement')
       end
 
       def make_udap_authorization_response

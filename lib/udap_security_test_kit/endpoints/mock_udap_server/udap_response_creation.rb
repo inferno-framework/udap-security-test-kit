@@ -11,7 +11,7 @@ module UDAPSecurityTestKit
         client_id = MockUDAPServer.client_uri_to_client_id(
           MockUDAPServer.udap_client_uri_from_registration_payload(parsed_body)
         )
-        ss_jwt = udap_software_statement_jwt(parsed_body)
+        ss_jwt = MockUDAPServer.udap_software_statement_jwt(parsed_body)
 
         response_body = {
           client_id:,

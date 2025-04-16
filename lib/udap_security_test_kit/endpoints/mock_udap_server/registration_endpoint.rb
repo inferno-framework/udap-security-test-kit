@@ -11,7 +11,7 @@ module UDAPSecurityTestKit
 
       def test_run_identifier
         MockUDAPServer.client_uri_to_client_id(
-          client_uri_from_registration_payload(MockUDAPServer.parsed_io_body(request))
+          udap_client_uri_from_registration_payload(MockUDAPServer.parsed_io_body(request))
         )
       end
 

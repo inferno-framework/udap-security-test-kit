@@ -340,8 +340,7 @@ module UDAPSecurityTestKit
     end
 
     def authorization_request_for_code(code, test_session_id) # rubocop:disable Metrics/CyclomaticComplexity
-      authorization_requests = Inferno::Repositories::Requests.new.tagged_requests(test_session_id,
-                                                                                   [UDAP_TAG, AUTHORIZATION_TAG])
+      authorization_requests = Inferno::Repositories::Requests.new.tagged_requests(test_session_id, [AUTHORIZATION_TAG])
       authorization_requests.find do |request|
         location_header = request.response_headers.find { |header| header.name.downcase == 'location' }
         if location_header.present? && location_header.value.present?

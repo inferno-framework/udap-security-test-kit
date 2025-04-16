@@ -21,7 +21,7 @@ module UDAPSecurityTestKit
       end
 
       def tags
-        [AUTHORIZATION_TAG, UDAP_TAG]
+        [AUTHORIZATION_TAG, AUTHORIZATION_CODE_TAG, UDAP_TAG]
       end
     end
   end

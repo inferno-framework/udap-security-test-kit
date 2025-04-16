@@ -8,8 +8,8 @@ module UDAPSecurityTestKit
     module UDAPResponseCreation
       def make_udap_registration_response
         parsed_body = MockUDAPServer.parsed_io_body(request)
-        client_id = MockUDAPServer.client_uri_to_client_id(client_uri_from_registration_payload(parsed_body))
-        ss_jwt = request_software_statement_jwt(parsed_body)
+        client_id = MockUDAPServer.client_uri_to_client_id(udap_client_uri_from_registration_payload(parsed_body))
+        ss_jwt = udap_software_statement_jwt(parsed_body)
 
         response_body = {
           client_id:,
@@ -25,20 +25,20 @@ module UDAPSecurityTestKit
         response.status = 201
       end
 
-      def client_uri_from_registration_payload(reg_body)
-        software_statement_jwt = request_software_statement_jwt(reg_body)
+      def udap_client_uri_from_registration_payload(reg_body)
+        software_statement_jwt = udap_software_statement_jwt(reg_body)
         return unless software_statement_jwt.present?
 
         MockUDAPServer.jwt_claims(software_statement_jwt)&.dig('iss')
       end
 
-      def request_software_statement_jwt(reg_body)
+      def udap_software_statement_jwt(reg_body)
         reg_body&.dig('software_statement')
       end
 
       def make_udap_authorization_response
         redirect_uri = request.params[:redirect_uri]
-        registered_redirect_uri_list = registered_redirect_uris
+        registered_redirect_uri_list = udap_registered_redirect_uris
 
         if redirect_uri.blank?
           # need one from the registered list
@@ -79,7 +79,7 @@ module UDAPSecurityTestKit
         response.status = 302
       end
 
-      def registered_redirect_uris
+      def udap_registered_redirect_uris
         registered_software_statement = MockUDAPServer.udap_registration_software_statement(test_run.test_session_id)
         registration_jwt_body, _registration_jwt_header = JWT.decode(registered_software_statement, nil, false)
         return [] unless registration_jwt_body['redirect'].present?
@@ -93,14 +93,14 @@ module UDAPSecurityTestKit
         authorization_code = request.params[:code]
         client_id = MockUDAPServer.issued_token_to_client_id(authorization_code)
         software_statement = MockUDAPServer.udap_registration_software_statement(test_run.test_session_id)
-        return unless authenticated?(request.params[:client_assertion], software_statement)
+        return unless udap_authenticated?(request.params[:client_assertion], software_statement)
 
         if MockUDAPServer.token_expired?(authorization_code)
           MockUDAPServer.update_response_for_expired_token(response, 'Authorization code')
           return
         end
 
-        return if request.params[:code_verifier].present? && !pkce_valid?(authorization_code)
+        return if request.params[:code_verifier].present? && !udap_pkce_valid?(authorization_code)
 
         exp_min = 60
         response_body = {
@@ -118,8 +118,8 @@ module UDAPSecurityTestKit
           rescue JSON::ParserError
             nil
           end
-        additional_context = requested_scope_context(registered_scope(software_statement), authorization_code,
-                                                     launch_context)
+        additional_context = udap_requested_scope_context(udap_registered_scope(software_statement), authorization_code,
+                                                          launch_context)
 
         response.body = additional_context.merge(response_body).to_json # response body values take priority
         response.headers['Cache-Control'] = 'no-store'
@@ -134,7 +134,7 @@ module UDAPSecurityTestKit
         authorization_code = MockUDAPServer.refresh_token_to_authorization_code(refresh_token)
         client_id = MockUDAPServer.issued_token_to_client_id(authorization_code)
         software_statement = MockUDAPServer.udap_registration_software_statement(test_run.test_session_id)
-        return unless authenticated?(request.params[:client_assertion], software_statement)
+        return unless udap_authenticated?(request.params[:client_assertion], software_statement)
 
         # no expiration checks for refresh tokens
 
@@ -172,8 +172,8 @@ module UDAPSecurityTestKit
           rescue JSON::ParserError
             nil
           end
-        additional_context = requested_scope_context(registered_scope(software_statement), authorization_code,
-                                                     launch_context)
+        additional_context = udap_requested_scope_context(udap_registered_scope(software_statement), authorization_code,
+                                                          launch_context)
 
         response.body = additional_context.merge(response_body).to_json # response body values take priority
         response.headers['Cache-Control'] = 'no-store'
@@ -187,7 +187,7 @@ module UDAPSecurityTestKit
         assertion = request.params[:client_assertion]
         client_id = MockUDAPServer.client_id_from_client_assertion(assertion)
         software_statement = MockUDAPServer.udap_registration_software_statement(test_run.test_session_id)
-        return unless authenticated?(request.params[:client_assertion], software_statement)
+        return unless udap_authenticated?(request.params[:client_assertion], software_statement)
 
         exp_min = 60
         response_body = {
@@ -204,7 +204,7 @@ module UDAPSecurityTestKit
         response.status = 200
       end
 
-      def authenticated?(assertion, software_statement)
+      def udap_authenticated?(assertion, software_statement)
         signature_error = MockUDAPServer.udap_token_signature_verification(assertion, software_statement)
 
         if signature_error.present?
@@ -215,7 +215,7 @@ module UDAPSecurityTestKit
         true
       end
 
-      def requested_scope_context(requested_scopes, authorization_code, launch_context)
+      def udap_requested_scope_context(requested_scopes, authorization_code, launch_context)
         context = launch_context.present? ? launch_context : {}
         scopes_list = requested_scopes.split
 
@@ -223,12 +223,12 @@ module UDAPSecurityTestKit
           context[:refresh_token] = MockUDAPServer.authorization_code_to_refresh_token(authorization_code)
         end
 
-        context[:id_token] = construct_id_token(scopes_list.include?('fhirUser')) if scopes_list.include?('openid')
+        context[:id_token] = udap_construct_id_token(scopes_list.include?('fhirUser')) if scopes_list.include?('openid')
 
         context
       end
 
-      def construct_id_token(include_fhir_user) # rubocop:disable Metrics/CyclomaticComplexity
+      def udap_construct_id_token(include_fhir_user) # rubocop:disable Metrics/CyclomaticComplexity
         client_id = JSON.parse(result.input_json)&.find do |input|
           input['name'] == 'client_id'
         end&.dig('value')
@@ -262,7 +262,7 @@ module UDAPSecurityTestKit
         JWT.encode claims, private_key.signing_key, algorithm, { alg: algorithm, kid: private_key.kid, typ: 'JWT' }
       end
 
-      def pkce_valid?(authorization_code)
+      def udap_pkce_valid?(authorization_code)
         authorization_request = MockUDAPServer.authorization_request_for_code(authorization_code,
                                                                               test_run.test_session_id)
         if authorization_request.blank?
@@ -287,7 +287,7 @@ module UDAPSecurityTestKit
         MockUDAPServer.pkce_valid?(verifier, challenge, method, response)
       end
 
-      def registered_scope(software_statement_jwt)
+      def udap_registered_scope(software_statement_jwt)
         claims, _headers = begin
           JWT.decode(software_statement_jwt, nil, false)
         rescue StandardError

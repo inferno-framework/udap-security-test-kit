@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative '../../tags'
+require_relative '../../urls'
 require_relative '../mock_udap_server'
 require_relative 'udap_response_creation'
 
@@ -8,6 +9,7 @@ module UDAPSecurityTestKit
   module MockUDAPServer
     class TokenEndpoint < Inferno::DSL::SuiteEndpoint
       include UDAPResponseCreation
+      include URLs
 
       def test_run_identifier
         case request.params[:grant_type]

@@ -1,6 +1,7 @@
 require 'jwt'
 require 'faraday'
 require 'time'
+require 'rack/utils'
 require_relative '../urls'
 require_relative '../tags'
 require_relative '../udap_jwt_builder'
@@ -354,12 +355,12 @@ module UDAPSecurityTestKit
       Base64.urlsafe_encode64(Digest::SHA256.digest(verifier), padding: false)
     end
 
-    def authorization_request_for_code(code, test_session_id) # rubocop:disable Metrics/CyclomaticComplexity
+    def authorization_request_for_code(code, test_session_id)
       authorization_requests = Inferno::Repositories::Requests.new.tagged_requests(test_session_id, [AUTHORIZATION_TAG])
       authorization_requests.find do |request|
         location_header = request.response_headers.find { |header| header.name.downcase == 'location' }
         if location_header.present? && location_header.value.present?
-          CGI.parse(URI(location_header.value)&.query)&.dig('code')&.first == code
+          Rack::Utils.parse_query(URI(location_header.value)&.query)&.dig('code') == code
         else
           false
         end
@@ -367,15 +368,11 @@ module UDAPSecurityTestKit
     end
 
     def authorization_code_request_details(inferno_request)
-      details_hash =
-        if inferno_request.verb.downcase == 'get'
-          CGI.parse(inferno_request.url.split('?')[1])
-        elsif inferno_request.verb.downcase == 'post'
-          CGI.parse(inferno_request.request_body)
-        end
-
-      details_hash&.keys&.each { |key| details_hash[key] = details_hash[key].first }
-      details_hash
+      if inferno_request.verb.downcase == 'get'
+        Rack::Utils.parse_query(inferno_request.url.split('?')[1])
+      elsif inferno_request.verb.downcase == 'post'
+        Rack::Utils.parse_query(inferno_request.request_body)
+      end
     end
   end
 end

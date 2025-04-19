@@ -1,13 +1,17 @@
-require_relative '../../../lib/udap_security_test_kit/urls'
-require_relative '../../../lib/udap_security_test_kit/tags'
-require_relative '../../../lib/udap_security_test_kit/udap_jwt_builder'
-require_relative '../../../lib/udap_security_test_kit/udap_client_assertion_payload_builder'
-require_relative '../../../lib/udap_security_test_kit/endpoints/mock_udap_server'
-
-RSpec.describe UDAPSecurityTestKit::UDAPClientRegistrationClientCredentialsVerification do # rubocop:disable RSpec/SpecFilePathFormat
+RSpec.describe UDAPSecurityTestKit::UDAPClientRegistrationAuthorizationCodeVerification do # rubocop:disable RSpec/SpecFilePathFormat
   include UDAPSecurityTestKit::URLs
   let(:suite_id) { 'udap_security_client' }
   let(:test) { described_class }
+  let(:test_session) do # overriden to add suite options
+    repo_create(
+      :test_session,
+      suite: suite_id,
+      suite_options: [Inferno::DSL::SuiteOption.new(
+        id: :client_type,
+        value: UDAPSecurityTestKit::UDAPClientOptions::UDAP_AUTHORIZATION_CODE
+      )]
+    )
+  end
   let(:results_repo) { Inferno::Repositories::Results.new }
   let(:dummy_result) { repo_create(:result, test_session_id: test_session.id) }
   let(:udap_client_uri) { 'urn:test' }
@@ -23,10 +27,13 @@ RSpec.describe UDAPSecurityTestKit::UDAPClientRegistrationClientCredentialsVerif
       iat: Time.now.to_i,
       jti: SecureRandom.hex(32),
       client_name: 'Test Client',
-      grant_types: ['client_credentials'],
+      grant_types: ['authorization_code', 'refresh_token'],
       token_endpoint_auth_method: 'private_key_jwt',
       scope: 'system/*.read',
-      contacts: ['mailto:test@inferno.healthit.gov']
+      contacts: ['mailto:test@inferno.healthit.gov'],
+      logo_uri: 'https://myapp.example.com/MyApp.png',
+      redirect_uris: ['https://myapp.example.com/redirect'],
+      response_types: ['code']
     }
   end
   let(:reg_ss) do
@@ -84,11 +91,6 @@ RSpec.describe UDAPSecurityTestKit::UDAPClientRegistrationClientCredentialsVerif
       status: 200,
       tags: [UDAPSecurityTestKit::REGISTRATION_TAG, UDAPSecurityTestKit::UDAP_TAG]
     )
-  end
-
-  before do
-    allow(UDAPSecurityTestKit::UDAPClientOptions).to receive(:oauth_flow)
-      .and_return(UDAPSecurityTestKit::CLIENT_CREDENTIALS_TAG)
   end
 
   it 'skips if no registration requests' do

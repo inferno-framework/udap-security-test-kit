@@ -9,7 +9,7 @@ module UDAPSecurityTestKit
       STU 1.0 IG](https://hl7.org/fhir/us/udap-security/STU1/index.html)
       <!-- break -->
       Specifically, this test
-      kit assesses the required capabilities from the following sections:
+      kit assesses the required capabilities for clients and servers from the following sections:
       - [JSON Web Token (JWT) Requirements](https://hl7.org/fhir/us/udap-security/STU1/index.html)
       - [Discovery](https://hl7.org/fhir/us/udap-security/STU1/discovery.html)
       - [Dynamic Client Registration](https://hl7.org/fhir/us/udap-security/STU1/registration.html)

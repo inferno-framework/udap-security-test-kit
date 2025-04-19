@@ -72,6 +72,8 @@ module UDAPSecurityTestKit
 
       def udap_registered_redirect_uris
         registered_software_statement = MockUDAPServer.udap_registration_software_statement(test_run.test_session_id)
+        return unless registered_software_statement.present?
+
         registration_jwt_body, _registration_jwt_header = JWT.decode(registered_software_statement, nil, false)
         return [] unless registration_jwt_body['redirect'].present?
         return registration_jwt_body['redirect'] if registration_jwt_body['redirect'].is_a?(Array)
@@ -208,7 +210,7 @@ module UDAPSecurityTestKit
 
       def udap_requested_scope_context(requested_scopes, authorization_code, launch_context)
         context = launch_context.present? ? launch_context : {}
-        scopes_list = requested_scopes.split
+        scopes_list = requested_scopes&.split || []
 
         if scopes_list.include?('offline_access') || scopes_list.include?('online_access')
           context[:refresh_token] = MockUDAPServer.authorization_code_to_refresh_token(authorization_code)
@@ -226,7 +228,7 @@ module UDAPSecurityTestKit
         fhir_user_relative_reference = JSON.parse(result.input_json)&.find do |input|
           input['name'] == 'fhir_user_relative_reference'
         end&.dig('value')
-        # TODO: how to generate the id - is this ok?
+
         subject_id = if fhir_user_relative_reference.present?
                        fhir_user_relative_reference.downcase.gsub('/', '-')
                      else
@@ -241,7 +243,7 @@ module UDAPSecurityTestKit
           iat: Time.now.to_i
         }
         if include_fhir_user && fhir_user_relative_reference.present?
-          claims[:fhirUser] = "#{fhir_user_relative_reference}/#{fhir_user_relative_reference}"
+          claims[:fhirUser] = "#{client_fhir_base_url}/#{fhir_user_relative_reference}"
         end
 
         algorithm = 'RS256'

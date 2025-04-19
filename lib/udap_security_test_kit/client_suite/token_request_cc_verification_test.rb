@@ -31,7 +31,7 @@ module UDAPSecurityTestKit
     run do
       load_tagged_requests(TOKEN_TAG, UDAP_TAG, CLIENT_CREDENTIALS_TAG)
       skip_if requests.blank?, 'No UDAP token requests made.'
-      # TODO: add refresh requests here and in module TokenVerification
+      load_tagged_requests(TOKEN_TAG, UDAP_TAG, REFRESH_TOKEN_TAG) # verify refresh_requests as well (shouldn't be any)
 
       verify_token_requests(CLIENT_CREDENTIALS_TAG)
 

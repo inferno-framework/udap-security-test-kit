@@ -162,10 +162,10 @@ module UDAPSecurityTestKit
 
     def check_authorization_code_software_statement(claims) # rubocop:disable Metrics/CyclomaticComplexity
       if claims['redirect_uris'].blank?
-        add_message('error', 'Registration software statement `redirect_uris` must be present when' \
+        add_message('error', 'Registration software statement `redirect_uris` must be present when ' \
                              "the 'authorization_code' `grant_type` is requested.")
       elsif !claims['redirect_uris'].is_a?(Array)
-        add_message('error', 'Registration software statement `redirect_uris` must be a list when' \
+        add_message('error', 'Registration software statement `redirect_uris` must be a list when ' \
                              "the 'authorization_code' `grant_type` is requested.")
       else
         claims['redirect_uris'].each_with_index do |redirect_uri, index|
@@ -177,7 +177,7 @@ module UDAPSecurityTestKit
       end
 
       if claims['logo_uri'].blank?
-        add_message('error', 'Registration software statement `logo_uri` must be present when' \
+        add_message('error', 'Registration software statement `logo_uri` must be present when ' \
                              "the 'authorization_code' `grant_type` is requested.")
       else
         unless valid_uri?(claims['logo_uri'], required_scheme: 'https')
@@ -190,7 +190,7 @@ module UDAPSecurityTestKit
       end
 
       if claims['response_types'].blank?
-        add_message('error', 'Registration software statement `response_types` must be present when' \
+        add_message('error', 'Registration software statement `response_types` must be present when ' \
                              "the 'authorization_code' `grant_type` is requested.")
       else
         unless claims['response_types'].is_a?(Array) &&
@@ -206,17 +206,17 @@ module UDAPSecurityTestKit
 
     def check_client_credentials_software_statement(claims)
       unless claims['redirect_uris'].nil?
-        add_message('error', 'Registration software statement `redirect_uris` must not be present when' \
+        add_message('error', 'Registration software statement `redirect_uris` must not be present when ' \
                              "the 'client_credentials' `grant_type` is requested.")
       end
 
       unless claims['response_types'].nil?
-        add_message('error', 'Registration software statement `response_types` must not be present when' \
+        add_message('error', 'Registration software statement `response_types` must not be present when ' \
                              "the 'client_credentials' `grant_type` is requested.")
       end
 
       if claims['grant_types'].include?('refresh_token')
-        add_message('error', "Registration software statement `response_types` cannot contain 'refresh_token' when" \
+        add_message('error', "Registration software statement `response_types` cannot contain 'refresh_token' when " \
                              "the 'client_credentials' `grant_type` is requested.")
       end
 

@@ -38,7 +38,7 @@ module UDAPSecurityTestKit
       }, 'Invalid authorization requests detected. See messages for details.'
     end
 
-    def check_request_params(params, request_num)
+    def check_request_params(params, request_num) # rubocop:disable Metrics/CyclomaticComplexity
       if params['response_type'] != 'code'
         add_message('error',
                     "Authorization request #{request_num} had an incorrect `response_type`: expected 'code', " \
@@ -52,17 +52,17 @@ module UDAPSecurityTestKit
       registration_body, _registration_header = JWT.decode(udap_registration_jwt, nil, false)
       if params['redirect_uri'].present?
         # must be a registered redirect_uri
-        unless registration_body['redirect_uris'].include?(params['redirect_uri'])
+        unless registration_body['redirect_uris']&.include?(params['redirect_uri'])
           add_message('error',
                       "Authorization request #{request_num} had an invalid `redirect_uri`: expected one of " \
-                      "'#{registration_body['redirect_uris'].join(', ')}', but got '#{params['redirect_uri']}'")
+                      "'#{registration_body['redirect_uris']&.join(', ')}', but got '#{params['redirect_uri']}'")
         end
       else
         # can only be one registered redirect_uri
-        unless registration_body['redirect_uris'].length == 1
+        unless registration_body['redirect_uris']&.length == 1
           add_message('error',
                       "Authorization request #{request_num} had an invalid `redirect_uri`: expected one of " \
-                      "'#{registration_body['redirect_uris'].join(', ')}', but got none")
+                      "'#{registration_body['redirect_uris']&.join(', ')}', but got none")
         end
       end
 

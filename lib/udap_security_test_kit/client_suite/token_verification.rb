@@ -12,7 +12,11 @@ module UDAPSecurityTestKit
       token_list = []
       requests.each_with_index do |token_request, index|
         request_params = URI.decode_www_form(token_request.request_body).to_h
-        check_request_params(oauth_flow, request_params, index + 1)
+        if request_params['grant_type'] == 'refresh_token'
+          check_refresh_request_params(oauth_flow, request_params, index + 1)
+        else
+          check_request_params(oauth_flow, request_params, index + 1)
+        end
         check_client_assertion(oauth_flow, request_params['client_assertion'], index + 1, jti_list, registration_token,
                                client_id, token_request.created_at)
         token_list << extract_token_from_response(token_request)
@@ -182,6 +186,37 @@ module UDAPSecurityTestKit
 
       JSON.parse(request.response_body)&.dig('access_token')
     rescue StandardError
+      nil
+    end
+
+    def check_refresh_request_params(oauth_flow, params, request_num)
+      if oauth_flow == CLIENT_CREDENTIALS_TAG
+        add_message('error',
+                    "Invalid refresh request #{request_num} found during client_credentials flow.")
+        return
+      end
+
+      if params['grant_type'] != 'refresh_token'
+        add_message('error',
+                    "Refresh request #{request_num} had an incorrect `grant_type`: expected 'refresh_token', " \
+                    "but got '#{params['grant_type']}'")
+      end
+      if params['client_assertion_type'] != 'urn:ietf:params:oauth:client-assertion-type:jwt-bearer'
+        add_message('error',
+                    "Confidential asymmetric refresh request #{request_num} had an incorrect `client_assertion_type`: " \
+                    "expected 'urn:ietf:params:oauth:client-assertion-type:jwt-bearer', " \
+                    "but got '#{params['client_assertion_type']}'")
+      end
+
+      authorization_code = MockUDAPServer.refresh_token_to_authorization_code(params['refresh_token'])
+      authorization_request = MockUDAPServer.authorization_request_for_code(authorization_code, test_session_id)
+      if authorization_request.present?
+        # TODO: - check that the scope is a subset of the original authorization code request
+      else
+        add_message('error', "Authorization code token refresh request #{request_num} included a refresh token not " \
+                             "issued during this test session: '#{params['refresh_token']}'")
+      end
+
       nil
     end
   end

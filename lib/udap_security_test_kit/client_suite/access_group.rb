@@ -1,4 +1,5 @@
-require_relative 'access_interaction_test'
+require_relative 'access_ac_interaction_test'
+require_relative 'access_cc_interaction_test'
 require_relative 'authorization_request_verification_test'
 require_relative 'token_request_ac_verification_test'
 require_relative 'token_request_cc_verification_test'
@@ -18,7 +19,14 @@ module UDAPSecurityTestKit
 
     run_as_group
 
-    test from: :udap_client_access_interaction
+    test from: :udap_client_access_ac_interaction,
+         required_suite_options: {
+           client_type: UDAPClientOptions::UDAP_AUTHORIZATION_CODE
+         }
+    test from: :udap_client_access_cc_interaction,
+         required_suite_options: {
+           client_type: UDAPClientOptions::UDAP_CLIENT_CREDENTIALS
+         }
     # Authorization Request Verification (authorization code only)
     test from: :udap_client_authorization_request_verification,
          required_suite_options: {

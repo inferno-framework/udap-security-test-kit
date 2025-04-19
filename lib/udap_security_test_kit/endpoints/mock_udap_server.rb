@@ -369,7 +369,7 @@ module UDAPSecurityTestKit
 
     def authorization_code_request_details(inferno_request)
       if inferno_request.verb.downcase == 'get'
-        Rack::Utils.parse_query(inferno_request.url.split('?')[1])
+        Rack::Utils.parse_query(URI(inferno_request.url)&.query)
       elsif inferno_request.verb.downcase == 'post'
         Rack::Utils.parse_query(inferno_request.request_body)
       end

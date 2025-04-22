@@ -5,83 +5,7 @@ require_relative '../../client_suite/oidc_jwks'
 
 module UDAPSecurityTestKit
   module MockUDAPServer
-    module UDAPResponseCreation
-      def make_udap_registration_response
-        parsed_body = MockUDAPServer.parsed_io_body(request)
-        client_id = MockUDAPServer.client_uri_to_client_id(
-          MockUDAPServer.udap_client_uri_from_registration_payload(parsed_body)
-        )
-        ss_jwt = MockUDAPServer.udap_software_statement_jwt(parsed_body)
-
-        response_body = {
-          client_id:,
-          software_statement: ss_jwt
-        }
-        response_body.merge!(MockUDAPServer.jwt_claims(ss_jwt).except(['iss', 'sub', 'exp', 'iat', 'jti']))
-
-        response.body = response_body.to_json
-        response.headers['Cache-Control'] = 'no-store'
-        response.headers['Pragma'] = 'no-cache'
-        response.headers['Access-Control-Allow-Origin'] = '*'
-        response.content_type = 'application/json'
-        response.status = 201
-      end
-
-      def make_udap_authorization_response
-        redirect_uri = request.params[:redirect_uri]
-        registered_redirect_uri_list = udap_registered_redirect_uris
-
-        if redirect_uri.blank?
-          # need one from the registered list
-          if registered_redirect_uri_list.blank?
-            response.status = 400
-            response.body = {
-              error: 'Bad request',
-              message: 'Missing required redirect_uri parameter with no default provided in the registration.'
-            }.to_json
-            response.content_type = 'application/json'
-            return
-          elsif registered_redirect_uri_list.length > 1
-            response.status = 400
-            response.body = {
-              error: 'Bad request',
-              message: 'Missing required redirect_uri parameter with multiple options provided in the registration.'
-            }.to_json
-            response.content_type = 'application/json'
-            return
-          else
-            redirect_uri = registered_redirect_uri_list.first
-          end
-        end
-
-        client_id = request.params[:client_id]
-        state = request.params[:state]
-
-        exp_min = 10
-        token = MockUDAPServer.client_id_to_token(client_id, exp_min)
-        code_query_string = "code=#{ERB::Util.url_encode(token)}"
-        query_string =
-          if state.present?
-            "#{code_query_string}&state=#{ERB::Util.url_encode(state)}"
-          else
-            code_query_string
-          end
-        response.headers['Location'] = "#{redirect_uri}#{redirect_uri.include?('?') ? '&' : '?'}#{query_string}"
-        response.status = 302
-      end
-
-      def udap_registered_redirect_uris
-        registered_software_statement = MockUDAPServer.udap_registration_software_statement(test_run.test_session_id)
-        return unless registered_software_statement.present?
-
-        registration_jwt_body, _registration_jwt_header = JWT.decode(registered_software_statement, nil, false)
-        return [] unless registration_jwt_body['redirect'].present?
-        return registration_jwt_body['redirect'] if registration_jwt_body['redirect'].is_a?(Array)
-
-        # invalid registration, but we'll succeed here and fail during registration verification
-        [registration_jwt_body['redirect']]
-      end
-
+    module UDAPTokenResponseCreation
       def make_udap_authorization_code_token_response # rubocop:disable Metrics/CyclomaticComplexity
         authorization_code = request.params[:code]
         client_id = MockUDAPServer.issued_token_to_client_id(authorization_code)
@@ -134,7 +58,7 @@ module UDAPSecurityTestKit
         authorization_request = MockUDAPServer.authorization_request_for_code(authorization_code,
                                                                               test_run.test_session_id)
         if authorization_request.blank?
-          MockUDAPServer.update_response_for_invalid_assertion(
+          MockUDAPServer.update_response_for_error(
             response,
             "no authorization request found for refresh token #{refresh_token}"
           )
@@ -142,7 +66,7 @@ module UDAPSecurityTestKit
         end
         auth_code_request_inputs = MockUDAPServer.authorization_code_request_details(authorization_request)
         if auth_code_request_inputs.blank?
-          MockUDAPServer.update_response_for_invalid_assertion(
+          MockUDAPServer.update_response_for_error(
             response,
             'invalid authorization request details'
           )
@@ -201,7 +125,7 @@ module UDAPSecurityTestKit
         signature_error = MockUDAPServer.udap_token_signature_verification(assertion, software_statement)
 
         if signature_error.present?
-          MockUDAPServer.update_response_for_invalid_assertion(response, signature_error)
+          MockUDAPServer.update_response_for_error(response, signature_error)
           return false
         end
 
@@ -259,7 +183,7 @@ module UDAPSecurityTestKit
         authorization_request = MockUDAPServer.authorization_request_for_code(authorization_code,
                                                                               test_run.test_session_id)
         if authorization_request.blank?
-          MockUDAPServer.update_response_for_invalid_assertion(
+          MockUDAPServer.update_response_for_error(
             response,
             "Could not check code_verifier: no authorization request found that returned code #{authorization_code}"
           )
@@ -267,7 +191,7 @@ module UDAPSecurityTestKit
         end
         auth_code_request_inputs = MockUDAPServer.authorization_code_request_details(authorization_request)
         if auth_code_request_inputs.blank?
-          MockUDAPServer.update_response_for_invalid_assertion(
+          MockUDAPServer.update_response_for_error(
             response,
             "Could not check code_verifier: invalid authorization request details for code #{authorization_code}"
           )

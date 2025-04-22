@@ -3,7 +3,7 @@ require_relative '../urls'
 require_relative '../endpoints/mock_udap_server'
 
 module UDAPSecurityTestKit
-  module RegistrationVerification
+  module RegistrationRequestVerification
     def load_registration_requests_for_client_uri(client_uri)
       load_tagged_requests(UDAP_TAG, REGISTRATION_TAG)
       requests.select do |reg_request|

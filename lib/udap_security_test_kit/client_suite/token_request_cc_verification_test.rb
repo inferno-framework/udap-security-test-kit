@@ -3,12 +3,12 @@ require_relative '../urls'
 require_relative '../endpoints/mock_udap_server'
 require_relative 'client_descriptions'
 require_relative 'client_options'
-require_relative 'token_verification'
+require_relative 'token_request_verification'
 
 module UDAPSecurityTestKit
   class UDAPClientTokenRequestClientCredentialsVerification < Inferno::Test
     include URLs
-    include TokenVerification
+    include TokenRequestVerification
 
     id :udap_client_token_request_cc_verification
     title 'Verify UDAP Client Credentials Token Requests'
@@ -37,7 +37,7 @@ module UDAPSecurityTestKit
 
       assert messages.none? { |msg|
         msg[:type] == 'error'
-      }, 'Invalid token requests detected. See messages for details.'
+      }, 'Invalid token requests received. See messages for details.'
     end
   end
 end

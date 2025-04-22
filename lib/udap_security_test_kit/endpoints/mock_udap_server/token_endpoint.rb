@@ -3,12 +3,12 @@
 require_relative '../../tags'
 require_relative '../../urls'
 require_relative '../mock_udap_server'
-require_relative 'udap_response_creation'
+require_relative 'udap_token_response_creation'
 
 module UDAPSecurityTestKit
   module MockUDAPServer
     class TokenEndpoint < Inferno::DSL::SuiteEndpoint
-      include UDAPResponseCreation
+      include UDAPTokenResponseCreation
       include URLs
 
       def test_run_identifier
@@ -33,7 +33,7 @@ module UDAPSecurityTestKit
         when REFRESH_TOKEN_TAG
           make_udap_refresh_token_response
         else
-          MockUDAPServer.update_response_for_invalid_assertion(
+          MockUDAPServer.update_response_for_error(
             response,
             "unsupported grant_type: #{request.params[:grant_type]}"
           )

@@ -1,5 +1,5 @@
 module UDAPSecurityTestKit
-  module TokenVerification
+  module TokenRequestVerification
     def verify_token_requests(oauth_flow)
       registration_token =
         begin

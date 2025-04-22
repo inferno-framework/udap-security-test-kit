@@ -2,12 +2,12 @@
 
 require_relative '../../tags'
 require_relative '../mock_udap_server'
-require_relative 'udap_response_creation'
+require_relative 'udap_registration_response_creation'
 
 module UDAPSecurityTestKit
   module MockUDAPServer
     class RegistrationEndpoint < Inferno::DSL::SuiteEndpoint
-      include UDAPResponseCreation
+      include UDAPRegistrationResponseCreation
 
       def test_run_identifier
         MockUDAPServer.client_uri_to_client_id(

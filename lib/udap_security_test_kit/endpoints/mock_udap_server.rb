@@ -267,7 +267,7 @@ module UDAPSecurityTestKit
       parsed_body&.dig('software_statement')
     end
 
-    def update_response_for_invalid_assertion(response, error_message)
+    def update_response_for_error(response, error_message)
       response.status = 401
       response.format = :json
       response.body = { error: 'invalid_client', error_description: error_message }.to_json
@@ -326,10 +326,6 @@ module UDAPSecurityTestKit
         'pkce check failed: no verifier provided'
       elsif challenge.blank?
         'pkce check failed: no challenge code provided'
-      elsif method == 'plain'
-        return nil unless challenge != verifier
-
-        "invalid plain pkce verifier: got '#{verifier}' expected '#{challenge}'"
       elsif method == 'S256'
         return nil unless challenge != calculate_s256_challenge(verifier)
 
@@ -344,7 +340,7 @@ module UDAPSecurityTestKit
       pkce_error = pkce_error(verifier, challenge, method)
 
       if pkce_error.present?
-        update_response_for_invalid_assertion(response, pkce_error)
+        update_response_for_error(response, pkce_error)
         false
       else
         true

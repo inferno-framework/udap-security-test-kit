@@ -3,7 +3,8 @@ require_relative 'endpoints/mock_udap_server/authorization_endpoint'
 require_relative 'endpoints/mock_udap_server/token_endpoint'
 require_relative 'endpoints/echoing_fhir_responder_endpoint'
 require_relative 'urls'
-require_relative 'client_suite/registration_group'
+require_relative 'client_suite/registration_ac_group'
+require_relative 'client_suite/registration_cc_group'
 require_relative 'client_suite/access_group'
 
 module UDAPSecurityTestKit
@@ -85,7 +86,14 @@ module UDAPSecurityTestKit
       request.query_parameters['token']
     end
 
-    group from: :udap_client_registration
+    group from: :udap_client_registration_ac,
+          required_suite_options: {
+            client_type: UDAPClientOptions::UDAP_AUTHORIZATION_CODE
+          }
+    group from: :udap_client_registration_cc,
+          required_suite_options: {
+            client_type: UDAPClientOptions::UDAP_CLIENT_CREDENTIALS
+          }
     group from: :udap_client_access
   end
 end

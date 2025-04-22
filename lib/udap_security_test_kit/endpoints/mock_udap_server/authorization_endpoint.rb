@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
 require_relative '../../tags'
-require_relative 'udap_response_creation'
+require_relative 'udap_authorization_response_creation'
 
 module UDAPSecurityTestKit
   module MockUDAPServer
     class AuthorizationEndpoint < Inferno::DSL::SuiteEndpoint
-      include UDAPResponseCreation
+      include UDAPAuthorizationResponseCreation
 
       def test_run_identifier
         request.params[:client_id]

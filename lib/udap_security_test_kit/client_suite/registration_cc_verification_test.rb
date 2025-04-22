@@ -1,12 +1,12 @@
 require_relative '../tags'
 require_relative '../urls'
 require_relative '../endpoints/mock_udap_server'
-require_relative 'registration_verification'
+require_relative 'registration_request_verification'
 
 module UDAPSecurityTestKit
   class UDAPClientRegistrationClientCredentialsVerification < Inferno::Test
     include URLs
-    include RegistrationVerification
+    include RegistrationRequestVerification
 
     id :udap_client_registration_cc_verification
     title 'Verify UDAP Client Credentials Registration'

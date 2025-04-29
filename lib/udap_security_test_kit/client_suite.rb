@@ -5,7 +5,8 @@ require_relative 'endpoints/echoing_fhir_responder_endpoint'
 require_relative 'urls'
 require_relative 'client_suite/registration_ac_group'
 require_relative 'client_suite/registration_cc_group'
-require_relative 'client_suite/access_group'
+require_relative 'client_suite/access_ac_group'
+require_relative 'client_suite/access_cc_group'
 
 module UDAPSecurityTestKit
   class UDAPSecurityClientTestSuite < Inferno::TestSuite
@@ -94,6 +95,13 @@ module UDAPSecurityTestKit
           required_suite_options: {
             client_type: UDAPClientOptions::UDAP_CLIENT_CREDENTIALS
           }
-    group from: :udap_client_access
+    group from: :udap_client_access_ac,
+          required_suite_options: {
+            client_type: UDAPClientOptions::UDAP_AUTHORIZATION_CODE
+          }
+    group from: :udap_client_access_cc,
+          required_suite_options: {
+            client_type: UDAPClientOptions::UDAP_CLIENT_CREDENTIALS
+          }
   end
 end

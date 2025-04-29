@@ -21,7 +21,7 @@ module UDAPSecurityTestKit
         udap_authorization_extensions_required: [],
         udap_certifications_supported: [],
         udap_certifications_required: [],
-        grant_types_supported: ['authorization_code', 'client_credentials'],
+        grant_types_supported: ['authorization_code', 'client_credentials', 'refresh_token'],
         scopes_supported: SUPPORTED_SCOPES,
         registration_endpoint: base_url + REGISTRATION_PATH,
         registration_endpoint_jwt_signing_alg_values_supported: ['RS256', 'RS384', 'ES384'],

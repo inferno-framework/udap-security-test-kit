@@ -78,7 +78,7 @@ RSpec.describe UDAPSecurityTestKit::UDAPClientAppLaunchAuthorizationRequestVerif
     )
   end
 
-  it 'omits if no registration requests for udap' do
+  it 'skips if no registration requests for udap' do
     result = run(test, client_id:)
     expect(result.result).to eq('skip')
     expect(result.result_message).to eq("Input 'udap_registration_jwt' is nil, skipping test.")

@@ -171,7 +171,7 @@ module UDAPSecurityTestKit
         claims['redirect_uris'].each_with_index do |redirect_uri, index|
           unless valid_uri?(redirect_uri, required_scheme: 'https')
             add_message('error', "Registration software statement `redirect_uris` entry #{index + 1} is invalid: " \
-                                 'it is not a valid https uri.')
+                                 "'#{redirect_uri}' is not a valid https uri.")
           end
         end
       end
@@ -181,7 +181,8 @@ module UDAPSecurityTestKit
                              "the 'authorization_code' `grant_type` is requested.")
       else
         unless valid_uri?(claims['logo_uri'], required_scheme: 'https')
-          add_message('error', 'Registration software statement `logo_uri` is invalid: it is not a valid https uri.')
+          add_message('error', 'Registration software statement `logo_uri` is invalid: ' \
+                               "'#{claims['logo_uri']}' is not a valid https uri.")
         end
         unless ['gif', 'jpg', 'jpeg', 'png'].include?(claims['logo_uri'].split('.').last.downcase)
           add_message('error', 'Registration software statement `logo_uri` is invalid: it must point to a ' \

@@ -203,7 +203,7 @@ module UDAPSecurityTestKit
       end
       if params['client_assertion_type'] != 'urn:ietf:params:oauth:client-assertion-type:jwt-bearer'
         add_message('error',
-                    "Confidential asymmetric refresh request #{request_num} had an incorrect " \
+                    "Token refresh request #{request_num} had an incorrect " \
                     "`client_assertion_type`: expected 'urn:ietf:params:oauth:client-assertion-type:jwt-bearer', " \
                     "but got '#{params['client_assertion_type']}'")
       end

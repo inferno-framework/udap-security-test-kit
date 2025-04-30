@@ -39,6 +39,12 @@ module UDAPSecurityTestKit
           optional: true,
           description: INPUT_ECHOED_FHIR_RESPONSE_DESCRIPTION
 
+    def client_suite_id
+      return config.options[:endpoint_suite_id] if config.options[:endpoint_suite_id].present?
+
+      UDAPSecurityTestKit::UDAPSecurityClientTestSuite.id
+    end
+
     run do
       message =
         wait_dialog_authorization_code_access_prefix(client_id, client_fhir_base_url) +

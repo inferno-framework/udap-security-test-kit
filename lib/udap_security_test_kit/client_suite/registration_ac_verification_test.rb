@@ -17,6 +17,12 @@ module UDAPSecurityTestKit
     input :udap_client_uri
     output :udap_registration_jwt
 
+    def client_suite_id
+      return config.options[:endpoint_suite_id] if config.options[:endpoint_suite_id].present?
+
+      UDAPSecurityTestKit::UDAPSecurityClientTestSuite.id
+    end
+
     run do
       client_registration_requests = load_registration_requests_for_client_uri(udap_client_uri)
       skip_if client_registration_requests.empty?,

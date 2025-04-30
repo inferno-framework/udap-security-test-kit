@@ -24,6 +24,12 @@ module UDAPSecurityTestKit
           locked: 'true',
           description: INPUT_UDAP_REGISTRATION_JWT_DESCRIPTION_LOCKED
 
+    def client_suite_id
+      return config.options[:endpoint_suite_id] if config.options[:endpoint_suite_id].present?
+
+      UDAPSecurityTestKit::UDAPSecurityClientTestSuite.id
+    end
+
     run do
       load_tagged_requests(AUTHORIZATION_TAG, UDAP_TAG)
       skip_if requests.blank?, 'No UDAP authorization requests made.'

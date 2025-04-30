@@ -21,6 +21,12 @@ module UDAPSecurityTestKit
 
     output :client_id
 
+    def client_suite_id
+      return config.options[:endpoint_suite_id] if config.options[:endpoint_suite_id].present?
+
+      UDAPSecurityTestKit::UDAPSecurityClientTestSuite.id
+    end
+
     run do
       generated_client_id = MockUDAPServer.client_uri_to_client_id(udap_client_uri)
       output client_id: generated_client_id

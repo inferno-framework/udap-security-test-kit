@@ -157,6 +157,14 @@ module UDAPSecurityTestKit
     end
 
     def decode_token(token)
+      token_to_decode =
+        if issued_token_is_refresh_token(token)
+          refresh_token_to_authorization_code(token)
+        else
+          token
+        end
+      return unless token_to_decode.present?
+
       JSON.parse(Base64.urlsafe_decode64(token))
     rescue JSON::ParserError
       nil

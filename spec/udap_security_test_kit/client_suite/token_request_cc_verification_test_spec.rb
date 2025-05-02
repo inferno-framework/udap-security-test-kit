@@ -1,11 +1,16 @@
-require_relative '../../../lib/udap_security_test_kit/tags'
-require_relative '../../../lib/udap_security_test_kit/udap_jwt_builder'
-require_relative '../../../lib/udap_security_test_kit/udap_client_assertion_payload_builder'
-require_relative '../../../lib/udap_security_test_kit/endpoints/mock_udap_server'
-
-RSpec.describe UDAPSecurityTestKit::UDAPClientTokenRequestVerification do # rubocop:disable RSpec/SpecFilePathFormat
+RSpec.describe UDAPSecurityTestKit::UDAPClientTokenRequestClientCredentialsVerification do # rubocop:disable RSpec/SpecFilePathFormat
   let(:suite_id) { 'udap_security_client' }
   let(:test) { described_class }
+  let(:test_session) do # overriden to add suite options
+    repo_create(
+      :test_session,
+      suite: suite_id,
+      suite_options: [Inferno::DSL::SuiteOption.new(
+        id: :client_type,
+        value: UDAPSecurityTestKit::UDAPClientOptions::UDAP_CLIENT_CREDENTIALS
+      )]
+    )
+  end
   let(:results_repo) { Inferno::Repositories::Results.new }
   let(:dummy_result) { repo_create(:result, test_session_id: test_session.id) }
   let(:udap_client_uri) { 'urn:test' }
@@ -31,7 +36,7 @@ RSpec.describe UDAPSecurityTestKit::UDAPClientTokenRequestVerification do # rubo
   end
   let(:reg_response_body) do
     {
-      client_id: client_id,
+      client_id:,
       software_statement: reg_ss
     }.to_json
   end
@@ -55,26 +60,31 @@ RSpec.describe UDAPSecurityTestKit::UDAPClientTokenRequestVerification do # rubo
     }
   end
 
+  let(:token_request_hash_invalid) do
+    {
+      grant_type: 'client_credentials',
+      client_assertion_type: 'invalid',
+      client_assertion: client_assertion_valid,
+      udap: '1'
+    }
+  end
+
+  let(:token_refresh_request_hash_valid) do
+    {
+      grant_type: 'refresh_token',
+      refresh_token: 'test',
+      client_assertion_type: 'urn:ietf:params:oauth:client-assertion-type:jwt-bearer',
+      client_assertion: client_assertion_valid,
+      udap: '1'
+    }
+  end
+
   def make_signed_udap_jwt(jwt_claim_hash, private_key, cert_list)
     UDAPSecurityTestKit::UDAPJWTBuilder.encode_jwt_with_x5c_header(
       jwt_claim_hash,
       private_key,
       'RS256',
       cert_list
-    )
-  end
-
-  def create_reg_request(request_body, response_body)
-    repo_create(
-      :request,
-      direction: 'incoming',
-      url: 'test',
-      result: dummy_result,
-      test_session_id: test_session.id,
-      request_body:,
-      response_body:,
-      status: 200,
-      tags: [UDAPSecurityTestKit::REGISTRATION_TAG, UDAPSecurityTestKit::UDAP_TAG]
     )
   end
 
@@ -88,39 +98,42 @@ RSpec.describe UDAPSecurityTestKit::UDAPClientTokenRequestVerification do # rubo
       request_body: URI.encode_www_form(request_body),
       response_body: { access_token: }.to_json,
       status: 200,
-      tags: [UDAPSecurityTestKit::TOKEN_TAG, UDAPSecurityTestKit::UDAP_TAG]
+      tags: [UDAPSecurityTestKit::TOKEN_TAG, UDAPSecurityTestKit::UDAP_TAG, UDAPSecurityTestKit::CLIENT_CREDENTIALS_TAG]
     )
   end
 
-  it 'omits if no registration requests for udap' do
-    result = run(test)
-    expect(result.result).to eq('omit')
-    udap_demonstrated_output = JSON.parse(result.output_json).find do |output|
-      output['name'] == 'udap_demonstrated'
-    end&.dig('value')
-    expect(udap_demonstrated_output).to eq('No')
+  it 'skips if no registration requests for udap' do
+    result = run(test, client_id:)
+    expect(result.result).to eq('skip')
+    expect(result.result_message).to eq("Input 'udap_registration_jwt' is nil, skipping test.")
   end
 
   it 'skips if no token requests' do
-    create_reg_request(reg_request_body, reg_response_body)
-    result = run(test)
+    result = run(test, udap_registration_jwt: reg_ss, client_id:)
     expect(result.result).to eq('skip')
-    udap_demonstrated_output = JSON.parse(result.output_json).find do |output|
-      output['name'] == 'udap_demonstrated'
-    end&.dig('value')
-    expect(udap_demonstrated_output).to eq('Yes')
+    expect(result.result_message).to eq('No UDAP token requests made.')
   end
 
   it 'passes for a valid request' do
-    create_reg_request(reg_request_body, reg_response_body)
     create_token_request(token_request_hash_valid)
-    result = run(test)
+    result = run(test, udap_registration_jwt: reg_ss, client_id:)
     expect(result.result).to eq('pass')
-    udap_demonstrated_output = JSON.parse(result.output_json).find do |output|
-      output['name'] == 'udap_demonstrated'
-    end&.dig('value')
-    expect(udap_demonstrated_output).to eq('Yes')
     output_tokens = JSON.parse(result.output_json).find { |output| output['name'] == 'udap_tokens' }&.dig('value')
     expect(output_tokens).to eq(access_token)
+  end
+
+  it 'fails for an invalid client assertion type' do
+    create_token_request(token_request_hash_invalid)
+    result = run(test, udap_registration_jwt: reg_ss, client_id:)
+    expect(result.result).to eq('fail')
+  end
+
+  it 'fails where there is an unexpected refresh token request' do
+    create_token_request(token_request_hash_valid)
+    create_token_request(token_refresh_request_hash_valid)
+    result = run(test, udap_registration_jwt: reg_ss, client_id:)
+    expect(result.result).to eq('fail')
+    result_messages = Inferno::Repositories::Messages.new.messages_for_result(result.id)
+    expect(result_messages.find { |m| /Invalid refresh request/.match(m.message) }).to_not be_nil
   end
 end

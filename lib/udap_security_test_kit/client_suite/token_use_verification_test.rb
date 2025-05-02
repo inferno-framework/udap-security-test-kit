@@ -10,7 +10,6 @@ module UDAPSecurityTestKit
         authentication.
       )
 
-    input :udap_demonstrated # from test :udap_client_token_request_verification based on registrations
     input :udap_tokens,
           optional: true
 
@@ -21,8 +20,6 @@ module UDAPSecurityTestKit
     end
 
     run do
-      omit_if udap_demonstrated == 'No', 'UDAP Authentication not demonstrated as a part of this test session.'
-
       access_requests = access_request_tags.map do |access_request_tag|
         load_tagged_requests(access_request_tag).reject { |access| access.status == 401 }
       end.flatten

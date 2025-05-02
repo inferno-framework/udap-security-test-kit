@@ -1,59 +1,34 @@
-require_relative '../tags'
-require_relative '../urls'
-require_relative '../endpoints/mock_udap_server'
-
 module UDAPSecurityTestKit
-  class UDAPClientTokenRequestVerification < Inferno::Test
-    include URLs
-
-    id :udap_client_token_request_verification
-    title 'Verify UDAP Token Requests'
-    description %(
-      Check that UDAP token requests are conformant.
-    )
-
-    output :udap_demonstrated
-    output :udap_tokens
-
-    run do
-      load_tagged_requests(REGISTRATION_TAG, UDAP_TAG)
-      output udap_demonstrated: requests.present? ? 'Yes' : 'No'
-      omit_if requests.blank?, 'UDAP Authentication not demonstrated as a part of this test session.'
-      registration_request = requests.last
-      registration_assertion = MockUDAPServer.parsed_request_body(registration_request)['software_statement']
+  module TokenRequestVerification
+    def verify_token_requests(oauth_flow)
       registration_token =
         begin
-          JWT::EncodedToken.new(registration_assertion)
+          JWT::EncodedToken.new(udap_registration_jwt)
         rescue StandardError => e
           assert false, "Registration request parsing failed: #{e}"
         end
-      registered_client_id = JSON.parse(registration_request.response_body)['client_id']
-
-      requests.clear
-      load_tagged_requests(TOKEN_TAG, UDAP_TAG)
-      skip_if requests.blank?, 'No UDAP token requests made.'
 
       jti_list = []
       token_list = []
       requests.each_with_index do |token_request, index|
         request_params = URI.decode_www_form(token_request.request_body).to_h
-        check_request_params(request_params, index + 1)
-        check_client_assertion(request_params['client_assertion'], index + 1, jti_list, registration_token,
-                               registered_client_id, token_request.created_at)
+        if request_params['grant_type'] == 'refresh_token'
+          check_refresh_request_params(oauth_flow, request_params, index + 1)
+        else
+          check_request_params(oauth_flow, request_params, index + 1)
+        end
+        check_client_assertion(oauth_flow, request_params['client_assertion'], index + 1, jti_list, registration_token,
+                               client_id, token_request.created_at)
         token_list << extract_token_from_response(token_request)
       end
 
       output udap_tokens: token_list.compact.join("\n")
-
-      assert messages.none? { |msg|
-        msg[:type] == 'error'
-      }, 'Invalid token requests detected. See messages for details.'
     end
 
-    def check_request_params(params, request_num)
-      if params['grant_type'] != 'client_credentials'
+    def check_request_params(oauth_flow, params, request_num)
+      if params['grant_type'] != oauth_flow
         add_message('error',
-                    "Token request #{request_num} had an incorrect `grant_type`: expected 'client_credentials', " \
+                    "Token request #{request_num} had an incorrect `grant_type`: expected '#{oauth_flow}', " \
                     "but got '#{params['grant_type']}'")
       end
       if params['client_assertion_type'] != 'urn:ietf:params:oauth:client-assertion-type:jwt-bearer'
@@ -62,15 +37,52 @@ module UDAPSecurityTestKit
                     "expected 'urn:ietf:params:oauth:client-assertion-type:jwt-bearer', " \
                     "but got '#{params['client_assertion_type']}'")
       end
-      return unless params['udap'].to_s != '1'
+      unless params['udap'].to_s == '1'
+        add_message('error',
+                    "Token request #{request_num} had an incorrect `udap`: " \
+                    "expected '1', " \
+                    "but got '#{params['udap']}'")
+      end
 
-      add_message('error',
-                  "Token request #{request_num} had an incorrect `udap`: " \
-                  "expected '1', " \
-                  "but got '#{params['udap']}'")
+      check_authorization_code_request_params(params, request_num) if oauth_flow == AUTHORIZATION_CODE_TAG
+
+      nil
     end
 
-    def check_client_assertion(assertion, request_num, jti_list, registration_token, registered_client_id, request_time)
+    def check_authorization_code_request_params(params, request_num)
+      if params['code'].present?
+
+        authorization_request = MockUDAPServer.authorization_request_for_code(params['code'], test_session_id)
+
+        if authorization_request.present?
+          authorization_body = MockUDAPServer.authorization_code_request_details(authorization_request)
+
+          if params['redirect_uri'] != authorization_body['redirect_uri']
+            add_message('error', "Authorization code token request #{request_num} included an incorrect " \
+                                 "`redirect_uri` value: expected '#{authorization_body['redirect_uri']} " \
+                                 "but got '#{params['redirect_uri']}'")
+          end
+
+          return unless params['code_verifier'].present? # optional in UDAP
+
+          pkce_error = MockUDAPServer.pkce_error(params['code_verifier'],
+                                                 authorization_body['code_challenge'],
+                                                 authorization_body['code_challenge_method'])
+          if pkce_error.present?
+            add_message('error', 'Error performing pkce verification on the `code_verifier` value in ' \
+                                 "authorization code token request #{request_num}: #{pkce_error}")
+          end
+        else
+          add_message('error', "Authorization code token request #{request_num} included a code not " \
+                               "issued during this test session: '#{params['code']}'")
+        end
+      else
+        add_message('error', "Authorization code token request #{request_num} missing a `code`")
+      end
+    end
+
+    def check_client_assertion(oauth_flow, assertion, request_num, jti_list, registration_token, registered_client_id,
+                               request_time)
       decoded_token =
         begin
           JWT::EncodedToken.new(assertion)
@@ -82,11 +94,11 @@ module UDAPSecurityTestKit
       return unless decoded_token.present?
 
       # header checked with signature
-      check_jwt_payload(decoded_token.payload, request_num, jti_list, registered_client_id, request_time)
+      check_jwt_payload(oauth_flow, decoded_token.payload, request_num, jti_list, registered_client_id, request_time)
       check_jwt_signature(decoded_token, registration_token, request_num)
     end
 
-    def check_jwt_payload(claims, request_num, jti_list, registered_client_id, request_time) # rubocop:disable Metrics/CyclomaticComplexity
+    def check_jwt_payload(oauth_flow, claims, request_num, jti_list, registered_client_id, request_time) # rubocop:disable Metrics/CyclomaticComplexity
       if claims['iss'] != registered_client_id
         add_message('error', "client assertion jwt on token request #{request_num} has an incorrect `iss` claim: " \
                              "expected '#{registered_client_id}', got '#{claims['iss']}'")
@@ -112,6 +124,8 @@ module UDAPSecurityTestKit
       else
         jti_list << claims['jti']
       end
+
+      return unless oauth_flow == CLIENT_CREDENTIALS_TAG
 
       if claims['extensions'].present?
         if claims['extensions'].is_a?(Hash)
@@ -172,6 +186,37 @@ module UDAPSecurityTestKit
 
       JSON.parse(request.response_body)&.dig('access_token')
     rescue StandardError
+      nil
+    end
+
+    def check_refresh_request_params(oauth_flow, params, request_num)
+      if oauth_flow == CLIENT_CREDENTIALS_TAG
+        add_message('error',
+                    "Invalid refresh request #{request_num} found during client_credentials flow.")
+        return
+      end
+
+      if params['grant_type'] != 'refresh_token'
+        add_message('error',
+                    "Refresh request #{request_num} had an incorrect `grant_type`: expected 'refresh_token', " \
+                    "but got '#{params['grant_type']}'")
+      end
+      if params['client_assertion_type'] != 'urn:ietf:params:oauth:client-assertion-type:jwt-bearer'
+        add_message('error',
+                    "Token refresh request #{request_num} had an incorrect " \
+                    "`client_assertion_type`: expected 'urn:ietf:params:oauth:client-assertion-type:jwt-bearer', " \
+                    "but got '#{params['client_assertion_type']}'")
+      end
+
+      authorization_code = MockUDAPServer.refresh_token_to_authorization_code(params['refresh_token'])
+      authorization_request = MockUDAPServer.authorization_request_for_code(authorization_code, test_session_id)
+      if authorization_request.present?
+        # TODO: - check that the scope is a subset of the original authorization code request
+      else
+        add_message('error', "Authorization code token refresh request #{request_num} included a refresh token not " \
+                             "issued during this test session: '#{params['refresh_token']}'")
+      end
+
       nil
     end
   end

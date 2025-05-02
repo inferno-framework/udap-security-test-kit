@@ -3,35 +3,24 @@ require_relative '../urls'
 require_relative '../endpoints/mock_udap_server'
 
 module UDAPSecurityTestKit
-  class UDAPClientRegistrationVerification < Inferno::Test
-    include URLs
-
-    id :udap_client_registration_verification
-    title 'Verify UDAP Registration'
-    description %(
-        During this test, Inferno will verify that the client's UDAP
-        registration request is conformant.
-      )
-    input :udap_client_uri,
-          optional: false
-
-    run do
-      omit_if udap_client_uri.blank?, # for re-use: mark the udap_client_uri input as optional when importing to enable
-              'Not configured for UDAP authentication.'
-
+  module RegistrationRequestVerification
+    def load_registration_requests_for_client_uri(client_uri)
       load_tagged_requests(UDAP_TAG, REGISTRATION_TAG)
-      skip_if requests.empty?, 'No UDAP Registration Requests made.'
+      requests.select do |reg_request|
+        registered_uri = MockUDAPServer.udap_client_uri_from_registration_payload(
+          MockUDAPServer.parsed_request_body(reg_request)
+        )
+        client_uri == registered_uri
+      end
+    end
 
-      verified_request = requests.last
+    def verify_registration_request(oauth_flow, verified_request)
       parsed_body = MockUDAPServer.parsed_request_body(verified_request)
       assert parsed_body.present?, 'Registration request body is not valid JSON.'
 
       check_request_body(parsed_body)
-      check_software_statement(parsed_body['software_statement'], verified_request.created_at)
-
-      assert messages.none? { |msg|
-        msg[:type] == 'error'
-      }, 'Invalid registration request. See messages for details.'
+      check_software_statement(oauth_flow, parsed_body['software_statement'], verified_request.created_at)
+      output udap_registration_jwt: parsed_body['software_statement']
     end
 
     def check_request_body(request_body)
@@ -46,14 +35,14 @@ module UDAPSecurityTestKit
       return unless request_body['certifications'].present?
 
       request_body['certifications'].each_with_index do |certification_jwt, index|
-        JWT.decond(certification_jwt)
+        JWT.decode(certification_jwt, nil, false)
       rescue StandardError => e
         add_message('error',
                     "Certification #{index + 1} in the registration request is not a valid signed jwt: #{e}")
       end
     end
 
-    def check_software_statement(software_statement_jwt, request_time)
+    def check_software_statement(oauth_flow, software_statement_jwt, request_time)
       unless software_statement_jwt.present?
         add_message('error',
                     'Registration is missing a `software_statement` key')
@@ -69,11 +58,11 @@ module UDAPSecurityTestKit
       end
 
       # headers checked with signature
-      check_software_statement_claims(claims, request_time)
+      check_software_statement_claims(oauth_flow, claims, request_time)
       check_jwt_signature(software_statement_jwt)
     end
 
-    def check_software_statement_claims(claims, request_time) # rubocop:disable Metrics/CyclomaticComplexity
+    def check_software_statement_claims(oauth_flow, claims, request_time) # rubocop:disable Metrics/CyclomaticComplexity
       unless claims['iss'] == udap_client_uri
         add_message('error',
                     'Registration software statement `iss` claim is incorrect: ' \
@@ -90,7 +79,7 @@ module UDAPSecurityTestKit
                     "expected '#{client_registration_url}', got '#{claims['aud']}'")
       end
 
-      check_software_statement_grant_types(claims)
+      check_software_statement_grant_types(oauth_flow, claims)
       MockUDAPServer.check_jwt_timing(claims['iat'], claims['exp'], request_time)
 
       add_message('error', 'Registration software statement `jti` claim is missing.') unless claims['jti'].present?
@@ -124,7 +113,7 @@ module UDAPSecurityTestKit
       nil
     end
 
-    def check_software_statement_grant_types(claims) # rubocop:disable Metrics/CyclomaticComplexity
+    def check_software_statement_grant_types(oauth_flow, claims) # rubocop:disable Metrics/CyclomaticComplexity
       unless claims['grant_types'].present?
         add_message('error', 'Registration software statement `grant_types` claim is missing')
         return
@@ -157,6 +146,14 @@ module UDAPSecurityTestKit
                              "'authorization_code', 'client_credentials', and 'refresh_token")
       end
 
+      if oauth_flow == CLIENT_CREDENTIALS_TAG && !has_client_credentials
+        add_message('error', 'Registration software statement `grant_types` must contain ' \
+                             "''client_credentials' when testing the client credentials flow.")
+      end
+      if oauth_flow == AUTHORIZATION_CODE_TAG && !has_authorization_code
+        add_message('error', 'Registration software statement `grant_types` must contain ' \
+                             "''authorization_code' when testing the authorization code flow.")
+      end
       check_client_credentials_software_statement(claims) if has_client_credentials
       check_authorization_code_software_statement(claims) if has_authorization_code
 
@@ -165,35 +162,36 @@ module UDAPSecurityTestKit
 
     def check_authorization_code_software_statement(claims) # rubocop:disable Metrics/CyclomaticComplexity
       if claims['redirect_uris'].blank?
-        add_message('error', 'Registration software statement `redirect_uris` must be present when' \
+        add_message('error', 'Registration software statement `redirect_uris` must be present when ' \
                              "the 'authorization_code' `grant_type` is requested.")
       elsif !claims['redirect_uris'].is_a?(Array)
-        add_message('error', 'Registration software statement `redirect_uris` must be a list when' \
+        add_message('error', 'Registration software statement `redirect_uris` must be a list when ' \
                              "the 'authorization_code' `grant_type` is requested.")
       else
-        claims['redirect_uris'].each do |redirect_uri|
+        claims['redirect_uris'].each_with_index do |redirect_uri, index|
           unless valid_uri?(redirect_uri, required_scheme: 'https')
             add_message('error', "Registration software statement `redirect_uris` entry #{index + 1} is invalid: " \
-                                 'it is not a valid https uri.')
+                                 "'#{redirect_uri}' is not a valid https uri.")
           end
         end
       end
 
       if claims['logo_uri'].blank?
-        add_message('error', 'Registration software statement `logo_uri` must be present when' \
+        add_message('error', 'Registration software statement `logo_uri` must be present when ' \
                              "the 'authorization_code' `grant_type` is requested.")
       else
         unless valid_uri?(claims['logo_uri'], required_scheme: 'https')
-          add_message('error', 'Registration software statement `logo_uri` is invalid: it is not a valid https uri.')
+          add_message('error', 'Registration software statement `logo_uri` is invalid: ' \
+                               "'#{claims['logo_uri']}' is not a valid https uri.")
         end
-        unless ['gif', 'jpg', 'jpeg', 'png'].include?(claims['logo_uri'].split['.'].last.downcase)
+        unless ['gif', 'jpg', 'jpeg', 'png'].include?(claims['logo_uri'].split('.').last.downcase)
           add_message('error', 'Registration software statement `logo_uri` is invalid: it must point to a ' \
                                'PNG, JPG, or GIF file.')
         end
       end
 
       if claims['response_types'].blank?
-        add_message('error', 'Registration software statement `response_types` must be present when' \
+        add_message('error', 'Registration software statement `response_types` must be present when ' \
                              "the 'authorization_code' `grant_type` is requested.")
       else
         unless claims['response_types'].is_a?(Array) &&
@@ -209,17 +207,17 @@ module UDAPSecurityTestKit
 
     def check_client_credentials_software_statement(claims)
       unless claims['redirect_uris'].nil?
-        add_message('error', 'Registration software statement `redirect_uris` must not be present when' \
+        add_message('error', 'Registration software statement `redirect_uris` must not be present when ' \
                              "the 'client_credentials' `grant_type` is requested.")
       end
 
       unless claims['response_types'].nil?
-        add_message('error', 'Registration software statement `response_types` must not be present when' \
+        add_message('error', 'Registration software statement `response_types` must not be present when ' \
                              "the 'client_credentials' `grant_type` is requested.")
       end
 
       if claims['grant_types'].include?('refresh_token')
-        add_message('error', "Registration software statement `response_types` cannot contain 'refresh_token' when" \
+        add_message('error', "Registration software statement `response_types` cannot contain 'refresh_token' when " \
                              "the 'client_credentials' `grant_type` is requested.")
       end
 

@@ -1,4 +1,4 @@
 module UDAPSecurityTestKit
-  VERSION = '0.11.3'.freeze
-  LAST_UPDATED = '2025-04-07'.freeze
+  VERSION = '0.11.4'.freeze
+  LAST_UPDATED = '2025-05-02'.freeze
 end

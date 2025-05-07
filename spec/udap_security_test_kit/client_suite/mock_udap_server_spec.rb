@@ -170,6 +170,7 @@ RSpec.describe UDAPSecurityTestKit::MockUDAPServer, :request, :runnable do # rub
       header('Authorization', "Bearer #{expired_token}")
       get(access_url)
       expect(last_response.status).to eq(401)
+      expect(last_response.body).to match(/Bearer token has expired/)
 
       result = results_repo.find(result.id)
       expect(result.result).to eq('wait')

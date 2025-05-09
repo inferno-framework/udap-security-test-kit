@@ -8,6 +8,7 @@ module UDAPSecurityTestKit
   AUTH_SERVER_PATH = '/auth'
   REGISTRATION_PATH = "#{AUTH_SERVER_PATH}/register".freeze
   AUTHORIZATION_PATH = "#{AUTH_SERVER_PATH}/authorization".freeze
+  INTROSPECTION_PATH = "#{AUTH_SERVER_PATH}/introspect".freeze
   TOKEN_PATH = "#{AUTH_SERVER_PATH}/token".freeze
   RESUME_PASS_PATH = '/resume_pass'
   RESUME_FAIL_PATH = '/resume_fail'
@@ -39,6 +40,10 @@ module UDAPSecurityTestKit
 
     def client_authorization_url
       @client_authorization_url ||= client_base_url + AUTHORIZATION_PATH
+    end
+
+    def client_introspection_url
+      @client_introspection_url ||= client_base_url + INTROSPECTION_PATH
     end
 
     def client_token_url

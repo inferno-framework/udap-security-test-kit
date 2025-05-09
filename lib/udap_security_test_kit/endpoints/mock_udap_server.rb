@@ -165,7 +165,7 @@ module UDAPSecurityTestKit
         end
       return unless token_to_decode.present?
 
-      JSON.parse(Base64.urlsafe_decode64(token))
+      JSON.parse(Base64.urlsafe_decode64(token_to_decode))
     rescue JSON::ParserError
       nil
     end
@@ -372,10 +372,22 @@ module UDAPSecurityTestKit
     end
 
     def authorization_code_request_details(inferno_request)
+      return unless inferno_request.present?
+
       if inferno_request.verb.downcase == 'get'
         Rack::Utils.parse_query(URI(inferno_request.url)&.query)
       elsif inferno_request.verb.downcase == 'post'
         Rack::Utils.parse_query(inferno_request.request_body)
+      end
+    end
+
+    def token_request_details(inferno_request)
+      return unless inferno_request.present?
+
+      if inferno_request.verb.downcase == 'get'
+        Rack::Utils.parse_query(inferno_request.request_body)
+      elsif inferno_request.verb.downcase == 'post'
+        JSON.parse(inferno_request.request_body)
       end
     end
   end

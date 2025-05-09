@@ -6,6 +6,7 @@ RSpec.describe UDAPSecurityTestKit::MockUDAPServer, :request, :runnable do # rub
   let(:dummy_result) { repo_create(:result, test_session_id: test_session.id) }
   let(:reg_url) { client_registration_url }
   let(:authorization_url) { client_authorization_url }
+  let(:introspection_url) { client_introspection_url }
   let(:token_url) { client_token_url }
   let(:access_url) { "/custom/#{suite_id}/fhir/Patient/999" }
   let(:redirect_uri) { 'http://inferno.healthit.gov/redirect' }
@@ -36,8 +37,31 @@ RSpec.describe UDAPSecurityTestKit::MockUDAPServer, :request, :runnable do # rub
     File.read(File.join(__dir__, '..', '..', '..', 'lib', 'udap_security_test_kit', 'certs',
                         'TestClientPrivateKey.key'))
   end
+  let(:reg_cc_scope) { 'system/*.read' }
+  let(:reg_cc_claims) do
+    {
+      iss: udap_client_uri,
+      sub: udap_client_uri,
+      aud: reg_url,
+      exp: 5.minutes.from_now.to_i,
+      iat: Time.now.to_i,
+      jti: SecureRandom.hex(32),
+      client_name: 'Test Client',
+      grant_types: ['client_credentials'],
+      token_endpoint_auth_method: 'private_key_jwt',
+      scope: reg_cc_scope,
+      contacts: ['mailto:test@inferno.healthit.gov']
+    }
+  end
+  let(:reg_cc_ss) do
+    make_signed_udap_jwt(reg_cc_claims, leaf_key, [leaf_cert])
+  end
   let(:udap_cc_reg_request_valid) do
-    File.read(File.join(__dir__, '../..', 'fixtures', 'udap_cc_reg_request_valid.json'))
+    {
+      software_statement: reg_cc_ss,
+      certifications: [],
+      udap: '1'
+    }.to_json
   end
   let(:udap_assertion_correct_cert) { make_signed_udap_jwt(udap_payload_invalid, leaf_key, [leaf_cert]) }
   let(:udap_assertion_wrong_cert) { make_signed_udap_jwt(udap_payload_invalid, root_key, [root_cert]) }
@@ -98,7 +122,7 @@ RSpec.describe UDAPSecurityTestKit::MockUDAPServer, :request, :runnable do # rub
       udap: 1 }
   end
 
-  let(:reg_claims) do
+  let(:reg_ac_claims) do
     {
       iss: udap_client_uri,
       sub: udap_client_uri,
@@ -116,15 +140,42 @@ RSpec.describe UDAPSecurityTestKit::MockUDAPServer, :request, :runnable do # rub
       response_types: ['code']
     }
   end
-  let(:reg_ss) do
-    make_signed_udap_jwt(reg_claims, leaf_key, [leaf_cert])
+  let(:reg_ac_ss) do
+    make_signed_udap_jwt(reg_ac_claims, leaf_key, [leaf_cert])
   end
-  let(:reg_request_body) do
+  let(:reg_ac_request_body) do
     {
-      software_statement: reg_ss,
+      software_statement: reg_ac_ss,
       certifications: [],
       udap: '1'
     }.to_json
+  end
+  let(:token_request_auth_code) do
+    {
+      grant_type: 'authorization_code',
+      code:,
+      client_assertion_type: 'urn:ietf:params:oauth:client-assertion-type:jwt-bearer',
+      client_assertion: 'dummy',
+      udap: '1'
+    }
+  end
+  let(:token_request_no_scope) do
+    {
+      grant_type: 'client_credentials',
+      client_assertion_type: 'urn:ietf:params:oauth:client-assertion-type:jwt-bearer',
+      client_assertion: 'dummy',
+      udap: '1'
+    }
+  end
+  let(:token_request_scope) { 'system/Patient.rs' }
+  let(:token_request_with_scope) do
+    {
+      grant_type: 'client_credentials',
+      client_assertion_type: 'urn:ietf:params:oauth:client-assertion-type:jwt-bearer',
+      client_assertion: 'dummy',
+      udap: '1',
+      scope: token_request_scope
+    }
   end
 
   def make_jwt(payload, header, alg, jwk)
@@ -152,6 +203,44 @@ RSpec.describe UDAPSecurityTestKit::MockUDAPServer, :request, :runnable do # rub
       request_body: body,
       status: 200,
       tags: [UDAPSecurityTestKit::REGISTRATION_TAG, UDAPSecurityTestKit::UDAP_TAG]
+    )
+  end
+
+  def create_authorization_request(body, authorization_code)
+    headers ||= [
+      {
+        type: 'response',
+        name: 'Location',
+        value: "#{redirect_uri}?code=#{authorization_code}"
+      }
+    ]
+    repo_create(
+      :request,
+      direction: 'incoming',
+      url: "#{authorization_url}?#{Rack::Utils.build_query(body)}",
+      result: dummy_result,
+      test_session_id: test_session.id,
+      status: 302,
+      headers:,
+      verb: 'get',
+      tags: [UDAPSecurityTestKit::AUTHORIZATION_TAG, UDAPSecurityTestKit::UDAP_TAG,
+             UDAPSecurityTestKit::AUTHORIZATION_CODE_TAG]
+    )
+  end
+
+  def create_token_request(request_body, response_token, response_scope = nil)
+    response_body = { access_token: response_token }
+    response_body[:scope] = response_scope if response_scope.present?
+    repo_create(
+      :request,
+      direction: 'incoming',
+      url: token_url,
+      result: dummy_result,
+      test_session_id: test_session.id,
+      request_body: URI.encode_www_form(request_body),
+      response_body: response_body.to_json,
+      status: 200,
+      tags: [UDAPSecurityTestKit::TOKEN_TAG, UDAPSecurityTestKit::UDAP_TAG, UDAPSecurityTestKit::AUTHORIZATION_CODE_TAG]
     )
   end
 
@@ -360,7 +449,7 @@ RSpec.describe UDAPSecurityTestKit::MockUDAPServer, :request, :runnable do # rub
       end
 
       it 'includes a refresh token when requested as a part of the scopes' do
-        create_reg_request(reg_request_body)
+        create_reg_request(reg_ac_request_body)
         inputs = { client_id: udap_client_id }
         result = run(test, inputs)
         expect(result.result).to eq('wait')
@@ -373,7 +462,7 @@ RSpec.describe UDAPSecurityTestKit::MockUDAPServer, :request, :runnable do # rub
       end
 
       it 'provides a id_token when requested through scopes' do
-        create_reg_request(reg_request_body)
+        create_reg_request(reg_ac_request_body)
         fhir_user_relative_reference = 'Patient/123'
         inputs = { client_id: udap_client_id, fhir_user_relative_reference: }
         result = run(test, inputs)
@@ -425,6 +514,110 @@ RSpec.describe UDAPSecurityTestKit::MockUDAPServer, :request, :runnable do # rub
 
         post_json(token_url, udap_refresh_token_request_body_sig_invalid)
         expect(last_response.status).to eq(401)
+      end
+    end
+
+    describe 'when responding to introspection requests' do
+      it 'returns 500 for an invalid token' do
+        inputs = { client_id: udap_client_id }
+        result = run(test, inputs)
+        expect(result.result).to eq('wait')
+
+        body = URI.encode_www_form([['token', 'code']])
+        post introspection_url, body, 'CONTENT_TYPE' => 'application/x-www-form-urlencoded'
+        expect(last_response.status).to eq(500)
+      end
+
+      it 'returns false for a token never issued' do
+        inputs = { client_id: udap_client_id }
+        result = run(test, inputs)
+        expect(result.result).to eq('wait')
+
+        body = URI.encode_www_form([['token', described_class.client_id_to_token(udap_client_id, 5)]])
+        post introspection_url, body, 'CONTENT_TYPE' => 'application/x-www-form-urlencoded'
+        expect(last_response.status).to eq(200)
+        expect(JSON.parse(last_response.body)['active']).to be(false)
+      end
+
+      it 'returns false for an expired token' do
+        inputs = { client_id: udap_client_id }
+        result = run(test, inputs)
+        expect(result.result).to eq('wait')
+
+        body = URI.encode_www_form([['token', described_class.client_id_to_token(udap_client_id, -1)]])
+        post introspection_url, body, 'CONTENT_TYPE' => 'application/x-www-form-urlencoded'
+        expect(last_response.status).to eq(200)
+        expect(JSON.parse(last_response.body)['active']).to be(false)
+      end
+
+      it 'returns false for a refresh token' do
+        inputs = { client_id: udap_client_id }
+        result = run(test, inputs)
+        expect(result.result).to eq('wait')
+
+        body = URI.encode_www_form([['token', refresh_token]])
+        post introspection_url, body, 'CONTENT_TYPE' => 'application/x-www-form-urlencoded'
+        expect(last_response.status).to eq(200)
+        expect(JSON.parse(last_response.body)['active']).to be(false)
+      end
+
+      it 'can find the scope in the registration' do
+        create_reg_request(udap_cc_reg_request_valid)
+        inputs = { client_id: udap_client_id }
+        result = run(test, inputs)
+        expect(result.result).to eq('wait')
+
+        post_json(token_url, udap_token_request_body_sig_valid)
+        expect(last_response.status).to eq(200)
+
+        body = URI.encode_www_form([['token', JSON.parse(last_response.body)['access_token']]])
+        post introspection_url, body, 'CONTENT_TYPE' => 'application/x-www-form-urlencoded'
+        expect(last_response.status).to eq(200)
+        expect(JSON.parse(last_response.body)['scope']).to eq(reg_cc_scope)
+      end
+
+      it 'can find the scope in the token response' do
+        token = described_class.client_id_to_token(udap_client_id, 5)
+        response_scope = 'system/Observation.rs'
+        create_token_request(token_request_no_scope, token, response_scope)
+        inputs = { client_id: udap_client_id }
+        result = run(test, inputs)
+        expect(result.result).to eq('wait')
+
+        body = URI.encode_www_form([['token', token]])
+        post introspection_url, body, 'CONTENT_TYPE' => 'application/x-www-form-urlencoded'
+        expect(last_response.status).to eq(200)
+        expect(JSON.parse(last_response.body)['scope']).to eq(response_scope)
+      end
+
+      it 'can find the scope in the token request' do
+        token = described_class.client_id_to_token(udap_client_id, 5)
+        create_token_request(token_request_with_scope, token)
+        inputs = { client_id: udap_client_id }
+        result = run(test, inputs)
+        expect(result.result).to eq('wait')
+
+        body = URI.encode_www_form([['token', token]])
+        post introspection_url, body, 'CONTENT_TYPE' => 'application/x-www-form-urlencoded'
+        expect(last_response.status).to eq(200)
+        expect(JSON.parse(last_response.body)['scope']).to eq(token_request_scope)
+      end
+
+      it 'can find the scope in the authorization request' do
+        token = described_class.client_id_to_token(udap_client_id, 5)
+        authorization_request_scope = 'system/Quesitonnaire.rs'
+        create_authorization_request({ response_type: 'code', client_id: udap_client_id, redirect_uri:,
+                                       scope: authorization_request_scope },
+                                     authorization_code)
+        create_token_request(udap_ac_token_request_body_valid, token)
+        inputs = { client_id: udap_client_id }
+        result = run(test, inputs)
+        expect(result.result).to eq('wait')
+
+        body = URI.encode_www_form([['token', token]])
+        post introspection_url, body, 'CONTENT_TYPE' => 'application/x-www-form-urlencoded'
+        expect(last_response.status).to eq(200)
+        expect(JSON.parse(last_response.body)['scope']).to eq(authorization_request_scope)
       end
     end
   end

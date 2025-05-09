@@ -3,6 +3,7 @@
 module UDAPSecurityTestKit
   REGISTRATION_TAG = 'registration'
   AUTHORIZATION_TAG = 'authorization'
+  INTROSPECTION_TAG = 'introspection'
   TOKEN_TAG = 'token'
   UDAP_TAG = 'udap'
   ACCESS_TAG = 'access'

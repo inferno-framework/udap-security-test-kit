@@ -1,6 +1,7 @@
 require_relative 'endpoints/mock_udap_server/registration_endpoint'
 require_relative 'endpoints/mock_udap_server/authorization_endpoint'
 require_relative 'endpoints/mock_udap_server/token_endpoint'
+require_relative 'endpoints/mock_udap_server/introspection_endpoint'
 require_relative 'endpoints/echoing_fhir_responder_endpoint'
 require_relative 'urls'
 require_relative 'client_suite/registration_ac_group'
@@ -61,6 +62,7 @@ module UDAPSecurityTestKit
     suite_endpoint :post, REGISTRATION_PATH, MockUDAPServer::RegistrationEndpoint
     suite_endpoint :get, AUTHORIZATION_PATH, MockUDAPServer::AuthorizationEndpoint
     suite_endpoint :post, AUTHORIZATION_PATH, MockUDAPServer::AuthorizationEndpoint
+    suite_endpoint :post, INTROSPECTION_PATH, MockUDAPServer::IntrospectionEndpoint
     suite_endpoint :post, TOKEN_PATH, MockUDAPServer::TokenEndpoint
     suite_endpoint :get, FHIR_PATH, EchoingFHIRResponderEndpoint
     suite_endpoint :post, FHIR_PATH, EchoingFHIRResponderEndpoint

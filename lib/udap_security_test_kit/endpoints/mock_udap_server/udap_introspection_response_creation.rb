@@ -47,8 +47,7 @@ module UDAPSecurityTestKit
 
       def requested_scope(token_request)
         # token request
-
-        original_request_body = MockUDAPServer.token_request_details(token_request)
+        original_request_body = Rack::Utils.parse_query(token_request.request_body)
         return original_request_body['scope'] if original_request_body['scope'].present?
 
         # authorization request

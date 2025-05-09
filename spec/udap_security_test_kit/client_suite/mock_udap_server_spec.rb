@@ -202,6 +202,7 @@ RSpec.describe UDAPSecurityTestKit::MockUDAPServer, :request, :runnable do # rub
       test_session_id: test_session.id,
       request_body: body,
       status: 200,
+      verb: 'post',
       tags: [UDAPSecurityTestKit::REGISTRATION_TAG, UDAPSecurityTestKit::UDAP_TAG]
     )
   end
@@ -240,6 +241,7 @@ RSpec.describe UDAPSecurityTestKit::MockUDAPServer, :request, :runnable do # rub
       request_body: URI.encode_www_form(request_body),
       response_body: response_body.to_json,
       status: 200,
+      verb: 'post',
       tags: [UDAPSecurityTestKit::TOKEN_TAG, UDAPSecurityTestKit::UDAP_TAG, UDAPSecurityTestKit::AUTHORIZATION_CODE_TAG]
     )
   end

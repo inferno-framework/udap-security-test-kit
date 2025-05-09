@@ -380,15 +380,5 @@ module UDAPSecurityTestKit
         Rack::Utils.parse_query(inferno_request.request_body)
       end
     end
-
-    def token_request_details(inferno_request)
-      return unless inferno_request.present?
-
-      if inferno_request.verb.downcase == 'get'
-        Rack::Utils.parse_query(inferno_request.request_body)
-      elsif inferno_request.verb.downcase == 'post'
-        JSON.parse(inferno_request.request_body)
-      end
-    end
   end
 end

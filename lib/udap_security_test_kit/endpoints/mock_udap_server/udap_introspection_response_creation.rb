@@ -57,6 +57,7 @@ module UDAPSecurityTestKit
         return auth_code_request_inputs['scope'] if auth_code_request_inputs&.dig('scope').present?
 
         # registration request
+        # not looking in registration response since the simulation currently echoes the requested scopes
         registered_software_statement = MockUDAPServer.udap_registration_software_statement(test_run.test_session_id)
         if registered_software_statement.present?
           registration_body, _registration_header = JWT.decode(registered_software_statement, nil, false)

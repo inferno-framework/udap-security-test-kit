@@ -13,8 +13,7 @@ module UDAPSecurityTestKit
 
     input :udap_well_known_metadata_json
 
-    verifies_requirements 'hl7.fhir.us.udap-security_1.0.0_reqs@15',
-                          'hl7.fhir.us.udap-security_1.0.0_reqs@30',
+    verifies_requirements 'hl7.fhir.us.udap-security_1.0.0_reqs@30',
                           'hl7.fhir.us.udap-security_1.0.0_reqs@31'
 
     run do

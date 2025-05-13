@@ -13,6 +13,10 @@ module UDAPSecurityTestKit
     input :udap_well_known_metadata_json
     output :udap_authorization_endpoint
 
+    verifies_requirements 'hl7.fhir.us.udap-security_1.0.0_reqs@9',
+                          'hl7.fhir.us.udap-security_1.0.0_reqs@38',
+                          'hl7.fhir.us.udap-security_1.0.0_reqs@39'
+
     run do
       assert_valid_json(udap_well_known_metadata_json)
       config = JSON.parse(udap_well_known_metadata_json)
@@ -29,7 +33,7 @@ module UDAPSecurityTestKit
               '`authorization_endpoint` field is only required if `authorization_code` is a supported grant type'
 
       assert config.key?('authorization_endpoint'),
-             '`authorization_endpoint` field is required if `authorization_endpoint` is a supported grant type'
+             '`authorization_endpoint` field is required if `authorization_code` is a supported grant type'
 
       endpoint = config['authorization_endpoint']
 

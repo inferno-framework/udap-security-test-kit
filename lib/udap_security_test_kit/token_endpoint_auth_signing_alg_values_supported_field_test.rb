@@ -29,6 +29,8 @@ module UDAPSecurityTestKit
       algs_supported = config['token_endpoint_auth_signing_alg_values_supported']
 
       assert algs_supported.present?, 'Must support at least one signature algorithm'
+
+      assert algs_supported.include?('RS256'), 'All UDAP implementations must support RS256 signature algorithm'
     end
   end
 end

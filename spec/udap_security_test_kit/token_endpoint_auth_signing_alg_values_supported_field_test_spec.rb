@@ -64,4 +64,12 @@ RSpec.describe UDAPSecurityTestKit::TokenEndpointAuthSigningAlgValuesSupportedFi
 
     expect(result.result).to eq('fail')
   end
+
+  it 'fails if token_endpoint_auth_signing_alg_values_supported does not include required RS256 algorithm' do
+    config = { token_endpoint_auth_signing_alg_values_supported: ['ES384'] }
+
+    result = run(runnable, udap_well_known_metadata_json: config.to_json)
+
+    expect(result.result).to eq('fail')
+  end
 end

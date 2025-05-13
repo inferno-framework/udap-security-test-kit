@@ -20,6 +20,12 @@ module UDAPSecurityTestKit
 
     input :udap_well_known_metadata_json
 
+    verifies_requirements 'hl7.fhir.us.udap-security_1.0.0_reqs@15',
+                          'hl7.fhir.us.udap-security_1.0.0_reqs@23',
+                          'hl7.fhir.us.udap-security_1.0.0_reqs@24',
+                          'hl7.fhir.us.udap-security_1.0.0_reqs@25',
+                          'hl7.fhir.us.udap-security_1.0.0_reqs@26'
+
     run do
       assert_valid_json(udap_well_known_metadata_json)
       config = JSON.parse(udap_well_known_metadata_json)

@@ -14,7 +14,7 @@ module InfernoRequirementsTools
     class CollectRequirements
       # Update these constants based on the test kit.
       TEST_KIT_ID = 'udap-security-test-kit'
-      INPUT_SETS = ['hl7.fhir.us.udap-security_1.0.0'].freeze
+      INPUT_SETS = ['hl7.fhir.us.udap-security_1.0.0_reqs'].freeze
 
       # Derivative constants
       TEST_KIT_CODE_FOLDER = TEST_KIT_ID.gsub('-', '_')

@@ -21,13 +21,13 @@ module InfernoRequirementsTools
     # The `run_check` method will check whether the previously generated file is up-to-date.
     class RequirementsCoverage
       # Update these constants based on the test kit.
-      TEST_KIT_ID = 'onc-certification-j8-test-suite'
-      TEST_SUITES = [OncCertificationJCriteriaTestKit::ONCCertificationJ8::Suite].freeze # list of suite classes
+      TEST_KIT_ID = 'udap-security-test-suite'
+      TEST_SUITES = [UDAPSecurityTestKit::Suite,
+                     UDAPSecurityTestKit::UDAPSecurityClientTestSuite::Suite].freeze # list of suite classes
       SUITE_ID_TO_ACTOR_MAP = {
-        'j8_test_suite' => 'Server'
+        'udap_security' => 'Server',
+        'udap_security_client' => 'Client'
       }.freeze
-      J_CRITERIA_TEST_KIT = 'onc_certification_j_criteria_test_kit'
-      J_CRITERIA = 'onc_certification_j8'
 
       # Derivative constants
       TEST_KIT_CODE_FOLDER = TEST_KIT_ID.gsub('-', '_')
@@ -44,16 +44,16 @@ module InfernoRequirementsTools
       SHORT_ID_HEADER = 'Short ID(s)'
       FULL_ID_HEADER = 'Full ID(s)'
       INPUT_FILE_NAME = "#{TEST_KIT_ID}_requirements.csv".freeze
-      INPUT_FILE = File.join('lib', J_CRITERIA_TEST_KIT, J_CRITERIA, TEST_KIT_CODE_FOLDER, 'requirements',
+      INPUT_FILE = File.join('lib', TEST_KIT_CODE_FOLDER, 'requirements',
                              INPUT_FILE_NAME).freeze
       NOT_TESTED_FILE_NAME = "#{TEST_KIT_ID}_out_of_scope_requirements.csv".freeze
-      NOT_TESTED_FILE = File.join('lib', J_CRITERIA_TEST_KIT, J_CRITERIA, TEST_KIT_CODE_FOLDER, 'requirements',
+      NOT_TESTED_FILE = File.join('lib', TEST_KIT_CODE_FOLDER, 'requirements',
                                   NOT_TESTED_FILE_NAME).freeze
       OUTPUT_HEADERS = INPUT_HEADERS + TEST_SUITES.flat_map do |suite|
                                          ["#{suite.title} #{SHORT_ID_HEADER}", "#{suite.title} #{FULL_ID_HEADER}"]
                                        end
       OUTPUT_FILE_NAME = "#{TEST_KIT_ID}_requirements_coverage.csv".freeze
-      OUTPUT_FILE = File.join('lib', J_CRITERIA_TEST_KIT, J_CRITERIA, TEST_KIT_CODE_FOLDER, 'requirements',
+      OUTPUT_FILE = File.join('lib', TEST_KIT_CODE_FOLDER, 'requirements',
                               'generated', OUTPUT_FILE_NAME).freeze
 
       def input_rows

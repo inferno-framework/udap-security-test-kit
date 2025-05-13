@@ -13,10 +13,8 @@ module InfernoRequirementsTools
     # The `run_check` method will check whether the previously generated file is up-to-date.
     class CollectRequirements
       # Update these constants based on the test kit.
-      TEST_KIT_ID = 'onc-certification-j8-test-suite'
-      INPUT_SETS = ['170.315(j)(8)_hti-2-proposal'].freeze
-      J_CRITERIA_TEST_KIT = 'onc_certification_j_criteria_test_kit'
-      J_CRITERIA = 'onc_certification_j8'
+      TEST_KIT_ID = 'udap-security-test-kit'
+      INPUT_SETS = ['hl7.fhir.us.udap-security_1.0.0'].freeze
 
       # Derivative constants
       TEST_KIT_CODE_FOLDER = TEST_KIT_ID.gsub('-', '_')
@@ -47,12 +45,12 @@ module InfernoRequirementsTools
         ].freeze
       REQUIREMENTS_OUTPUT_FILE_NAME = "#{TEST_KIT_ID}_requirements.csv".freeze
       REQUIREMENTS_OUTPUT_FILE =
-        File.join('lib', J_CRITERIA_TEST_KIT, J_CRITERIA, TEST_KIT_CODE_FOLDER,
+        File.join('lib', TEST_KIT_CODE_FOLDER,
                   'requirements', REQUIREMENTS_OUTPUT_FILE_NAME).freeze
       PLANNED_NOT_TESTED_OUTPUT_HEADERS = ['Req Set', 'ID', 'Reason', 'Details'].freeze
       PLANNED_NOT_TESTED_OUTPUT_FILE_NAME = "#{TEST_KIT_ID}_out_of_scope_requirements.csv".freeze
       PLANNED_NOT_TESTED_OUTPUT_FILE =
-        File.join('lib', J_CRITERIA_TEST_KIT, J_CRITERIA, TEST_KIT_CODE_FOLDER,
+        File.join('lib', TEST_KIT_CODE_FOLDER,
                   'requirements', PLANNED_NOT_TESTED_OUTPUT_FILE_NAME).freeze
 
       def available_input_worksheets
@@ -219,7 +217,7 @@ module InfernoRequirementsTools
       end
 
       def spreadsheet_value_falsy?(str)
-        str&.downcase == 'no' || str&.downcase == 'false'
+        ['no', 'false'].include?(str&.downcase)
       end
     end
   end

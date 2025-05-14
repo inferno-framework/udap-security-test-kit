@@ -167,7 +167,7 @@ module UDAPSecurityTestKit
       return unless token_to_decode.present?
 
       JSON.parse(Base64.urlsafe_decode64(token_to_decode))
-    rescue JSON::ParserError
+    rescue StandardError
       nil
     end
 

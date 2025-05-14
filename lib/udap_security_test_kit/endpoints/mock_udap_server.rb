@@ -29,6 +29,7 @@ module UDAPSecurityTestKit
         token_endpoint: base_url + TOKEN_PATH,
         token_endpoint_auth_methods_supported: ['private_key_jwt'],
         token_endpoint_auth_signing_alg_values_supported: ['RS256', 'RS384', 'ES384'],
+        introspection_endpoint: base_url + INTROSPECTION_PATH,
         signed_metadata: udap_signed_metadata_jwt(base_url)
       }.to_json
 
@@ -165,8 +166,8 @@ module UDAPSecurityTestKit
         end
       return unless token_to_decode.present?
 
-      JSON.parse(Base64.urlsafe_decode64(token))
-    rescue JSON::ParserError
+      JSON.parse(Base64.urlsafe_decode64(token_to_decode))
+    rescue StandardError
       nil
     end
 
@@ -372,6 +373,8 @@ module UDAPSecurityTestKit
     end
 
     def authorization_code_request_details(inferno_request)
+      return unless inferno_request.present?
+
       if inferno_request.verb.downcase == 'get'
         Rack::Utils.parse_query(URI(inferno_request.url)&.query)
       elsif inferno_request.verb.downcase == 'post'

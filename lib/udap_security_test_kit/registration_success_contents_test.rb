@@ -43,6 +43,9 @@ module UDAPSecurityTestKit
 
     output :udap_client_id
 
+    verifies_requirements 'hl7.fhir.us.udap-security_1.0.0_reqs@111',
+                          'hl7.fhir.us.udap-security_1.0.0_reqs@113'
+
     run do
       assert_valid_json(udap_registration_response)
       registration_response = JSON.parse(udap_registration_response)

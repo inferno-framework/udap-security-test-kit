@@ -35,6 +35,9 @@ module UDAPSecurityTestKit
     input :udap_registration_certifications,
           optional: true
 
+    verifies_requirements 'hl7.fhir.us.udap-security_1.0.0_reqs@106',
+                          'hl7.fhir.us.udap-security_1.0.0_reqs@114'
+
     run do
       software_statement_payload = SoftwareStatementBuilder.build_payload(
         'invalid_iss',

@@ -2,7 +2,7 @@
 
 require 'CSV'
 require 'roo'
-require_relative '../../../../inferno_requirements_tools/ext/inferno_core/runnable'
+require_relative '../ext/inferno_core/runnable'
 
 module InfernoRequirementsTools
   module Tasks
@@ -21,9 +21,9 @@ module InfernoRequirementsTools
     # The `run_check` method will check whether the previously generated file is up-to-date.
     class RequirementsCoverage
       # Update these constants based on the test kit.
-      TEST_KIT_ID = 'udap-security-test-suite'
+      TEST_KIT_ID = 'udap-security-test-kit'
       TEST_SUITES = [UDAPSecurityTestKit::Suite,
-                     UDAPSecurityTestKit::UDAPSecurityClientTestSuite::Suite].freeze # list of suite classes
+                     UDAPSecurityTestKit::UDAPSecurityClientTestSuite].freeze # list of suite classes
       SUITE_ID_TO_ACTOR_MAP = {
         'udap_security' => 'Server',
         'udap_security_client' => 'Client'

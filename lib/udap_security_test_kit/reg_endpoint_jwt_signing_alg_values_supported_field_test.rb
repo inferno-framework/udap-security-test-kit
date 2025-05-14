@@ -16,7 +16,8 @@ module UDAPSecurityTestKit
 
     input :udap_well_known_metadata_json
 
-    verifies_requirements 'hl7.fhir.us.udap-security_1.0.0_reqs@45'
+    verifies_requirements 'hl7.fhir.us.udap-security_1.0.0_reqs@4',
+                          'hl7.fhir.us.udap-security_1.0.0_reqs@45'
 
     run do
       assert_valid_json(udap_well_known_metadata_json)
@@ -26,6 +27,9 @@ module UDAPSecurityTestKit
               '`registration_endpoint_jwt_signing_alg_values_supported` field is recommended but not required'
 
       CommonAssertions.assert_array_of_strings(config, 'registration_endpoint_jwt_signing_alg_values_supported')
+
+      assert config['registration_endpoint_jwt_signing_alg_values_supported'].include?('RS256'),
+             'All UDAP implementations must support RS256 signature algorithm'
     end
   end
 end

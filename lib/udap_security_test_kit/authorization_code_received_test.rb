@@ -18,6 +18,9 @@ module UDAPSecurityTestKit
 
       assert code.present?, 'No `code` parameter received'
 
+      state = request.query_parameters['state']
+      assert state.present?, '`state` parameter is required since it was present in client request'
+
       error = request.query_parameters['error']
 
       pass_if error.blank?

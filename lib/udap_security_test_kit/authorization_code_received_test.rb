@@ -9,6 +9,9 @@ module UDAPSecurityTestKit
     output :udap_authorization_code
     uses_request :redirect
 
+    verifies_requirements 'hl7.fhir.us.udap-security_1.0.0_reqs@133',
+                          'hl7.fhir.us.udap-security_1.0.0_reqs@134'
+
     run do
       code = request.query_parameters['code']
       output udap_authorization_code: code

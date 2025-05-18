@@ -28,6 +28,9 @@ module UDAPSecurityTestKit
           description: INPUT_UDAP_REGISTRATION_JWT_DESCRIPTION_LOCKED
     output :udap_tokens
 
+    verifies_requirements 'hl7.fhir.us.udap-security_1.0.0_reqs@66',
+                          'hl7.fhir.us.udap-security_1.0.0_reqs@67'
+
     def client_suite_id
       return config.options[:endpoint_suite_id] if config.options[:endpoint_suite_id].present?
 

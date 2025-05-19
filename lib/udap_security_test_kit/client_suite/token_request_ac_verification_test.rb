@@ -30,7 +30,35 @@ module UDAPSecurityTestKit
 
     verifies_requirements 'hl7.fhir.us.udap-security_1.0.0_reqs@66',
                           'hl7.fhir.us.udap-security_1.0.0_reqs@67',
-                          'hl7.fhir.us.udap-security_1.0.0_reqs@69'
+                          'hl7.fhir.us.udap-security_1.0.0_reqs@69',
+                          'hl7.fhir.us.udap-security_1.0.0_reqs@140',
+                          'hl7.fhir.us.udap-security_1.0.0_reqs@141',
+                          'hl7.fhir.us.udap-security_1.0.0_reqs@142',
+                          'hl7.fhir.us.udap-security_1.0.0_reqs@143',
+                          'hl7.fhir.us.udap-security_1.0.0_reqs@145',
+                          'hl7.fhir.us.udap-security_1.0.0_reqs@151',
+                          'hl7.fhir.us.udap-security_1.0.0_reqs@152',
+                          'hl7.fhir.us.udap-security_1.0.0_reqs@153',
+                          'hl7.fhir.us.udap-security_1.0.0_reqs@154',
+                          'hl7.fhir.us.udap-security_1.0.0_reqs@155',
+                          'hl7.fhir.us.udap-security_1.0.0_reqs@156',
+                          'hl7.fhir.us.udap-security_1.0.0_reqs@157',
+                          'hl7.fhir.us.udap-security_1.0.0_reqs@158',
+                          'hl7.fhir.us.udap-security_1.0.0_reqs@160',
+                          'hl7.fhir.us.udap-security_1.0.0_reqs@161',
+                          'hl7.fhir.us.udap-security_1.0.0_reqs@163',
+                          'hl7.fhir.us.udap-security_1.0.0_reqs@165',
+                          'hl7.fhir.us.udap-security_1.0.0_reqs@166',
+                          'hl7.fhir.us.udap-security_1.0.0_reqs@167',
+                          'hl7.fhir.us.udap-security_1.0.0_reqs@168',
+                          'hl7.fhir.us.udap-security_1.0.0_reqs@169',
+                          'hl7.fhir.us.udap-security_1.0.0_reqs@170',
+                          'hl7.fhir.us.udap-security_1.0.0_reqs@171',
+                          'hl7.fhir.us.udap-security_1.0.0_reqs@175',
+                          'hl7.fhir.us.udap-security_1.0.0_reqs@177',
+                          'hl7.fhir.us.udap-security_1.0.0_reqs@178',
+                          'hl7.fhir.us.udap-security_1.0.0_reqs@179',
+                          'hl7.fhir.us.udap-security_1.0.0_reqs@180'
 
     def client_suite_id
       return config.options[:endpoint_suite_id] if config.options[:endpoint_suite_id].present?

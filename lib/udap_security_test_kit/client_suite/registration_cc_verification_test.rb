@@ -23,6 +23,28 @@ module UDAPSecurityTestKit
       UDAPSecurityTestKit::UDAPSecurityClientTestSuite.id
     end
 
+    verifies_requirements 'hl7.fhir.us.udap-security_1.0.0_reqs@71',
+                          'hl7.fhir.us.udap-security_1.0.0_reqs@72',
+                          'hl7.fhir.us.udap-security_1.0.0_reqs@73',
+                          'hl7.fhir.us.udap-security_1.0.0_reqs@74',
+                          'hl7.fhir.us.udap-security_1.0.0_reqs@75',
+                          'hl7.fhir.us.udap-security_1.0.0_reqs@76',
+                          'hl7.fhir.us.udap-security_1.0.0_reqs@77',
+                          'hl7.fhir.us.udap-security_1.0.0_reqs@78',
+                          'hl7.fhir.us.udap-security_1.0.0_reqs@79',
+                          'hl7.fhir.us.udap-security_1.0.0_reqs@80',
+                          'hl7.fhir.us.udap-security_1.0.0_reqs@81',
+                          'hl7.fhir.us.udap-security_1.0.0_reqs@83',
+                          'hl7.fhir.us.udap-security_1.0.0_reqs@85',
+                          'hl7.fhir.us.udap-security_1.0.0_reqs@92',
+                          'hl7.fhir.us.udap-security_1.0.0_reqs@95',
+                          'hl7.fhir.us.udap-security_1.0.0_reqs@96',
+                          'hl7.fhir.us.udap-security_1.0.0_reqs@97',
+                          'hl7.fhir.us.udap-security_1.0.0_reqs@101',
+                          'hl7.fhir.us.udap-security_1.0.0_reqs@102',
+                          'hl7.fhir.us.udap-security_1.0.0_reqs@103',
+                          'hl7.fhir.us.udap-security_1.0.0_reqs@104'
+
     run do
       client_registration_requests = load_registration_requests_for_client_uri(udap_client_uri)
       skip_if client_registration_requests.empty?,

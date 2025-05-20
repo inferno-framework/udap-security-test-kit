@@ -17,7 +17,8 @@ module UDAPSecurityTestKit
 
     run_as_group
 
-    verifies_requirements 'hl7.fhir.us.udap-security_1.0.0_reqs@126'
+    verifies_requirements 'hl7.fhir.us.udap-security_1.0.0_reqs@126',
+                          'hl7.fhir.us.udap-security_1.0.0_reqs@222'
 
     test from: :udap_client_access_ac_interaction
     test from: :udap_client_authorization_request_verification

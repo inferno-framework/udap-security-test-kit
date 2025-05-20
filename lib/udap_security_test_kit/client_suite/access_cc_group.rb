@@ -16,6 +16,8 @@ module UDAPSecurityTestKit
 
     run_as_group
 
+    verifies_requirements 'hl7.fhir.us.udap-security_1.0.0_reqs@223'
+
     test from: :udap_client_access_cc_interaction
     test from: :udap_client_token_request_cc_verification
     test from: :udap_client_token_use_verification

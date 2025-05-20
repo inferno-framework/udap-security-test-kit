@@ -23,7 +23,12 @@ module UDAPSecurityTestKit
       UDAPSecurityTestKit::UDAPSecurityClientTestSuite.id
     end
 
-    verifies_requirements 'hl7.fhir.us.udap-security_1.0.0_reqs@71',
+    verifies_requirements 'hl7.fhir.us.udap-security_1.0.0_reqs@1',
+                          'hl7.fhir.us.udap-security_1.0.0_reqs@2',
+                          'hl7.fhir.us.udap-security_1.0.0_reqs@3',
+                          'hl7.fhir.us.udap-security_1.0.0_reqs@7',
+                          'hl7.fhir.us.udap-security_1.0.0_reqs@8',
+                          'hl7.fhir.us.udap-security_1.0.0_reqs@71',
                           'hl7.fhir.us.udap-security_1.0.0_reqs@72',
                           'hl7.fhir.us.udap-security_1.0.0_reqs@73',
                           'hl7.fhir.us.udap-security_1.0.0_reqs@74',

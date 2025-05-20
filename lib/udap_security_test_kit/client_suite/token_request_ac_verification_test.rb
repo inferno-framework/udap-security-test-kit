@@ -58,7 +58,14 @@ module UDAPSecurityTestKit
                           'hl7.fhir.us.udap-security_1.0.0_reqs@177',
                           'hl7.fhir.us.udap-security_1.0.0_reqs@178',
                           'hl7.fhir.us.udap-security_1.0.0_reqs@179',
-                          'hl7.fhir.us.udap-security_1.0.0_reqs@180'
+                          'hl7.fhir.us.udap-security_1.0.0_reqs@180',
+                          'hl7.fhir.us.udap-security_1.0.0_reqs@185',
+                          'hl7.fhir.us.udap-security_1.0.0_reqs@192',
+                          'hl7.fhir.us.udap-security_1.0.0_reqs@193',
+                          'hl7.fhir.us.udap-security_1.0.0_reqs@194',
+                          'hl7.fhir.us.udap-security_1.0.0_reqs@195',
+                          'hl7.fhir.us.udap-security_1.0.0_reqs@196',
+                          'hl7.fhir.us.udap-security_1.0.0_reqs@197'
 
     def client_suite_id
       return config.options[:endpoint_suite_id] if config.options[:endpoint_suite_id].present?

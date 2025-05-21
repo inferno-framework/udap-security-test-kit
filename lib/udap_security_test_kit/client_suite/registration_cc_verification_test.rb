@@ -28,6 +28,7 @@ module UDAPSecurityTestKit
                           'hl7.fhir.us.udap-security_1.0.0_reqs@3',
                           'hl7.fhir.us.udap-security_1.0.0_reqs@7',
                           'hl7.fhir.us.udap-security_1.0.0_reqs@8',
+                          'hl7.fhir.us.udap-security_1.0.0_reqs@66',
                           'hl7.fhir.us.udap-security_1.0.0_reqs@71',
                           'hl7.fhir.us.udap-security_1.0.0_reqs@72',
                           'hl7.fhir.us.udap-security_1.0.0_reqs@73',

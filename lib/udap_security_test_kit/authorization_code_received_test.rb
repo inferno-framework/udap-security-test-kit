@@ -12,7 +12,6 @@ module UDAPSecurityTestKit
     verifies_requirements 'hl7.fhir.us.udap-security_1.0.0_reqs@133',
                           'hl7.fhir.us.udap-security_1.0.0_reqs@134',
                           'hl7.fhir.us.udap-security_1.0.0_reqs@138',
-                          'hl7.fhir.us.udap-security_1.0.0_reqs@148',
                           'hl7.fhir.us.udap-security_1.0.0_reqs@190'
 
     run do

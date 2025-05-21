@@ -62,6 +62,8 @@ module UDAPSecurityTestKit
 
     makes_request :token_exchange
 
+    verifies_requirements 'hl7.fhir.us.udap-security_1.0.0_reqs@148'
+
     run do
       client_assertion_payload = UDAPClientAssertionPayloadBuilder.build(
         udap_client_id,

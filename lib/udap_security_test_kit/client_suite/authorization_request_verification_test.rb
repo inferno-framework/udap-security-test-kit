@@ -25,6 +25,7 @@ module UDAPSecurityTestKit
           description: INPUT_UDAP_REGISTRATION_JWT_DESCRIPTION_LOCKED
 
     verifies_requirements 'hl7.fhir.us.udap-security_1.0.0_reqs@67',
+                          'hl7.fhir.us.udap-security_1.0.0_reqs@127',
                           'hl7.fhir.us.udap-security_1.0.0_reqs@128',
                           'hl7.fhir.us.udap-security_1.0.0_reqs@129'
 

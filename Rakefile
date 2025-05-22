@@ -38,7 +38,7 @@ end
 
 namespace :requirements do
   desc 'Collect requirements and planned not tested requirements into CSVs'
-  task :collect, [:input_directory] => [] do |t, args|
+  task :collect, [:input_directory] => [] do |_t, args|
     require_relative 'lib/inferno_requirements_tools/tasks/collect_requirements'
     InfernoRequirementsTools::Tasks::CollectRequirements.new.run(args.input_directory)
   end
@@ -46,7 +46,7 @@ end
 
 namespace :requirements do
   desc 'Check if requirements and planned not tested CSVs are up-to-date'
-  task :check_collection, [:input_directory] => [] do |t, args|
+  task :check_collection, [:input_directory] => [] do |_t, args|
     require_relative 'lib/inferno_requirements_tools/tasks/collect_requirements'
     InfernoRequirementsTools::Tasks::CollectRequirements.new.run_check(args.input_directory)
   end

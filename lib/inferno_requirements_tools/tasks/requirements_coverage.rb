@@ -11,7 +11,8 @@ module InfernoRequirementsTools
     # This file must have a column with the header 'ID' which holds user-designated IDs for each requirement.
     # These requirement IDs must map to the IDs specified in the test kit using `verifies_requirements`
     #
-    # The `run` method generates a CSV file at lib/onc_certification_g31_test_kit/requirements/Requirements_Coverage.csv.
+    # The `run` method generates a CSV file at
+    # lib/onc_certification_g31_test_kit/requirements/Requirements_Coverage.csv.
     # This file will be identical to the input spreadsheet, plus an additional column which holds a comma separated
     # list of inferno test IDs that test each requirement. These test IDs are Inferno short form IDs that represent the
     # position of the test within its group and suite. For example, the fifth test in the second group will have an ID

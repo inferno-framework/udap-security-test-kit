@@ -9,11 +9,19 @@ module UDAPSecurityTestKit
     output :udap_authorization_code
     uses_request :redirect
 
+    verifies_requirements 'hl7.fhir.us.udap-security_1.0.0_reqs@133',
+                          'hl7.fhir.us.udap-security_1.0.0_reqs@134',
+                          'hl7.fhir.us.udap-security_1.0.0_reqs@138',
+                          'hl7.fhir.us.udap-security_1.0.0_reqs@190'
+
     run do
       code = request.query_parameters['code']
       output udap_authorization_code: code
 
       assert code.present?, 'No `code` parameter received'
+
+      state = request.query_parameters['state']
+      assert state.present?, '`state` parameter is required since it was present in client request'
 
       error = request.query_parameters['error']
 

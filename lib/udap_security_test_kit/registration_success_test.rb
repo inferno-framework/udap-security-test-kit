@@ -39,6 +39,9 @@ module UDAPSecurityTestKit
     output :udap_software_statement_json
     output :udap_registration_response
 
+    verifies_requirements 'hl7.fhir.us.udap-security_1.0.0_reqs@110',
+                          'hl7.fhir.us.udap-security_1.0.0_reqs@119'
+
     run do
       software_statement_payload = SoftwareStatementBuilder.build_payload(
         udap_cert_iss,

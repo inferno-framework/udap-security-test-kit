@@ -61,6 +61,8 @@ module UDAPSecurityTestKit
     output :udap_registration_endpoint
     output :udap_registration_grant_type
 
+    verifies_requirements 'hl7.fhir.us.udap-security_1.0.0_reqs@15'
+
     test from: :udap_well_known_endpoint
     test from: :udap_versions_supported_field
     test from: :udap_grant_types_supported_field

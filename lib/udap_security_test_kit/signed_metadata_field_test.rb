@@ -13,6 +13,9 @@ module UDAPSecurityTestKit
     input :udap_well_known_metadata_json
     output :signed_metadata_jwt
 
+    verifies_requirements 'hl7.fhir.us.udap-security_1.0.0_reqs@46',
+                          'hl7.fhir.us.udap-security_1.0.0_reqs@47'
+
     run do
       assert_valid_json(udap_well_known_metadata_json)
       config = JSON.parse(udap_well_known_metadata_json)
@@ -23,7 +26,7 @@ module UDAPSecurityTestKit
       assert jwt.is_a?(String), "`signed_metadata` should be a String, but found #{jwt.class.name}"
       output signed_metadata_jwt: jwt
 
-      jwt_regex = %r{^[A-Za-z0-9-_=]+\.[A-Za-z0-9-_=]+\.?[A-Za-z0-9-_.+/=]*$}
+      jwt_regex = %r{^[A-Za-z0-9\-_=]+\.[A-Za-z0-9\-_=]+\.?[A-Za-z0-9\-_.+/=]*$}
 
       assert jwt.match?(jwt_regex), '`signed_metadata` is not a valid JWT'
     end

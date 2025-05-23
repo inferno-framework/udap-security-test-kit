@@ -52,6 +52,9 @@ module UDAPSecurityTestKit
 
     receives_request :redirect
 
+    verifies_requirements 'hl7.fhir.us.udap-security_1.0.0_reqs@133',
+                          'hl7.fhir.us.udap-security_1.0.0_reqs@190'
+
     config options: {
       redirect_uri: UDAPSecurityTestKit::UDAP_REDIRECT_URI
     }

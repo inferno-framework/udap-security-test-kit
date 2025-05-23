@@ -15,6 +15,9 @@ module UDAPSecurityTestKit
 
     input :udap_well_known_metadata_json
 
+    verifies_requirements 'hl7.fhir.us.udap-security_1.0.0_reqs@4',
+                          'hl7.fhir.us.udap-security_1.0.0_reqs@42'
+
     run do
       assert_valid_json(udap_well_known_metadata_json)
       config = JSON.parse(udap_well_known_metadata_json)
@@ -27,6 +30,8 @@ module UDAPSecurityTestKit
       algs_supported = config['token_endpoint_auth_signing_alg_values_supported']
 
       assert algs_supported.present?, 'Must support at least one signature algorithm'
+
+      assert algs_supported.include?('RS256'), 'All UDAP implementations must support RS256 signature algorithm'
     end
   end
 end

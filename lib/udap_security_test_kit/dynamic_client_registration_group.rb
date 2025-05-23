@@ -141,6 +141,9 @@ module UDAPSecurityTestKit
           type: 'textarea',
           optional: true
 
+    verifies_requirements 'hl7.fhir.us.udap-security_1.0.0_reqs@68',
+                          'hl7.fhir.us.udap-security_1.0.0_reqs@105'
+
     test from: :udap_registration_failure_invalid_contents
     test from: :udap_registration_failure_invalid_jwt_signature
     test from: :udap_registration_success

@@ -28,6 +28,31 @@ module UDAPSecurityTestKit
           description: INPUT_UDAP_REGISTRATION_JWT_DESCRIPTION_LOCKED
     output :udap_tokens
 
+    verifies_requirements 'hl7.fhir.us.udap-security_1.0.0_reqs@1',
+                          'hl7.fhir.us.udap-security_1.0.0_reqs@2',
+                          'hl7.fhir.us.udap-security_1.0.0_reqs@3',
+                          'hl7.fhir.us.udap-security_1.0.0_reqs@7',
+                          'hl7.fhir.us.udap-security_1.0.0_reqs@8',
+                          'hl7.fhir.us.udap-security_1.0.0_reqs@67',
+                          'hl7.fhir.us.udap-security_1.0.0_reqs@69',
+                          'hl7.fhir.us.udap-security_1.0.0_reqs@186',
+                          'hl7.fhir.us.udap-security_1.0.0_reqs@192',
+                          'hl7.fhir.us.udap-security_1.0.0_reqs@193',
+                          'hl7.fhir.us.udap-security_1.0.0_reqs@194',
+                          'hl7.fhir.us.udap-security_1.0.0_reqs@195',
+                          'hl7.fhir.us.udap-security_1.0.0_reqs@196',
+                          'hl7.fhir.us.udap-security_1.0.0_reqs@197',
+                          'hl7.fhir.us.udap-security_1.0.0_reqs@198',
+                          'hl7.fhir.us.udap-security_1.0.0_reqs@202',
+                          'hl7.fhir.us.udap-security_1.0.0_reqs@212',
+                          'hl7.fhir.us.udap-security_1.0.0_reqs@214',
+                          'hl7.fhir.us.udap-security_1.0.0_reqs@215',
+                          'hl7.fhir.us.udap-security_1.0.0_reqs@223',
+                          'hl7.fhir.us.udap-security_1.0.0_reqs@225',
+                          'hl7.fhir.us.udap-security_1.0.0_reqs@226',
+                          'hl7.fhir.us.udap-security_1.0.0_reqs@227',
+                          'hl7.fhir.us.udap-security_1.0.0_reqs@228'
+
     def client_suite_id
       return config.options[:endpoint_suite_id] if config.options[:endpoint_suite_id].present?
 

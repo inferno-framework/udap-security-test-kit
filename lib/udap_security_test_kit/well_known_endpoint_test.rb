@@ -28,9 +28,9 @@ module UDAPSecurityTestKit
     output :udap_well_known_metadata_json
     makes_request :config
 
-    verifies_requirements 'hl7.fhir.us.udap-security_1.0.0_reqs@12',
-                          'hl7.fhir.us.udap-security_1.0.0_reqs@13',
-                          'hl7.fhir.us.udap-security_1.0.0_reqs@14'
+    verifies_requirements 'hl7.fhir.us.udap-security_1.0.0@12',
+                          'hl7.fhir.us.udap-security_1.0.0@13',
+                          'hl7.fhir.us.udap-security_1.0.0@14'
 
     run do
       uri = URI.parse("#{udap_fhir_base_url.strip.chomp('/')}/.well-known/udap")

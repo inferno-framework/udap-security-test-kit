@@ -15,6 +15,14 @@ module UDAPSecurityTestKit
     title 'UDAP Security Client'
     description File.read(File.join(__dir__, 'docs', 'udap_client_suite_description.md'))
 
+    requirement_sets(
+      {
+        identifier: 'hl7.fhir.us.udap-security_1.0.0',
+        title: 'Security for Scalable Registration, Authentication, and Authorization (UDAP)',
+        actor: 'Client'
+      }
+    )
+
     links [
       {
         type: 'source_code',

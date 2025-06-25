@@ -15,22 +15,22 @@ module UDAPSecurityTestKit
     input :signed_metadata_jwt, optional: true
     input :udap_well_known_metadata_json, :udap_fhir_base_url
 
-    verifies_requirements 'hl7.fhir.us.udap-security_1.0.0_reqs@1',
-                          'hl7.fhir.us.udap-security_1.0.0_reqs@2',
-                          'hl7.fhir.us.udap-security_1.0.0_reqs@3',
-                          'hl7.fhir.us.udap-security_1.0.0_reqs@7',
-                          'hl7.fhir.us.udap-security_1.0.0_reqs@8',
-                          'hl7.fhir.us.udap-security_1.0.0_reqs@48',
-                          'hl7.fhir.us.udap-security_1.0.0_reqs@49',
-                          'hl7.fhir.us.udap-security_1.0.0_reqs@50',
-                          'hl7.fhir.us.udap-security_1.0.0_reqs@51',
-                          'hl7.fhir.us.udap-security_1.0.0_reqs@52',
-                          'hl7.fhir.us.udap-security_1.0.0_reqs@53',
-                          'hl7.fhir.us.udap-security_1.0.0_reqs@54',
-                          'hl7.fhir.us.udap-security_1.0.0_reqs@55',
-                          'hl7.fhir.us.udap-security_1.0.0_reqs@57',
-                          'hl7.fhir.us.udap-security_1.0.0_reqs@58',
-                          'hl7.fhir.us.udap-security_1.0.0_reqs@59'
+    verifies_requirements 'hl7.fhir.us.udap-security_1.0.0@1',
+                          'hl7.fhir.us.udap-security_1.0.0@2',
+                          'hl7.fhir.us.udap-security_1.0.0@3',
+                          'hl7.fhir.us.udap-security_1.0.0@7',
+                          'hl7.fhir.us.udap-security_1.0.0@8',
+                          'hl7.fhir.us.udap-security_1.0.0@48',
+                          'hl7.fhir.us.udap-security_1.0.0@49',
+                          'hl7.fhir.us.udap-security_1.0.0@50',
+                          'hl7.fhir.us.udap-security_1.0.0@51',
+                          'hl7.fhir.us.udap-security_1.0.0@52',
+                          'hl7.fhir.us.udap-security_1.0.0@53',
+                          'hl7.fhir.us.udap-security_1.0.0@54',
+                          'hl7.fhir.us.udap-security_1.0.0@55',
+                          'hl7.fhir.us.udap-security_1.0.0@57',
+                          'hl7.fhir.us.udap-security_1.0.0@58',
+                          'hl7.fhir.us.udap-security_1.0.0@59'
 
     run do
       skip_if signed_metadata_jwt.blank?

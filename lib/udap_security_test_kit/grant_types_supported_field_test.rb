@@ -13,8 +13,8 @@ module UDAPSecurityTestKit
     input :required_flow_type
     output :udap_registration_grant_type
 
-    verifies_requirements 'hl7.fhir.us.udap-security_1.0.0_reqs@36',
-                          'hl7.fhir.us.udap-security_1.0.0_reqs@37'
+    verifies_requirements 'hl7.fhir.us.udap-security_1.0.0@36',
+                          'hl7.fhir.us.udap-security_1.0.0@37'
 
     run do
       assert_valid_json(udap_well_known_metadata_json)

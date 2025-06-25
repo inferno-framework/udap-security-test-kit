@@ -32,6 +32,14 @@ module UDAPSecurityTestKit
       (which is not a required capability).
     )
 
+    requirement_sets(
+      {
+        identifier: 'hl7.fhir.us.udap-security_1.0.0',
+        title: 'Security for Scalable Registration, Authentication, and Authorization (UDAP)',
+        actor: 'Server'
+      }
+    )
+
     input_instructions %(
       This menu will execute tests for both OAuth flows.
 

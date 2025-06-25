@@ -159,7 +159,7 @@ module UDAPSecurityTestKit
 
     def decode_token(token)
       token_to_decode =
-        if issued_token_is_refresh_token(token)
+        if issued_token_is_refresh_token?(token)
           refresh_token_to_authorization_code(token)
         else
           token
@@ -175,7 +175,7 @@ module UDAPSecurityTestKit
       decode_token(token)&.dig('client_id')
     end
 
-    def issued_token_is_refresh_token(token)
+    def issued_token_is_refresh_token?(token)
       token.end_with?('_rt')
     end
 

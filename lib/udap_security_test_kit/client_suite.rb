@@ -8,6 +8,7 @@ require_relative 'client_suite/registration_ac_group'
 require_relative 'client_suite/registration_cc_group'
 require_relative 'client_suite/access_ac_group'
 require_relative 'client_suite/access_cc_group'
+require_relative 'visual_inspection_and_attestation/client_attestation_group'
 
 module UDAPSecurityTestKit
   class UDAPSecurityClientTestSuite < Inferno::TestSuite
@@ -113,5 +114,7 @@ module UDAPSecurityTestKit
           required_suite_options: {
             client_type: UDAPClientOptions::UDAP_CLIENT_CREDENTIALS
           }
+    
+    group from: :udap_client_v100_visual_inspection_and_attestation
   end
 end

@@ -8,9 +8,13 @@ module UDAPSecurityTestKit
     verifies_requirements 'hl7.fhir.us.udap-security_1.0.0@245'
 
     input :idp_authentication_request_correct,
-          title: 'Interaction with Identity Providers (IdPs): Performs Authentication request to the IdP’s authorization endpoint',
+          title: %(
+            Interaction with Identity Providers (IdPs): Performs Authentication request to the IdP’s authorization
+            endpoint
+          ),
           description: %(
-            I attest that the Data Holder makes an authentication request to the IdP’s authorization endpoint when the IdP is trusted.
+            I attest that the Data Holder makes an authentication request to the IdP’s authorization endpoint when the
+            IdP is trusted.
           ),
           type: 'radio',
           default: 'false',
@@ -33,7 +37,8 @@ module UDAPSecurityTestKit
 
     run do
       assert idp_authentication_request_correct == 'true',
-             'Data Holder does not make an authentication request to the IdP’s authorization endpoint when the IdP is trusted.'
+             'Data Holder does not make an authentication request to the IdP’s authorization endpoint when the IdP
+              is trusted.'
       pass idp_authentication_request_note if idp_authentication_request_note.present?
     end
   end

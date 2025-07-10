@@ -14,7 +14,8 @@ module UDAPSecurityTestKit
     input :token_response_validation_correct,
           title: 'ID Token and Access Token Validation: Validates token response correctly',
           description: %(
-            I attest that the Client validates the Token Response as per RFC 6749 and OIDC Core specifications, including:
+            I attest that the Client validates the Token Response as per RFC 6749 and OIDC Core specifications,
+            including:
             - Ensuring the presence of `access_token` and `token_type` parameters.
             - Validating the response structure and data integrity.
           ),

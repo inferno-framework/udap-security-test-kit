@@ -22,7 +22,8 @@ module UDAPSecurityTestKit
     input :subject_name_compliance,
           title: 'Includes `subject_name` if known',
           description: %(
-            I attest that the client application includes the `subject_name` parameter if it is known for human or non-human requestors.
+            I attest that the client application includes the `subject_name` parameter if it is known for human
+            or non-human requestors.
           ),
           type: 'radio',
           default: 'false',
@@ -46,7 +47,8 @@ module UDAPSecurityTestKit
     input :subject_id_compliance,
           title: 'Includes `subject_id` for human requestors when `subject_name` is present',
           description: %(
-            I attest that the client application includes the `subject_id` parameter for human requestors when the `subject_name` parameter is present.
+            I attest that the client application includes the `subject_id` parameter for human requestors when the
+            `subject_name` parameter is present.
           ),
           type: 'radio',
           default: 'false',
@@ -70,7 +72,8 @@ module UDAPSecurityTestKit
     input :subject_id_npi_compliance,
           title: 'Uses NPI for `subject_id` in US Realm human requestors',
           description: %(
-            I attest that the client application uses the National Provider Identifier (NPI) as the value for `subject_id` for human requestors in the US Realm.
+            I attest that the client application uses the National Provider Identifier (NPI) as the value for
+            `subject_id` for human requestors in the US Realm.
           ),
           type: 'radio',
           default: 'false',
@@ -94,7 +97,8 @@ module UDAPSecurityTestKit
     input :consent_reference_compliance,
           title: 'Ensures `consent_reference` URLs are resolvable',
           description: %(
-            I attest that the client application ensures that the `consent_reference` parameter includes URLs that are resolvable by the receiving party and omits `consent_reference` if `consent_policy` is not present.
+            I attest that the client application ensures that the `consent_reference` parameter includes URLs that
+            are resolvable by the receiving party and omits `consent_reference` if `consent_policy` is not present.
           ),
           type: 'radio',
           default: 'false',
@@ -129,7 +133,8 @@ module UDAPSecurityTestKit
       pass subject_id_npi_compliance_note if subject_id_npi_compliance_note.present?
 
       assert consent_reference_compliance == 'true',
-             'Client application did not ensure `consent_reference` URLs were resolvable or omitted `consent_reference` when `consent_policy` was not present.'
+             'Client application did not ensure `consent_reference` URLs were resolvable or omitted `consent_reference`
+              when `consent_policy` was not present.'
       pass consent_reference_compliance_note if consent_reference_compliance_note.present?
     end
   end

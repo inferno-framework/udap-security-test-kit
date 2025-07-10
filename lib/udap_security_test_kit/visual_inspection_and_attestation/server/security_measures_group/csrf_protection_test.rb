@@ -12,7 +12,8 @@ module UDAPSecurityTestKit
     input :csrf_protection_implemented,
           title: 'Security Measures: Implements CSRF protection for the authorization endpoint',
           description: %(
-            I attest that the Authorization Server implements CSRF protection for its authorization endpoint, including mechanisms such as:
+            I attest that the Authorization Server implements CSRF protection for its authorization endpoint,
+            including mechanisms such as:
             - Use of anti-CSRF tokens.
             - Validation of `state` parameter to prevent cross-site request forgery.
           ),

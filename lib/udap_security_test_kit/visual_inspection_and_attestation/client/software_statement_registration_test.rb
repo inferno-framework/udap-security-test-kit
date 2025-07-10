@@ -4,8 +4,10 @@ module UDAPSecurityTestKit
     id :udap_security_software_statement_registration
     description %(
       Client complies with the requirements for Software Statement and Registration:
-      - Ensures that the `jti` claim in the JWT is not reused in another software statement or authentication JWT before the time specified in the `exp` claim has passed.
-      - Interprets a registration response containing an empty `grant_types` array as a confirmation that the registration for the `client_id` listed in the response has been cancelled by the Authorization Server.
+      - Ensures that the `jti` claim in the JWT is not reused in another software statement or authentication JWT
+        before the time specified in the `exp` claim has passed.
+      - Interprets a registration response containing an empty `grant_types` array as a confirmation that the
+        registration for the `client_id` listed in the response has been cancelled by the Authorization Server.
     )
     verifies_requirements 'hl7.fhir.us.udap-security_1.0.0@82',
                           'hl7.fhir.us.udap-security_1.0.0@123'
@@ -13,7 +15,8 @@ module UDAPSecurityTestKit
     input :jti_reuse_compliance,
           title: 'Ensures that the `jti` claim in the JWT is not reused before the `exp` claim has passed',
           description: %(
-            I attest that the client application ensures that the `jti` claim in the JWT is not reused in another software statement or authentication JWT before the time specified in the `exp` claim has passed.
+            I attest that the client application ensures that the `jti` claim in the JWT is not reused in another
+            software statement or authentication JWT before the time specified in the `exp` claim has passed.
           ),
           type: 'radio',
           default: 'false',
@@ -37,7 +40,9 @@ module UDAPSecurityTestKit
     input :grant_types_empty_array_compliance,
           title: 'Interprets empty `grant_types` array as registration cancellation',
           description: %(
-            I attest that the client application interprets a registration response containing an empty `grant_types` array as a confirmation that the registration for the `client_id` listed in the response has been cancelled by the Authorization Server.
+            I attest that the client application interprets a registration response containing an empty `grant_types`
+            array as a confirmation that the registration for the `client_id` listed in the response has been
+            cancelled by the Authorization Server.
           ),
           type: 'radio',
           default: 'false',

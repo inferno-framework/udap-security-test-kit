@@ -3,14 +3,16 @@ module UDAPSecurityTestKit
     title 'Supports required scopes in IdPs'
     id :udap_security_idp_supports_scopes
     description %(
-        Identity Provider (IdP) includes `"openid"` and `"udap"` in the array of scopes returned for the `scopes_supported` parameter.
+        Identity Provider (IdP) includes `"openid"` and `"udap"` in the array of scopes returned
+        for the `scopes_supported` parameter.
       )
     verifies_requirements 'hl7.fhir.us.udap-security_1.0.0@235'
 
     input :idp_supports_required_scopes,
           title: 'Supports required scopes',
           description: %(
-              I attest that the Identity Provider (IdP) includes `"openid"` and `"udap"` in the array of scopes returned for the `scopes_supported` parameter.
+              I attest that the Identity Provider (IdP) includes `"openid"` and `"udap"` in the array of scopes returned
+              for the `scopes_supported` parameter.
             ),
           type: 'radio',
           default: 'false',

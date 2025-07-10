@@ -6,7 +6,8 @@ module UDAPSecurityTestKit
       Client applications complies with the requirements for Client Security and CSRF Protection:
       - Implements CSRF protection for its redirection URI.
       - Uses a binding value for CSRF protection that contains a non-guessable value.
-      - Ensures the user-agent's authenticated state is accessible only to the client and user-agent, protected by the same-origin policy.
+      - Ensures the user-agent's authenticated state is accessible only to the client and user-agent, protected by
+        the same-origin policy.
     )
     verifies_requirements 'hl7.fhir.us.udap-security_1.0.0@275',
                           'hl7.fhir.us.udap-security_1.0.0@276',
@@ -15,7 +16,8 @@ module UDAPSecurityTestKit
     input :csrf_protection_implementation,
           title: 'Implements CSRF protection for its redirection URI',
           description: %(
-            I attest that the client application implements CSRF protection for its redirection URI to prevent cross-site request forgery attacks.
+            I attest that the client application implements CSRF protection for its redirection URI to prevent
+            cross-site request forgery attacks.
           ),
           type: 'radio',
           default: 'false',
@@ -39,7 +41,8 @@ module UDAPSecurityTestKit
     input :csrf_binding_value_compliance,
           title: 'Uses a non-guessable binding value for CSRF protection',
           description: %(
-            I attest that the client application uses a binding value for CSRF protection that contains a non-guessable value to ensure security.
+            I attest that the client application uses a binding value for CSRF protection that contains a non-guessable
+            value to ensure security.
           ),
           type: 'radio',
           default: 'false',
@@ -63,7 +66,8 @@ module UDAPSecurityTestKit
     input :authenticated_state_protection,
           title: 'Ensures authenticated state is protected by same-origin policy',
           description: %(
-            I attest that the client application ensures the user-agent's authenticated state is stored in a location accessible only to the client and user-agent, protected by the same-origin policy.
+            I attest that the client application ensures the user-agent's authenticated state is stored in a location
+            accessible only to the client and user-agent, protected by the same-origin policy.
           ),
           type: 'radio',
           default: 'false',
@@ -94,7 +98,8 @@ module UDAPSecurityTestKit
       pass csrf_binding_value_compliance_note if csrf_binding_value_compliance_note.present?
 
       assert authenticated_state_protection == 'true',
-             'Client application did not ensure the user-agent\'s authenticated state is protected by the same-origin policy.'
+             'Client application did not ensure the user-agent\'s authenticated state is protected by the same-origin
+              policy.'
       pass authenticated_state_protection_note if authenticated_state_protection_note.present?
     end
   end

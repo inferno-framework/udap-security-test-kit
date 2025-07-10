@@ -4,8 +4,10 @@ module UDAPSecurityTestKit
     id :udap_security_validation_confidentiality
     description %(
       Client applications complies with the requirements for Validation and Confidentiality:
-      - Validates the `state` parameter returned by the Resource Holder in response to an authorization request to ensure it matches the value sent in the original request.
-      - Ensures confidentiality of client passwords and other client credentials by securely storing and transmitting them.
+      - Validates the `state` parameter returned by the Resource Holder in response to an authorization request to
+        ensure it matches the value sent in the original request.
+      - Ensures confidentiality of client passwords and other client credentials by securely storing and
+        transmitting them.
     )
     verifies_requirements 'hl7.fhir.us.udap-security_1.0.0@274',
                           'hl7.fhir.us.udap-security_1.0.0@286'
@@ -13,7 +15,8 @@ module UDAPSecurityTestKit
     input :state_parameter_validation,
           title: 'Complies with Validation and Confidentiality',
           description: %(
-            I attest that the client application validates the `state` parameter returned by the Resource Holder in response to an authorization request to ensure it matches the value sent in the original request.
+            I attest that the client application validates the `state` parameter returned by the Resource Holder in
+            response to an authorization request to ensure it matches the value sent in the original request.
           ),
           type: 'radio',
           default: 'false',
@@ -37,7 +40,8 @@ module UDAPSecurityTestKit
     input :client_credentials_confidentiality,
           title: 'Ensures confidentiality of client passwords and credentials',
           description: %(
-            I attest that the client application ensures confidentiality of client passwords and other client credentials by securely storing and transmitting them.
+            I attest that the client application ensures confidentiality of client passwords and other client
+            credentials by securely storing and transmitting them.
           ),
           type: 'radio',
           default: 'false',

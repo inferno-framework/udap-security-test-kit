@@ -4,7 +4,8 @@ module UDAPSecurityTestKit
     id :udap_security_private_key_authentication
     description %(
       Client application uses private key authentication correctly by:
-            - Omitting the HTTP Authorization header and client secret in token endpoint requests when authenticating with a private key and Authentication Token.
+            - Omitting the HTTP Authorization header and client secret in token endpoint requests when authenticating
+              with a private key and Authentication Token.
     )
     verifies_requirements 'hl7.fhir.us.udap-security_1.0.0@164',
                           'hl7.fhir.us.udap-security_1.0.0@224'
@@ -13,7 +14,8 @@ module UDAPSecurityTestKit
           title: 'Uses private key authentication correctly',
           description: %(
             I attest that the client application uses private key authentication correctly by:
-            - Omitting the HTTP Authorization header and client secret in token endpoint requests when authenticating with a private key and Authentication Token.
+            - Omitting the HTTP Authorization header and client secret in token endpoint requests when authenticating
+              with a private key and Authentication Token.
           ),
           type: 'radio',
           default: 'false',

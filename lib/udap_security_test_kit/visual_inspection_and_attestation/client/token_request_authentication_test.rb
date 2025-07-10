@@ -4,8 +4,10 @@ module UDAPSecurityTestKit
     id :udap_security_token_request_authentication
     description %(
       Client application authenticates correctly when making token requests by:
-            - Including the `client_id` parameter in the token request if the client is not authenticating with the authorization server.
-            - Authenticating to the Token Endpoint using the method registered for its `client_id` if the client is a Confidential Client.
+            - Including the `client_id` parameter in the token request if the client is not authenticating with the
+              authorization server.
+            - Authenticating to the Token Endpoint using the method registered for its `client_id` if the client
+              is a Confidential Client.
     )
     verifies_requirements 'hl7.fhir.us.udap-security_1.0.0@144',
                           'openid.connect.core@280'
@@ -14,8 +16,10 @@ module UDAPSecurityTestKit
           title: 'Authenticates correctly when making token requests',
           description: %(
             I attest that the client application authenticates correctly when making token requests by:
-            - Including the `client_id` parameter in the token request if the client is not authenticating with the authorization server.
-            - Authenticating to the Token Endpoint using the method registered for its `client_id` if the client is a Confidential Client.
+            - Including the `client_id` parameter in the token request if the client is not authenticating
+              with the authorization server.
+            - Authenticating to the Token Endpoint using the method registered for its `client_id` if the client
+              is a Confidential Client.
           ),
           type: 'radio',
           default: 'false',

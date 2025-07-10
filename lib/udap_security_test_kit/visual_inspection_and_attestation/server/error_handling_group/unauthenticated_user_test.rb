@@ -10,7 +10,8 @@ module UDAPSecurityTestKit
     input :unauthenticated_user_error_handling_correct,
           title: 'Error Handling: Handles unauthenticated user error correctly',
           description: %(
-            I attest that the Data Holder returns an `access_denied` error response when it cannot resolve the authenticated user.
+            I attest that the Data Holder returns an `access_denied` error response when it cannot resolve
+            the authenticated user.
           ),
           type: 'radio',
           default: 'false',
@@ -33,7 +34,8 @@ module UDAPSecurityTestKit
 
     run do
       assert unauthenticated_user_error_handling_correct == 'true',
-             'Data Holder does not return an `access_denied` error response when it cannot resolve the authenticated user.'
+             'Data Holder does not return an `access_denied` error response when it cannot resolve the
+              authenticated user.'
       pass unauthenticated_user_error_handling_note if unauthenticated_user_error_handling_note.present?
     end
   end

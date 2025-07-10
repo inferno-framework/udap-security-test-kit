@@ -37,7 +37,8 @@ module UDAPSecurityTestKit
 
     run do
       assert idp_dynamic_registration_correct == 'true',
-             'Data Holder does not register as a client with the IdP when it is trusted and supports UDAP Dynamic Registration.'
+             'Data Holder does not register as a client with the IdP when it is trusted and supports
+              UDAP Dynamic Registration.'
       pass idp_dynamic_registration_note if idp_dynamic_registration_note.present?
     end
   end

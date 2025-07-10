@@ -4,7 +4,8 @@ module UDAPSecurityTestKit
     id :udap_security_scopes_identity_provider_interaction
     description %(
       Client applications complies with the requirements for Scopes and Identity Provider Interaction:
-      - Client application includes `udap` in the list of scopes provided in the `scope` query parameter to indicate the preferred Identity Provider.
+      - Client application includes `udap` in the list of scopes provided in the `scope` query
+        parameter to indicate the preferred Identity Provider.
       - Client application authenticates the user according to the OIDC Core and UDAP Tiered OAuth specifications.
       - Identity Provider authenticates the user according to the OIDC Core and UDAP Tiered OAuth specifications.
     )
@@ -15,7 +16,8 @@ module UDAPSecurityTestKit
     input :scope_includes_udap,
           title: 'Includes `udap` in the `scope` query parameter',
           description: %(
-            I attest that the client application includes `udap` in the list of scopes provided in the `scope` query parameter to indicate the preferred Identity Provider.
+            I attest that the client application includes `udap` in the list of scopes provided in the `scope` query
+            parameter to indicate the preferred Identity Provider.
           ),
           type: 'radio',
           default: 'false',
@@ -39,7 +41,8 @@ module UDAPSecurityTestKit
     input :scope_contains_openid_udap,
           title: 'Ensures `scope` query parameter contains `openid` and `udap`',
           description: %(
-            I attest that the client application ensures the `scope` query parameter of the authentication request contains at least the values `openid` and `udap`.
+            I attest that the client application ensures the `scope` query parameter of the authentication request
+            contains at least the values `openid` and `udap`.
           ),
           type: 'radio',
           default: 'false',
@@ -63,7 +66,8 @@ module UDAPSecurityTestKit
     input :idp_authentication_compliance,
           title: 'Authenticates user as per OIDC Core and UDAP Tiered OAuth specifications',
           description: %(
-            I attest that the Identity Provider authenticates the user according to the OIDC Core and UDAP Tiered OAuth specifications.
+            I attest that the Identity Provider authenticates the user according to the OIDC Core and UDAP Tiered
+            OAuth specifications.
           ),
           type: 'radio',
           default: 'false',
@@ -86,7 +90,8 @@ module UDAPSecurityTestKit
 
     run do
       assert scope_includes_udap == 'true',
-             'Client application did not include `udap` in the `scope` query parameter to indicate the preferred Identity Provider.'
+             'Client application did not include `udap` in the `scope` query parameter to indicate the preferred
+             Identity Provider.'
       pass scope_includes_udap_note if scope_includes_udap_note.present?
 
       assert scope_contains_openid_udap == 'true',

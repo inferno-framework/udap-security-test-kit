@@ -10,7 +10,7 @@ module UDAPSecurityTestKit
     verifies_requirements 'hl7.fhir.us.udap-security_1.0.0@278'
 
     input :csrf_protection_implemented,
-          title: "Security Measures: Implements CSRF protection for the authorization endpoint",
+          title: 'Security Measures: Implements CSRF protection for the authorization endpoint',
           description: %(
             I attest that the Authorization Server implements CSRF protection for its authorization endpoint, including mechanisms such as:
             - Use of anti-CSRF tokens.
@@ -37,7 +37,7 @@ module UDAPSecurityTestKit
 
     run do
       assert csrf_protection_implemented == 'true',
-              'Authorization Server does not implement CSRF protection for its authorization endpoint.'
+             'Authorization Server does not implement CSRF protection for its authorization endpoint.'
       pass csrf_protection_note if csrf_protection_note.present?
     end
   end

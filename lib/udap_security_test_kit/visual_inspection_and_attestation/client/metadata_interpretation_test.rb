@@ -11,7 +11,7 @@ module UDAPSecurityTestKit
                           'hl7.fhir.us.udap-security_1.0.0@21'
 
     input :interprets_metadata_correctly,
-          title: "Interprets metadata correctly",
+          title: 'Interprets metadata correctly',
           description: %(
             I attest that the client application interprets metadata correctly by:
             - Interpreting an empty array value in metadata as indicating that the corresponding capability is NOT supported by the server.
@@ -38,7 +38,7 @@ module UDAPSecurityTestKit
 
     run do
       assert interprets_metadata_correctly == 'true',
-              'Client application did not demonstrate correct interpretation of metadata.'
+             'Client application did not demonstrate correct interpretation of metadata.'
       pass interprets_metadata_correctly_note if interprets_metadata_correctly_note.present?
     end
   end

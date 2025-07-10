@@ -10,7 +10,7 @@ module UDAPSecurityTestKit
     verifies_requirements 'hl7.fhir.us.udap-security_1.0.0@288'
 
     input :unauthenticated_client_security_measures,
-          title: "Security Measures: Considers security measures for unauthenticated clients",
+          title: 'Security Measures: Considers security measures for unauthenticated clients',
           description: %(
             I attest that the Authorization Server considers security implications when interacting with unauthenticated clients, including:
             - Restricting access to sensitive endpoints.
@@ -37,7 +37,7 @@ module UDAPSecurityTestKit
 
     run do
       assert unauthenticated_client_security_measures == 'true',
-              'Authorization Server does not consider security implications when interacting with unauthenticated clients.'
+             'Authorization Server does not consider security implications when interacting with unauthenticated clients.'
       pass unauthenticated_client_security_note if unauthenticated_client_security_note.present?
     end
   end

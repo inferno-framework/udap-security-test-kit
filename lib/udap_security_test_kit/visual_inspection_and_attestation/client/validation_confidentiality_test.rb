@@ -11,7 +11,7 @@ module UDAPSecurityTestKit
                           'hl7.fhir.us.udap-security_1.0.0@286'
 
     input :state_parameter_validation,
-          title: "Complies with Validation and Confidentiality",
+          title: 'Complies with Validation and Confidentiality',
           description: %(
             I attest that the client application validates the `state` parameter returned by the Resource Holder in response to an authorization request to ensure it matches the value sent in the original request.
           ),
@@ -35,7 +35,7 @@ module UDAPSecurityTestKit
           optional: true
 
     input :client_credentials_confidentiality,
-          title: "Ensures confidentiality of client passwords and credentials",
+          title: 'Ensures confidentiality of client passwords and credentials',
           description: %(
             I attest that the client application ensures confidentiality of client passwords and other client credentials by securely storing and transmitting them.
           ),

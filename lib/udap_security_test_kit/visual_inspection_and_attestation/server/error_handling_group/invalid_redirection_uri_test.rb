@@ -8,7 +8,7 @@ module UDAPSecurityTestKit
     verifies_requirements 'hl7.fhir.us.udap-security_1.0.0@242'
 
     input :invalid_redirection_uri_handling_correct,
-          title: "Error Handling: Handles Invalid redirection URI correctly",
+          title: 'Error Handling: Handles Invalid redirection URI correctly',
           description: %(
             I attest that the Authorization Server does NOT redirect the user-agent to an invalid redirection URI when the request fails due to a missing or invalid redirection URI.
           ),
@@ -33,7 +33,7 @@ module UDAPSecurityTestKit
 
     run do
       assert invalid_redirection_uri_handling_correct == 'true',
-              'Authorization Server redirects the user-agent to an invalid redirection URI when the request fails due to a missing or invalid URI.'
+             'Authorization Server redirects the user-agent to an invalid redirection URI when the request fails due to a missing or invalid URI.'
       pass invalid_redirection_uri_handling_note if invalid_redirection_uri_handling_note.present?
     end
   end

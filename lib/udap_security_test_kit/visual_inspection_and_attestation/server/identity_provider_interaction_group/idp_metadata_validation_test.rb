@@ -10,7 +10,7 @@ module UDAPSecurityTestKit
     verifies_requirements 'hl7.fhir.us.udap-security_1.0.0@238'
 
     input :idp_metadata_validation_correct,
-          title: "Interaction with Identity Providers (IdPs): Validates IdP metadata to determine trust",
+          title: 'Interaction with Identity Providers (IdPs): Validates IdP metadata to determine trust',
           description: %(
             I attest that the Data Holder validates the IdP’s UDAP metadata to determine trustworthiness, including:
             - Verifying the authenticity of the metadata.
@@ -37,7 +37,7 @@ module UDAPSecurityTestKit
 
     run do
       assert idp_metadata_validation_correct == 'true',
-              'Data Holder does not validate the IdP’s UDAP metadata to determine trustworthiness.'
+             'Data Holder does not validate the IdP’s UDAP metadata to determine trustworthiness.'
       pass idp_metadata_validation_note if idp_metadata_validation_note.present?
     end
   end

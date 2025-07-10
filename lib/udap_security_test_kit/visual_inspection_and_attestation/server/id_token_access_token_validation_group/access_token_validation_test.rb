@@ -11,7 +11,7 @@ module UDAPSecurityTestKit
                           'hl7.fhir.us.udap-security_1.0.0@290'
 
     input :access_token_validation_correct,
-          title: "ID Token and Access Token Validation: Validates access token correctly",
+          title: 'ID Token and Access Token Validation: Validates access token correctly',
           description: %(
             I attest that the Data Holder validates the Access Token as per the Access Token validation rules, including:
             - Verifying the token's integrity.
@@ -38,7 +38,7 @@ module UDAPSecurityTestKit
 
     run do
       assert access_token_validation_correct == 'true',
-              'Access Token validation is not implemented correctly as per the Access Token validation rules.'
+             'Access Token validation is not implemented correctly as per the Access Token validation rules.'
       pass access_token_validation_note if access_token_validation_note.present?
     end
   end

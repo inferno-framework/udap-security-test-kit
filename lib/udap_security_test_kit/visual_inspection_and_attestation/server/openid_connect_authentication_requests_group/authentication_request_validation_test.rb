@@ -23,7 +23,7 @@ module UDAPSecurityTestKit
                           'hl7.fhir.us.udap-security_1.0.0@269'
 
     input :auth_request_validation_correct,
-          title: "OpenID Connect Authentication Requests: Complies with OpenID Connect requirements in validation",
+          title: 'OpenID Connect Authentication Requests: Complies with OpenID Connect requirements in validation',
           description: %(
             I attest that the Authorization Server complies with OpenID Connect requirements and ensures:
             - Validation of all OAuth 2.0 parameters.
@@ -53,7 +53,7 @@ module UDAPSecurityTestKit
 
     run do
       assert auth_request_validation_correct == 'true',
-              'Authentication Request Validation does not comply with OpenID Connect requirements.'
+             'Authentication Request Validation does not comply with OpenID Connect requirements.'
       pass auth_request_validation_note if auth_request_validation_note.present?
     end
   end

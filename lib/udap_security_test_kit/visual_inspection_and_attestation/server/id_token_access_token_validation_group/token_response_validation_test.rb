@@ -12,7 +12,7 @@ module UDAPSecurityTestKit
                           'hl7.fhir.us.udap-security_1.0.0@285'
 
     input :token_response_validation_correct,
-          title: "ID Token and Access Token Validation: Validates token response correctly",
+          title: 'ID Token and Access Token Validation: Validates token response correctly',
           description: %(
             I attest that the Client validates the Token Response as per RFC 6749 and OIDC Core specifications, including:
             - Ensuring the presence of `access_token` and `token_type` parameters.
@@ -39,7 +39,7 @@ module UDAPSecurityTestKit
 
     run do
       assert token_response_validation_correct == 'true',
-              'Token Response validation is not implemented correctly as per RFC 6749 and OIDC Core specifications.'
+             'Token Response validation is not implemented correctly as per RFC 6749 and OIDC Core specifications.'
       pass token_response_validation_note if token_response_validation_note.present?
     end
   end

@@ -10,7 +10,7 @@ module UDAPSecurityTestKit
                           'hl7.fhir.us.udap-security_1.0.0@224'
 
     input :private_key_authentication_correctly,
-          title: "Uses private key authentication correctly",
+          title: 'Uses private key authentication correctly',
           description: %(
             I attest that the client application uses private key authentication correctly by:
             - Omitting the HTTP Authorization header and client secret in token endpoint requests when authenticating with a private key and Authentication Token.
@@ -36,7 +36,7 @@ module UDAPSecurityTestKit
 
     run do
       assert private_key_authentication_correctly == 'true',
-              'Client application did not demonstrate correct private key authentication.'
+             'Client application did not demonstrate correct private key authentication.'
       pass private_key_authentication_correctly_note if private_key_authentication_correctly_note.present?
     end
   end

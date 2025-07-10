@@ -10,7 +10,7 @@ module UDAPSecurityTestKit
     verifies_requirements 'hl7.fhir.us.udap-security_1.0.0@239'
 
     input :idp_dynamic_registration_correct,
-          title: "Interaction with Identity Providers (IdPs): Performs IdP dynamic registration if supported",
+          title: 'Interaction with Identity Providers (IdPs): Performs IdP dynamic registration if supported',
           description: %(
             I attest that the Data Holder registers as a client with the IdP if:
             - The IdP is trusted.
@@ -37,7 +37,7 @@ module UDAPSecurityTestKit
 
     run do
       assert idp_dynamic_registration_correct == 'true',
-              'Data Holder does not register as a client with the IdP when it is trusted and supports UDAP Dynamic Registration.'
+             'Data Holder does not register as a client with the IdP when it is trusted and supports UDAP Dynamic Registration.'
       pass idp_dynamic_registration_note if idp_dynamic_registration_note.present?
     end
   end

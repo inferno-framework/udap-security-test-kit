@@ -13,7 +13,7 @@ module UDAPSecurityTestKit
                           'hl7.fhir.us.udap-security_1.0.0@109'
 
     input :dynamic_client_registration_validation_correct,
-          title: "Dynamic Client Registration: Validates requests correctly",
+          title: 'Dynamic Client Registration: Validates requests correctly',
           description: %(
             I attest that the Authorization Server validates dynamic client registration requests by:
             - Ensuring the `sub` value matches the `iss` value.
@@ -41,7 +41,7 @@ module UDAPSecurityTestKit
 
     run do
       assert dynamic_client_registration_validation_correct == 'true',
-              'Authorization Server did not validate dynamic client registration requests correctly.'
+             'Authorization Server did not validate dynamic client registration requests correctly.'
       pass dynamic_client_registration_validation_note if dynamic_client_registration_validation_note.present?
     end
   end

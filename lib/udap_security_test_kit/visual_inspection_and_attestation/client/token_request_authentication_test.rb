@@ -11,7 +11,7 @@ module UDAPSecurityTestKit
                           'openid.connect.core@280'
 
     input :token_request_authentication_correctly,
-          title: "Authenticates correctly when making token requests",
+          title: 'Authenticates correctly when making token requests',
           description: %(
             I attest that the client application authenticates correctly when making token requests by:
             - Including the `client_id` parameter in the token request if the client is not authenticating with the authorization server.
@@ -38,7 +38,7 @@ module UDAPSecurityTestKit
 
     run do
       assert token_request_authentication_correctly == 'true',
-              'Client application did not demonstrate correct authentication during token requests.'
+             'Client application did not demonstrate correct authentication during token requests.'
       pass token_request_authentication_correctly_note if token_request_authentication_correctly_note.present?
     end
   end

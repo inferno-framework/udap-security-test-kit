@@ -8,7 +8,7 @@ module UDAPSecurityTestKit
     verifies_requirements 'hl7.fhir.us.udap-security_1.0.0@61'
 
     input :community_query_parameter_compliance,
-          title: "Complies with Trust Community and Query Parameter",
+          title: 'Complies with Trust Community and Query Parameter',
           description: %(
             I attest that the client application ensures the value of the `community` query parameter is a valid URI as determined by the trust community.
           ),

@@ -9,7 +9,7 @@ module UDAPSecurityTestKit
     verifies_requirements 'hl7.fhir.us.udap-security_1.0.0@159'
 
     input :jti_reuse_prevention_correctly,
-          title: "Prevents reuse of JTI values in authentication tokens",
+          title: 'Prevents reuse of JTI values in authentication tokens',
           description: %(
             I attest that the client application prevents reuse of JTI values in authentication tokens by:
             - Ensuring the `jti` parameter is not reused in another authentication JWT before the time specified in the `exp` claim has passed.
@@ -35,7 +35,7 @@ module UDAPSecurityTestKit
 
     run do
       assert jti_reuse_prevention_correctly == 'true',
-              'Client application did not demonstrate prevention of JTI reuse in authentication tokens.'
+             'Client application did not demonstrate prevention of JTI reuse in authentication tokens.'
       pass jti_reuse_prevention_correctly_note if jti_reuse_prevention_correctly_note.present?
     end
   end

@@ -8,7 +8,7 @@ module UDAPSecurityTestKit
     verifies_requirements 'hl7.fhir.us.udap-security_1.0.0@279'
 
     input :idp_token_exchange_correct,
-          title: "Interaction with Identity Providers (IdPs): Exchanges code for tokens after successful authentication response",
+          title: 'Interaction with Identity Providers (IdPs): Exchanges code for tokens after successful authentication response',
           description: %(
             I attest that the Data Holder exchanges the authorization code for tokens after receiving a successful authentication response from the IdP.
           ),
@@ -33,7 +33,7 @@ module UDAPSecurityTestKit
 
     run do
       assert idp_token_exchange_correct == 'true',
-              'Data Holder does not exchange the authorization code for tokens after receiving a successful authentication response from the IdP.'
+             'Data Holder does not exchange the authorization code for tokens after receiving a successful authentication response from the IdP.'
       pass idp_token_exchange_note if idp_token_exchange_note.present?
     end
   end

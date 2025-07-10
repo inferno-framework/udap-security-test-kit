@@ -8,7 +8,7 @@ module UDAPSecurityTestKit
     verifies_requirements 'hl7.fhir.us.udap-security_1.0.0@184'
 
     input :access_token_lifetime_correct,
-          title: "Authorization Code and Token Requests: Limits lifetime of access tokens to no longer than 60 minutes",
+          title: 'Authorization Code and Token Requests: Limits lifetime of access tokens to no longer than 60 minutes',
           description: %(
             I attest that the Authorization Server issues access tokens with a lifetime no longer than 60 minutes for all successful token requests.
           ),
@@ -33,7 +33,7 @@ module UDAPSecurityTestKit
 
     run do
       assert access_token_lifetime_correct == 'true',
-              'Authorization Server did not issue access tokens with a lifetime no longer than 60 minutes.'
+             'Authorization Server did not issue access tokens with a lifetime no longer than 60 minutes.'
       pass access_token_lifetime_note if access_token_lifetime_note.present?
     end
   end

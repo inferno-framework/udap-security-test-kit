@@ -13,7 +13,7 @@ module UDAPSecurityTestKit
                           'hl7.fhir.us.udap-security_1.0.0@277'
 
     input :csrf_protection_implementation,
-          title: "Implements CSRF protection for its redirection URI",
+          title: 'Implements CSRF protection for its redirection URI',
           description: %(
             I attest that the client application implements CSRF protection for its redirection URI to prevent cross-site request forgery attacks.
           ),
@@ -37,7 +37,7 @@ module UDAPSecurityTestKit
           optional: true
 
     input :csrf_binding_value_compliance,
-          title: "Uses a non-guessable binding value for CSRF protection",
+          title: 'Uses a non-guessable binding value for CSRF protection',
           description: %(
             I attest that the client application uses a binding value for CSRF protection that contains a non-guessable value to ensure security.
           ),
@@ -61,7 +61,7 @@ module UDAPSecurityTestKit
           optional: true
 
     input :authenticated_state_protection,
-          title: "Ensures authenticated state is protected by same-origin policy",
+          title: 'Ensures authenticated state is protected by same-origin policy',
           description: %(
             I attest that the client application ensures the user-agent's authenticated state is stored in a location accessible only to the client and user-agent, protected by the same-origin policy.
           ),

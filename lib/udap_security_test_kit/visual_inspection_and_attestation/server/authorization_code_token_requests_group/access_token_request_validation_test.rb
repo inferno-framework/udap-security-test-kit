@@ -15,7 +15,7 @@ module UDAPSecurityTestKit
                           'hl7.fhir.us.udap-security_1.0.0@150'
 
     input :access_token_request_validation_correct,
-          title: "Authorization Code and Token Requests: Validates access token requests correctly",
+          title: 'Authorization Code and Token Requests: Validates access token requests correctly',
           description: %(
             I attest that the Authorization Server validates access token requests by:
             - Requiring client authentication for confidential clients or clients issued credentials.
@@ -44,7 +44,7 @@ module UDAPSecurityTestKit
 
     run do
       assert access_token_request_validation_correct == 'true',
-              'Authorization Server did not validate access token requests correctly.'
+             'Authorization Server did not validate access token requests correctly.'
       pass access_token_request_validation_note if access_token_request_validation_note.present?
     end
   end

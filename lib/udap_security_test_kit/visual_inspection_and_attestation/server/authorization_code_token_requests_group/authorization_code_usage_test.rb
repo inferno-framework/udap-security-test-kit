@@ -11,7 +11,7 @@ module UDAPSecurityTestKit
                           'hl7.fhir.us.udap-security_1.0.0@137'
 
     input :authorization_code_usage_correct,
-          title: "Authorization Code and Token Requests: Ensures Authorization Code is used correctly",
+          title: 'Authorization Code and Token Requests: Ensures Authorization Code is used correctly',
           description: %(
             I attest that the Authorization Server ensures:
             - Authorization codes are not used more than once.
@@ -38,7 +38,7 @@ module UDAPSecurityTestKit
 
     run do
       assert authorization_code_usage_correct == 'true',
-              'Authorization Server did not ensure correct usage of authorization codes.'
+             'Authorization Server did not ensure correct usage of authorization codes.'
       pass authorization_code_usage_note if authorization_code_usage_note.present?
     end
   end

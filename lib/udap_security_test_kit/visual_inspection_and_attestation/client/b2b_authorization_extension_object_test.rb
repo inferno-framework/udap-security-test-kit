@@ -20,7 +20,7 @@ module UDAPSecurityTestKit
                           'hl7.fhir.us.udap-security_1.0.0@221'
 
     input :subject_name_compliance,
-          title: "Includes `subject_name` if known",
+          title: 'Includes `subject_name` if known',
           description: %(
             I attest that the client application includes the `subject_name` parameter if it is known for human or non-human requestors.
           ),
@@ -44,7 +44,7 @@ module UDAPSecurityTestKit
           optional: true
 
     input :subject_id_compliance,
-          title: "Includes `subject_id` for human requestors when `subject_name` is present",
+          title: 'Includes `subject_id` for human requestors when `subject_name` is present',
           description: %(
             I attest that the client application includes the `subject_id` parameter for human requestors when the `subject_name` parameter is present.
           ),
@@ -68,7 +68,7 @@ module UDAPSecurityTestKit
           optional: true
 
     input :subject_id_npi_compliance,
-          title: "Uses NPI for `subject_id` in US Realm human requestors",
+          title: 'Uses NPI for `subject_id` in US Realm human requestors',
           description: %(
             I attest that the client application uses the National Provider Identifier (NPI) as the value for `subject_id` for human requestors in the US Realm.
           ),
@@ -92,7 +92,7 @@ module UDAPSecurityTestKit
           optional: true
 
     input :consent_reference_compliance,
-          title: "Ensures `consent_reference` URLs are resolvable",
+          title: 'Ensures `consent_reference` URLs are resolvable',
           description: %(
             I attest that the client application ensures that the `consent_reference` parameter includes URLs that are resolvable by the receiving party and omits `consent_reference` if `consent_policy` is not present.
           ),

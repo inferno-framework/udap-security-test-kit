@@ -11,7 +11,7 @@ module UDAPSecurityTestKit
                           'hl7.fhir.us.udap-security_1.0.0@188'
 
     input :authorization_code_usage_correctly,
-          title: "Uses authorization code correctly",
+          title: 'Uses authorization code correctly',
           description: %(
             I attest that the client application uses the authorization code correctly by:
             - Ensuring the authorization code is not used more than once.
@@ -38,7 +38,7 @@ module UDAPSecurityTestKit
 
     run do
       assert authorization_code_usage_correctly == 'true',
-              'Client application did not demonstrate correct usage of the authorization code.'
+             'Client application did not demonstrate correct usage of the authorization code.'
       pass authorization_code_usage_correctly_note if authorization_code_usage_correctly_note.present?
     end
   end

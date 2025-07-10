@@ -11,7 +11,7 @@ module UDAPSecurityTestKit
                           'hl7.fhir.us.udap-security_1.0.0@289'
 
     input :id_token_validation_correct,
-          title: "ID Token and Access Token Validation: ID Token is validated correctly",
+          title: 'ID Token and Access Token Validation: ID Token is validated correctly',
           description: %(
             I attest that the Data Holder validates the ID Token as per OIDC Core specifications, including:
             - Verifying the token's signature.
@@ -38,7 +38,7 @@ module UDAPSecurityTestKit
 
     run do
       assert id_token_validation_correct == 'true',
-              'ID Token validation is not implemented correctly as per OIDC Core specifications.'
+             'ID Token validation is not implemented correctly as per OIDC Core specifications.'
       pass id_token_validation_note if id_token_validation_note.present?
     end
   end

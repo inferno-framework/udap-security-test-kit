@@ -11,7 +11,7 @@ module UDAPSecurityTestKit
                           'hl7.fhir.us.udap-security_1.0.0@123'
 
     input :jti_reuse_compliance,
-          title: "Ensures that the `jti` claim in the JWT is not reused before the `exp` claim has passed",
+          title: 'Ensures that the `jti` claim in the JWT is not reused before the `exp` claim has passed',
           description: %(
             I attest that the client application ensures that the `jti` claim in the JWT is not reused in another software statement or authentication JWT before the time specified in the `exp` claim has passed.
           ),
@@ -35,7 +35,7 @@ module UDAPSecurityTestKit
           optional: true
 
     input :grant_types_empty_array_compliance,
-          title: "Interprets empty `grant_types` array as registration cancellation",
+          title: 'Interprets empty `grant_types` array as registration cancellation',
           description: %(
             I attest that the client application interprets a registration response containing an empty `grant_types` array as a confirmation that the registration for the `client_id` listed in the response has been cancelled by the Authorization Server.
           ),

@@ -17,7 +17,7 @@ module UDAPSecurityTestKit
                           'hl7.fhir.us.udap-security_1.0.0@251'
 
     input :auth_request_construction_correct,
-          title: "OpenID Connect Authentication Requests: Complies with OpenID Connect requirements",
+          title: 'OpenID Connect Authentication Requests: Complies with OpenID Connect requirements',
           description: %(
             I attest that the Authorization Server complies with OpenID Connect requirements and ensures:
             - HTTP GET and POST methods are supported at the Authorization Endpoint.
@@ -46,7 +46,7 @@ module UDAPSecurityTestKit
 
     run do
       assert auth_request_construction_correct == 'true',
-              'Authentication Request Construction does not comply with OpenID Connect requirements.'
+             'Authentication Request Construction does not comply with OpenID Connect requirements.'
       pass auth_request_construction_note if auth_request_construction_note.present?
     end
   end

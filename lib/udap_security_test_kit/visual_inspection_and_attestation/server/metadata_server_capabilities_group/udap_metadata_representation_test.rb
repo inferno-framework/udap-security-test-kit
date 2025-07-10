@@ -8,7 +8,7 @@ module UDAPSecurityTestKit
     verifies_requirements 'hl7.fhir.us.udap-security_1.0.0@18'
 
     input :udap_metadata_representation_correct,
-          title: "UDAP Metadata and Server Capabilities: Represents server capabilities correctly",
+          title: 'UDAP Metadata and Server Capabilities: Represents server capabilities correctly',
           description: %(
             I attest that the server's UDAP metadata endpoint correctly represents the server’s capabilities with respect to the UDAP workflows described in the guide.
           ),
@@ -33,7 +33,7 @@ module UDAPSecurityTestKit
 
     run do
       assert udap_metadata_representation_correct == 'true',
-              'Server metadata does not correctly represent the server’s capabilities with respect to UDAP workflows.'
+             'Server metadata does not correctly represent the server’s capabilities with respect to UDAP workflows.'
       pass udap_metadata_representation_note if udap_metadata_representation_note.present?
     end
   end

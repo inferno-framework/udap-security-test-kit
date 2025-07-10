@@ -8,7 +8,7 @@ module UDAPSecurityTestKit
     verifies_requirements 'hl7.fhir.us.udap-security_1.0.0@121'
 
     input :client_id_modification_correct,
-          title: "Dynamic Client Registration: Handles client ID modification correctly",
+          title: 'Dynamic Client Registration: Handles client ID modification correctly',
           description: %(
             I attest that the Authorization Server cancels the registration for the previous `client_id` if it returns a different `client_id` in response to a registration modification request.
           ),
@@ -33,7 +33,7 @@ module UDAPSecurityTestKit
 
     run do
       assert client_id_modification_correct == 'true',
-              'Authorization Server did not handle client ID modification correctly.'
+             'Authorization Server did not handle client ID modification correctly.'
       pass client_id_modification_note if client_id_modification_note.present?
     end
   end

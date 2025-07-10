@@ -11,7 +11,7 @@ module UDAPSecurityTestKit
                           'hl7.fhir.us.udap-security_1.0.0@118'
 
     input :certification_handling_correct,
-          title: "Dynamic Client Registration: Handles certifications correctly",
+          title: 'Dynamic Client Registration: Handles certifications correctly',
           description: %(
             I attest that the Authorization Server handles certifications correctly:
             - Ignores unsupported or unrecognized certifications.
@@ -38,7 +38,7 @@ module UDAPSecurityTestKit
 
     run do
       assert certification_handling_correct == 'true',
-              'Authorization Server did not handle certifications correctly.'
+             'Authorization Server did not handle certifications correctly.'
       pass certification_handling_note if certification_handling_note.present?
     end
   end

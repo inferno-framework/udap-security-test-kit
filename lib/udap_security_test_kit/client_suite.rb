@@ -114,7 +114,7 @@ module UDAPSecurityTestKit
           required_suite_options: {
             client_type: UDAPClientOptions::UDAP_CLIENT_CREDENTIALS
           }
-    
+
     group from: :udap_client_v100_visual_inspection_and_attestation
   end
 end

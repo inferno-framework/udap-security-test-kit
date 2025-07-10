@@ -7,7 +7,6 @@ require_relative 'server/error_handling_group'
 require_relative 'server/security_measures_group'
 require_relative 'server/identity_provider_interaction_group'
 
-
 module UDAPSecurityTestKit
   class ServerAttestationGroup < Inferno::TestGroup
     id :udap_server_v100_visual_inspection_and_attestation

@@ -1,6 +1,6 @@
 module UDAPSecurityTestKit
-  class AuthorizationCodeUsageAttestationTest < Inferno::Test
-    title 'Authorization code is used correctly'
+  class ClientAuthorizationCodeUsageAttestationTest < Inferno::Test
+    title 'Client Authorization code is used correctly'
     id :udap_security_client_auth_code_usage
     description %(
       Client applications SHALL use the authorization code correctly by:

@@ -10,7 +10,7 @@ module UDAPSecurityTestKit
               is a Confidential Client.
     )
     verifies_requirements 'hl7.fhir.us.udap-security_1.0.0@144',
-                          'openid.connect.core@280'
+                          'hl7.fhir.us.udap-security_1.0.0@280'
 
     input :token_request_authentication_correctly,
           title: 'Authenticates correctly when making token requests',

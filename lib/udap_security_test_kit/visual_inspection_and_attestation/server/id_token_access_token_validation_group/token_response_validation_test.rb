@@ -1,17 +1,18 @@
 module UDAPSecurityTestKit
   class TokenResponseValidationAttestationTest < Inferno::Test
-    title 'Token Response is validated correctly'
+    title 'Validates token response correctly'
     id :udap_security_token_response_validation
     description %(
-      The Client MUST validate the Token Response as per RFC 6749 and OIDC Core specifications.
-      This includes ensuring the presence of required parameters such as `access_token` and `token_type`.
+      Client validates the Token Response as per RFC 6749 and OIDC Core specifications, including:
+            - Ensuring the presence of `access_token` and `token_type` parameters.
+            - Validating the response structure and data integrity.
     )
     verifies_requirements 'hl7.fhir.us.udap-security_1.0.0@283',
                           'hl7.fhir.us.udap-security_1.0.0@284',
                           'hl7.fhir.us.udap-security_1.0.0@285'
 
     input :token_response_validation_correct,
-          title: "Token Response is validated correctly",
+          title: "ID Token and Access Token Validation: Validates token response correctly",
           description: %(
             I attest that the Client validates the Token Response as per RFC 6749 and OIDC Core specifications, including:
             - Ensuring the presence of `access_token` and `token_type` parameters.

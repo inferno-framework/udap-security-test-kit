@@ -1,19 +1,19 @@
 module UDAPSecurityTestKit
   class ScopesAndIdentityProviderInteractionAttestationTest < Inferno::Test
-    title 'Scopes and Identity Provider Interaction Compliance'
+    title 'Complies with Scopes and Identity Provider Interaction'
     id :udap_security_scopes_identity_provider_interaction
     description %(
-      Client applications SHALL comply with the requirements for Scopes and Identity Provider Interaction:
-      - The client app indicates the preferred Identity Provider by adding `udap` to the list of scopes in the `scope` query parameter.
-      - The `scope` query parameter of the authentication request SHALL contain at least the values `openid` and `udap`.
-      - The Identity Provider SHALL authenticate the user as per OIDC Core and UDAP Tiered OAuth specifications.
+      Client applications complies with the requirements for Scopes and Identity Provider Interaction:
+      - Client application includes `udap` in the list of scopes provided in the `scope` query parameter to indicate the preferred Identity Provider.
+      - Client application authenticates the user according to the OIDC Core and UDAP Tiered OAuth specifications.
+      - Identity Provider authenticates the user according to the OIDC Core and UDAP Tiered OAuth specifications.
     )
     verifies_requirements 'hl7.fhir.us.udap-security_1.0.0@236',
                           'hl7.fhir.us.udap-security_1.0.0@256',
                           'hl7.fhir.us.udap-security_1.0.0@257'
 
     input :scope_includes_udap,
-          title: "Client application includes `udap` in the `scope` query parameter",
+          title: "Includes `udap` in the `scope` query parameter",
           description: %(
             I attest that the client application includes `udap` in the list of scopes provided in the `scope` query parameter to indicate the preferred Identity Provider.
           ),
@@ -37,7 +37,7 @@ module UDAPSecurityTestKit
           optional: true
 
     input :scope_contains_openid_udap,
-          title: "Client application ensures `scope` query parameter contains `openid` and `udap`",
+          title: "Ensures `scope` query parameter contains `openid` and `udap`",
           description: %(
             I attest that the client application ensures the `scope` query parameter of the authentication request contains at least the values `openid` and `udap`.
           ),
@@ -61,7 +61,7 @@ module UDAPSecurityTestKit
           optional: true
 
     input :idp_authentication_compliance,
-          title: "Identity Provider authenticates user as per OIDC Core and UDAP Tiered OAuth specifications",
+          title: "Authenticates user as per OIDC Core and UDAP Tiered OAuth specifications",
           description: %(
             I attest that the Identity Provider authenticates the user according to the OIDC Core and UDAP Tiered OAuth specifications.
           ),

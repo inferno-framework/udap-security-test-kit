@@ -1,16 +1,17 @@
 module UDAPSecurityTestKit
   class IDTokenValidationAttestationTest < Inferno::Test
-    title 'ID Token is validated correctly'
+    title 'Validates ID Token correctly'
     id :udap_security_id_token_validation
     description %(
-      The Data Holder SHALL validate the ID Token as per OIDC Core specifications.
-      This includes verifying the token's signature, claims, issuer, audience, and expiration.
+      Data Holder validates the ID Token as per OIDC Core specifications, including:
+            - Verifying the token's signature.
+            - Checking claims such as `iss`, `aud`, and `exp`.
     )
     verifies_requirements 'hl7.fhir.us.udap-security_1.0.0@282',
                           'hl7.fhir.us.udap-security_1.0.0@289'
 
     input :id_token_validation_correct,
-          title: "ID Token is validated correctly",
+          title: "ID Token and Access Token Validation: ID Token is validated correctly",
           description: %(
             I attest that the Data Holder validates the ID Token as per OIDC Core specifications, including:
             - Verifying the token's signature.

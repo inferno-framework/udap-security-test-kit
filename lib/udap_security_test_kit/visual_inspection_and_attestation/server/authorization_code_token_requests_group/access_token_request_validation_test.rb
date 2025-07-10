@@ -1,9 +1,9 @@
 module UDAPSecurityTestKit
   class AccessTokenRequestValidationAttestationTest < Inferno::Test
-    title 'Access token request is validated correctly'
+    title 'Validates access token requests correctly'
     id :udap_security_access_token_request_validation
     description %(
-      The Authorization Server SHALL validate access token requests by:
+      The Authorization Server validates access token requests by:
       - Requiring client authentication for confidential clients or clients issued credentials.
       - Authenticating the client if client authentication is included.
       - Verifying that the authorization code is valid.
@@ -15,7 +15,7 @@ module UDAPSecurityTestKit
                           'hl7.fhir.us.udap-security_1.0.0@150'
 
     input :access_token_request_validation_correct,
-          title: "Access token request is validated correctly",
+          title: "Authorization Code and Token Requests: Validates access token requests correctly",
           description: %(
             I attest that the Authorization Server validates access token requests by:
             - Requiring client authentication for confidential clients or clients issued credentials.

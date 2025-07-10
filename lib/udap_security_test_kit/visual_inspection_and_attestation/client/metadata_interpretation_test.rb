@@ -1,11 +1,11 @@
 module UDAPSecurityTestKit
   class MetadataInterpretationAttestationTest < Inferno::Test
-    title 'Client interprets metadata correctly'
+    title 'Interprets metadata correctly'
     id :udap_security_metadata_interpretation
     description %(
-      Client applications SHALL interpret metadata correctly by:
-      - Interpreting an empty array value in metadata as indicating that the corresponding capability is NOT supported by the server.
-      - Using applicable values returned in a server’s UDAP metadata for workflows defined in this guide.
+      Client application interprets metadata correctly by:
+            - Interpreting an empty array value in metadata as indicating that the corresponding capability is NOT supported by the server.
+            - Using applicable values returned in a server’s UDAP metadata for workflows defined in this guide.
     )
     verifies_requirements 'hl7.fhir.us.udap-security_1.0.0@20',
                           'hl7.fhir.us.udap-security_1.0.0@21'

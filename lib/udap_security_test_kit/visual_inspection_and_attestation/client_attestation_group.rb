@@ -1,4 +1,4 @@
-require_relative 'client/authorization_code_usage_test'
+require_relative 'client/client_authorization_code_usage_test'
 require_relative 'client/b2b_authorization_extension_object_test'
 require_relative 'client/client_security_csrf_protection_test'
 require_relative 'client/idp_supports_required_scopes_test'

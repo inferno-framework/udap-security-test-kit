@@ -1,14 +1,14 @@
 module UDAPSecurityTestKit
   class UnauthenticatedUserErrorAttestationTest < Inferno::Test
-    title 'Unauthenticated user error is handled correctly'
+    title 'Handles unauthenticated user error correctly'
     id :udap_security_unauthenticated_user_error
     description %(
-      If the Data Holder cannot resolve the authenticated user, it SHALL return an `access_denied` error response.
+      Data Holder returns an `access_denied` error response when it cannot resolve the authenticated user.
     )
     verifies_requirements 'hl7.fhir.us.udap-security_1.0.0@296'
 
     input :unauthenticated_user_error_handling_correct,
-          title: "Unauthenticated user error is handled correctly",
+          title: "Error Handling: Handles unauthenticated user error correctly",
           description: %(
             I attest that the Data Holder returns an `access_denied` error response when it cannot resolve the authenticated user.
           ),

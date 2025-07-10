@@ -1,14 +1,16 @@
 module UDAPSecurityTestKit
   class CSRFProtectionAttestationTest < Inferno::Test
-    title 'CSRF protection is implemented for the authorization endpoint'
+    title 'Implements CSRF protection for the authorization endpoint'
     id :udap_security_csrf_protection
     description %(
-      The Authorization Server MUST implement CSRF protection for its authorization endpoint to prevent unauthorized or malicious requests.
+      Authorization Server implements CSRF protection for its authorization endpoint, including mechanisms such as:
+            - Use of anti-CSRF tokens.
+            - Validation of `state` parameter to prevent cross-site request forgery.
     )
     verifies_requirements 'hl7.fhir.us.udap-security_1.0.0@278'
 
     input :csrf_protection_implemented,
-          title: "CSRF protection is implemented for the authorization endpoint",
+          title: "Security Measures: Implements CSRF protection for the authorization endpoint",
           description: %(
             I attest that the Authorization Server implements CSRF protection for its authorization endpoint, including mechanisms such as:
             - Use of anti-CSRF tokens.

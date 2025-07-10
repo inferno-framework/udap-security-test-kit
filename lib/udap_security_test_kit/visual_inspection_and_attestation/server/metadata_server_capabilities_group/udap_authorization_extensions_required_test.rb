@@ -1,14 +1,14 @@
 module UDAPSecurityTestKit
   class UDAPAuthorizationExtensionsRequiredAttestationTest < Inferno::Test
-    title 'UDAP Metadata includes required authorization extensions'
+    title 'Includes required authorization extensions'
     id :udap_security_authorization_extensions_required
     description %(
-      If the Authorization Server requires the B2B Authorization Extension Object, the `udap_authorization_extensions_required` list SHALL include `["hl7-b2b"]`.
+      Server's UDAP metadata includes the `udap_authorization_extensions_required` list with `["hl7-b2b"]` if the Authorization Server requires the B2B Authorization Extension Object.
     )
     verifies_requirements 'hl7.fhir.us.udap-security_1.0.0@32'
 
     input :udap_authorization_extensions_required_correct,
-          title: "UDAP Metadata includes required authorization extensions",
+          title: "UDAP Metadata and Server Capabilities: Includes required authorization extensions",
           description: %(
             I attest that the server's UDAP metadata includes the `udap_authorization_extensions_required` list with `["hl7-b2b"]` if the Authorization Server requires the B2B Authorization Extension Object.
           ),

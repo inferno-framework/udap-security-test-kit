@@ -1,14 +1,14 @@
 module UDAPSecurityTestKit
   class AuthenticationRequestValidationAttestationTest < Inferno::Test
-    title 'Authentication Request Validation Compliance'
+    title 'OpenID Connect Authentication Requests: Complies with OpenID Connect requirements in validation'
     id :oidc_auth_request_validation
     description %(
-      The Authorization Server SHALL validate authentication requests according to OpenID Connect requirements, including:
-      - Validation of all OAuth 2.0 parameters.
-      - Verification that the `scope` parameter contains the `openid` value.
-      - Verification of the presence and conformity of required parameters.
-      - Proper handling of the `sub` Claim, `id_token_hint`, and `prompt` parameter.
-      - Implementation of CSRF and Clickjacking protections.
+      Authorization Server complies with OpenID Connect requirements and ensures:
+            - Validation of all OAuth 2.0 parameters.
+            - Verification that the `scope` parameter contains the `openid` value.
+            - Required parameters are present and conform to the specification.
+            - Proper handling of the `sub` Claim, `id_token_hint`, and `prompt` parameter.
+            - Implementation of CSRF and Clickjacking protections.
     )
     verifies_requirements 'hl7.fhir.us.udap-security_1.0.0@258',
                           'hl7.fhir.us.udap-security_1.0.0@259',
@@ -23,9 +23,9 @@ module UDAPSecurityTestKit
                           'hl7.fhir.us.udap-security_1.0.0@269'
 
     input :auth_request_validation_correct,
-          title: "Authentication Request Validation Compliance",
+          title: "OpenID Connect Authentication Requests: Complies with OpenID Connect requirements in validation",
           description: %(
-            I attest that the Authorization Server ensures:
+            I attest that the Authorization Server complies with OpenID Connect requirements and ensures:
             - Validation of all OAuth 2.0 parameters.
             - Verification that the `scope` parameter contains the `openid` value.
             - Required parameters are present and conform to the specification.

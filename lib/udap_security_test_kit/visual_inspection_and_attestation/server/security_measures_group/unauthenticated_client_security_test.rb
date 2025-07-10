@@ -1,14 +1,16 @@
 module UDAPSecurityTestKit
   class UnauthenticatedClientSecurityAttestationTest < Inferno::Test
-    title 'Security measures are considered for unauthenticated clients'
+    title 'Considers security measures for unauthenticated clients'
     id :udap_security_unauthenticated_clients
     description %(
-      The Authorization Server MUST consider security implications of interacting with unauthenticated clients to prevent unauthorized access or misuse.
+        I attest that the Authorization Server considers security implications when interacting with unauthenticated clients, including:
+            - Restricting access to sensitive endpoints.
+            - Implementing rate limiting or other protective measures.
     )
     verifies_requirements 'hl7.fhir.us.udap-security_1.0.0@288'
 
     input :unauthenticated_client_security_measures,
-          title: "Security measures are considered for unauthenticated clients",
+          title: "Security Measures: Considers security measures for unauthenticated clients",
           description: %(
             I attest that the Authorization Server considers security implications when interacting with unauthenticated clients, including:
             - Restricting access to sensitive endpoints.

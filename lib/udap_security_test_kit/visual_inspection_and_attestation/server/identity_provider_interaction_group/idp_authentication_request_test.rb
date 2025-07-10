@@ -1,14 +1,14 @@
 module UDAPSecurityTestKit
   class IdPAuthenticationRequestAttestationTest < Inferno::Test
-    title 'Authentication request is made to the IdP’s authorization endpoint'
+    title 'Performs Authentication request to the IdP’s authorization endpoint'
     id :udap_security_idp_authentication_request
     description %(
-      If the IdP is trusted, the Data Holder SHALL make an authentication request to the IdP’s authorization endpoint.
+      Data Holder makes an authentication request to the IdP’s authorization endpoint when the IdP is trusted.
     )
     verifies_requirements 'hl7.fhir.us.udap-security_1.0.0@245'
 
     input :idp_authentication_request_correct,
-          title: "Authentication request is made to the IdP’s authorization endpoint",
+          title: "Interaction with Identity Providers (IdPs): Performs Authentication request to the IdP’s authorization endpoint",
           description: %(
             I attest that the Data Holder makes an authentication request to the IdP’s authorization endpoint when the IdP is trusted.
           ),

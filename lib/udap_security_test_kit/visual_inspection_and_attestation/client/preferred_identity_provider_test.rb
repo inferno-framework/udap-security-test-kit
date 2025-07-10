@@ -1,17 +1,17 @@
 module UDAPSecurityTestKit
   class PreferredIdentityProviderAttestationTest < Inferno::Test
-    title 'Client indicates preferred Identity Provider'
+    title 'Indicates preferred Identity Provider'
     id :udap_security_preferred_idp
     description %(
-      Client applications SHALL indicate the preferred Identity Provider (IdP) to the data holder by:
-      - Adding `udap` to the list of scopes provided in the `scope` query parameter.
-      - Adding the extension query parameter `idp` with a value equal to the base URL of the preferred OIDC IdP.
+      Client application indicates the preferred Identity Provider (IdP) to the data holder by:
+            - Adding `udap` to the list of scopes provided in the `scope` query parameter.
+            - Adding the extension query parameter `idp` with a value equal to the base URL of the preferred OIDC IdP.
     )
     verifies_requirements 'hl7.fhir.us.udap-security_1.0.0@236',
                           'hl7.fhir.us.udap-security_1.0.0@237'
 
     input :indicates_preferred_idp,
-          title: "Client indicates preferred Identity Provider",
+          title: "Indicates preferred Identity Provider",
           description: %(
             I attest that the client application indicates the preferred Identity Provider (IdP) to the data holder by:
             - Adding `udap` to the list of scopes provided in the `scope` query parameter.

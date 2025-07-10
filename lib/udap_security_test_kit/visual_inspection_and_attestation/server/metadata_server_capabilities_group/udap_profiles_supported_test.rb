@@ -1,14 +1,14 @@
 module UDAPSecurityTestKit
   class UDAPProfilesSupportedAttestationTest < Inferno::Test
-    title 'UDAP Metadata includes supported profiles'
+    title 'Includes supported profiles'
     id :udap_security_profiles_supported
     description %(
-      If the server supports the user authentication workflow described in Section 6, the `udap_profiles_supported` element SHALL include `udap_to` for UDAP Tiered OAuth for User Authentication.
+      Server's UDAP metadata includes the `udap_profiles_supported` element with `udap_to` if the server supports the user authentication workflow described in Section 6.
     )
     verifies_requirements 'hl7.fhir.us.udap-security_1.0.0@27'
 
     input :udap_profiles_supported_correct,
-          title: "UDAP Metadata includes supported profiles",
+          title: "UDAP Metadata and Server Capabilities: Includes supported profiles",
           description: %(
             I attest that the server's UDAP metadata includes the `udap_profiles_supported` element with `udap_to` if the server supports the user authentication workflow described in Section 6.
           ),

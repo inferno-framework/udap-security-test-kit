@@ -1,14 +1,16 @@
 module UDAPSecurityTestKit
   class IdPMetadataValidationAttestationTest < Inferno::Test
-    title 'IdP metadata is validated to determine trust'
+    title 'Validates IdP metadata to determine trust'
     id :udap_security_idp_metadata_validation
     description %(
-      The Data Holder SHALL validate the IdP’s UDAP metadata to determine trustworthiness before interacting with the IdP.
+      Data Holder validates the IdP’s UDAP metadata to determine trustworthiness, including:
+            - Verifying the authenticity of the metadata.
+            - Ensuring the metadata meets UDAP specifications.
     )
     verifies_requirements 'hl7.fhir.us.udap-security_1.0.0@238'
 
     input :idp_metadata_validation_correct,
-          title: "IdP metadata is validated to determine trust",
+          title: "Interaction with Identity Providers (IdPs): Validates IdP metadata to determine trust",
           description: %(
             I attest that the Data Holder validates the IdP’s UDAP metadata to determine trustworthiness, including:
             - Verifying the authenticity of the metadata.

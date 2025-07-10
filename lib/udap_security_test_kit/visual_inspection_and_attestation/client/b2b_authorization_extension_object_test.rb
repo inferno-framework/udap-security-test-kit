@@ -1,14 +1,14 @@
 module UDAPSecurityTestKit
   class B2BAuthorizationExtensionObjectAttestationTest < Inferno::Test
-    title 'B2B Authorization Extension Object Compliance'
+    title 'Complies with B2B Authorization Extension Object'
     id :udap_security_b2b_authorization_extension_object
     description %(
-      Client applications SHALL comply with the requirements for the B2B Authorization Extension Object:
-      - `subject_name` SHALL be required if known for human or non-human requestors.
-      - `subject_id` SHALL be required if known for human requestors when `subject_name` is present.
-      - `subject_id` SHALL be the National Provider Identifier (NPI) for US Realm human requestors.
-      - `subject_id` SHALL be omitted for non-human requestors or requestors without an NPI.
-      - `consent_reference` SHALL include resolvable URLs and SHALL be omitted if `consent_policy` is not present.
+      Client applications complies with requirements for the B2B Authorization Extension Object and:
+      - Includes `subject_name` parameter if it is known for human or non-human requestors.
+      - Includes `subject_id` parameter for human requestors when the `subject_name` parameter is present.
+      - Uses the National Provider Identifier (NPI) as the value for `subject_id` for human requestors in the US Realm.
+      - Ensures that the `consent_reference` parameter includes URLs that are resolvable by the receiving party
+      - Omits `consent_reference` if `consent_policy` is not present.
     )
     verifies_requirements 'hl7.fhir.us.udap-security_1.0.0@203',
                           'hl7.fhir.us.udap-security_1.0.0@204',
@@ -20,7 +20,7 @@ module UDAPSecurityTestKit
                           'hl7.fhir.us.udap-security_1.0.0@221'
 
     input :subject_name_compliance,
-          title: "Client application includes `subject_name` if known",
+          title: "Includes `subject_name` if known",
           description: %(
             I attest that the client application includes the `subject_name` parameter if it is known for human or non-human requestors.
           ),
@@ -44,7 +44,7 @@ module UDAPSecurityTestKit
           optional: true
 
     input :subject_id_compliance,
-          title: "Client application includes `subject_id` for human requestors when `subject_name` is present",
+          title: "Includes `subject_id` for human requestors when `subject_name` is present",
           description: %(
             I attest that the client application includes the `subject_id` parameter for human requestors when the `subject_name` parameter is present.
           ),
@@ -68,7 +68,7 @@ module UDAPSecurityTestKit
           optional: true
 
     input :subject_id_npi_compliance,
-          title: "Client application uses NPI for `subject_id` in US Realm human requestors",
+          title: "Uses NPI for `subject_id` in US Realm human requestors",
           description: %(
             I attest that the client application uses the National Provider Identifier (NPI) as the value for `subject_id` for human requestors in the US Realm.
           ),
@@ -92,7 +92,7 @@ module UDAPSecurityTestKit
           optional: true
 
     input :consent_reference_compliance,
-          title: "Client application ensures `consent_reference` URLs are resolvable",
+          title: "Ensures `consent_reference` URLs are resolvable",
           description: %(
             I attest that the client application ensures that the `consent_reference` parameter includes URLs that are resolvable by the receiving party and omits `consent_reference` if `consent_policy` is not present.
           ),

@@ -1,16 +1,16 @@
 module UDAPSecurityTestKit
   class PrivateKeyAuthenticationAttestationTest < Inferno::Test
-    title 'Client uses private key authentication correctly'
+    title 'Uses private key authentication correctly'
     id :udap_security_private_key_authentication
     description %(
-      Client applications SHALL use private key authentication correctly by:
-      - Omitting the HTTP Authorization header and client secret in token endpoint requests when authenticating with a private key and Authentication Token.
+      Client application uses private key authentication correctly by:
+            - Omitting the HTTP Authorization header and client secret in token endpoint requests when authenticating with a private key and Authentication Token.
     )
     verifies_requirements 'hl7.fhir.us.udap-security_1.0.0@164',
                           'hl7.fhir.us.udap-security_1.0.0@224'
 
     input :private_key_authentication_correctly,
-          title: "Client uses private key authentication correctly",
+          title: "Uses private key authentication correctly",
           description: %(
             I attest that the client application uses private key authentication correctly by:
             - Omitting the HTTP Authorization header and client secret in token endpoint requests when authenticating with a private key and Authentication Token.

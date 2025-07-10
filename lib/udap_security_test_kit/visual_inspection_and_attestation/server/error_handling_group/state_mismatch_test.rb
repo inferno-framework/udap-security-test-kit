@@ -1,6 +1,6 @@
 module UDAPSecurityTestKit
   class StateMismatchErrorAttestationTest < Inferno::Test
-    title 'State mismatch error is handled correctly'
+    title 'Handles state mismatch error correctly'
     id :udap_security_state_mismatch_error
     description %(
       If the `state` parameter does NOT match, the Resource Holder MUST terminate the workflow and redirect with a `server_error`.
@@ -8,7 +8,7 @@ module UDAPSecurityTestKit
     verifies_requirements 'hl7.fhir.us.udap-security_1.0.0@271'
 
     input :state_mismatch_error_handling_correct,
-          title: "State mismatch error is handled correctly",
+          title: "Error Handling: State mismatch error is handled correctly",
           description: %(
             I attest that the Resource Holder terminates the workflow and redirects with a `server_error` when the `state` parameter does NOT match.
           ),

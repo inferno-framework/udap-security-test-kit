@@ -1,14 +1,14 @@
 module UDAPSecurityTestKit
   class InvalidRedirectionURIAttestationTest < Inferno::Test
-    title 'Invalid redirection URI is handled correctly'
+    title 'Handles invalid redirection URI correctly'
     id :udap_security_invalid_redirection_uri
     description %(
-      The Authorization Server MUST NOT redirect the user-agent to an invalid redirection URI if the request fails due to a missing or invalid redirection URI.
+      The Authorization Server does NOT redirect the user-agent to an invalid redirection URI when the request fails due to a missing or invalid redirection URI.
     )
     verifies_requirements 'hl7.fhir.us.udap-security_1.0.0@242'
 
     input :invalid_redirection_uri_handling_correct,
-          title: "Invalid redirection URI is handled correctly",
+          title: "Error Handling: Handles Invalid redirection URI correctly",
           description: %(
             I attest that the Authorization Server does NOT redirect the user-agent to an invalid redirection URI when the request fails due to a missing or invalid redirection URI.
           ),

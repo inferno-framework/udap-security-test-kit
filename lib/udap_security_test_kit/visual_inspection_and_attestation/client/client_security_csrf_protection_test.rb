@@ -1,19 +1,19 @@
 module UDAPSecurityTestKit
   class ClientSecurityAndCSRFProtectionAttestationTest < Inferno::Test
-    title 'Client Security and CSRF Protection Compliance'
+    title 'Complies with Client Security and CSRF Protection'
     id :udap_security_client_security_csrf_protection
     description %(
-      Client applications SHALL comply with the requirements for Client Security and CSRF Protection:
-      - Implement CSRF protection for its redirection URI.
-      - Use a binding value for CSRF protection that contains a non-guessable value.
-      - Ensure the user-agent's authenticated state is accessible only to the client and user-agent, protected by the same-origin policy.
+      Client applications complies with the requirements for Client Security and CSRF Protection:
+      - Implements CSRF protection for its redirection URI.
+      - Uses a binding value for CSRF protection that contains a non-guessable value.
+      - Ensures the user-agent's authenticated state is accessible only to the client and user-agent, protected by the same-origin policy.
     )
     verifies_requirements 'hl7.fhir.us.udap-security_1.0.0@275',
                           'hl7.fhir.us.udap-security_1.0.0@276',
                           'hl7.fhir.us.udap-security_1.0.0@277'
 
     input :csrf_protection_implementation,
-          title: "Client application implements CSRF protection for its redirection URI",
+          title: "Implements CSRF protection for its redirection URI",
           description: %(
             I attest that the client application implements CSRF protection for its redirection URI to prevent cross-site request forgery attacks.
           ),
@@ -37,7 +37,7 @@ module UDAPSecurityTestKit
           optional: true
 
     input :csrf_binding_value_compliance,
-          title: "Client application uses a non-guessable binding value for CSRF protection",
+          title: "Uses a non-guessable binding value for CSRF protection",
           description: %(
             I attest that the client application uses a binding value for CSRF protection that contains a non-guessable value to ensure security.
           ),
@@ -61,7 +61,7 @@ module UDAPSecurityTestKit
           optional: true
 
     input :authenticated_state_protection,
-          title: "Client application ensures authenticated state is protected by same-origin policy",
+          title: "Ensures authenticated state is protected by same-origin policy",
           description: %(
             I attest that the client application ensures the user-agent's authenticated state is stored in a location accessible only to the client and user-agent, protected by the same-origin policy.
           ),

@@ -1,14 +1,14 @@
 module UDAPSecurityTestKit
   class ClientIDModificationAttestationTest < Inferno::Test
-    title 'Authorization Server handles client ID modification correctly'
+    title 'Handles client ID modification correctly'
     id :udap_security_client_id_modification
     description %(
-      If the Authorization Server returns a different `client_id` in response to a registration modification request, it SHALL cancel the registration for the previous `client_id`.
+      Authorization Server cancels the registration for the previous `client_id` if it returns a different `client_id` in response to a registration modification request.
     )
     verifies_requirements 'hl7.fhir.us.udap-security_1.0.0@121'
 
     input :client_id_modification_correct,
-          title: "Authorization Server handles client ID modification correctly",
+          title: "Dynamic Client Registration: Handles client ID modification correctly",
           description: %(
             I attest that the Authorization Server cancels the registration for the previous `client_id` if it returns a different `client_id` in response to a registration modification request.
           ),

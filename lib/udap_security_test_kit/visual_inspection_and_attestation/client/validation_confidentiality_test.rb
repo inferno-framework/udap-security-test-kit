@@ -1,17 +1,17 @@
 module UDAPSecurityTestKit
   class ValidationAndConfidentialityAttestationTest < Inferno::Test
-    title 'Validation and Confidentiality Compliance'
+    title 'Complies with Validation and Confidentiality'
     id :udap_security_validation_confidentiality
     description %(
-      Client applications SHALL comply with the requirements for Validation and Confidentiality:
-      - Validate the `state` parameter returned by the Resource Holder in response to an authorization request.
-      - Ensure confidentiality of client passwords and other client credentials.
+      Client applications complies with the requirements for Validation and Confidentiality:
+      - Validates the `state` parameter returned by the Resource Holder in response to an authorization request to ensure it matches the value sent in the original request.
+      - Ensures confidentiality of client passwords and other client credentials by securely storing and transmitting them.
     )
     verifies_requirements 'hl7.fhir.us.udap-security_1.0.0@274',
                           'hl7.fhir.us.udap-security_1.0.0@286'
 
     input :state_parameter_validation,
-          title: "Client application validates the `state` parameter returned by the Resource Holder",
+          title: "Complies with Validation and Confidentiality",
           description: %(
             I attest that the client application validates the `state` parameter returned by the Resource Holder in response to an authorization request to ensure it matches the value sent in the original request.
           ),
@@ -35,7 +35,7 @@ module UDAPSecurityTestKit
           optional: true
 
     input :client_credentials_confidentiality,
-          title: "Client application ensures confidentiality of client passwords and credentials",
+          title: "Ensures confidentiality of client passwords and credentials",
           description: %(
             I attest that the client application ensures confidentiality of client passwords and other client credentials by securely storing and transmitting them.
           ),

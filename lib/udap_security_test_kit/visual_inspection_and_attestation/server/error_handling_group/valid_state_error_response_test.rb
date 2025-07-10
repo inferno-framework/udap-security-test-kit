@@ -1,14 +1,14 @@
 module UDAPSecurityTestKit
   class ValidStateErrorResponseAttestationTest < Inferno::Test
-    title 'Valid state error response is handled correctly'
+    title 'Handles valid state error correctly'
     id :udap_security_valid_state_error_response
     description %(
-      If the `state` value is valid on an error response, the Resource Holder MUST redirect with an `access_denied` error code.
+      Resource Holder redirects with an `access_denied` error code when the `state` value is valid on an error response.
     )
     verifies_requirements 'hl7.fhir.us.udap-security_1.0.0@273'
 
     input :valid_state_error_response_handling_correct,
-          title: "Valid state error response is handled correctly",
+          title: "Error Handling: Handles valid state error correctly",
           description: %(
             I attest that the Resource Holder redirects with an `access_denied` error code when the `state` value is valid on an error response.
           ),

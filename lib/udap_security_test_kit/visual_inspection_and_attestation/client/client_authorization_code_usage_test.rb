@@ -1,17 +1,17 @@
 module UDAPSecurityTestKit
   class ClientAuthorizationCodeUsageAttestationTest < Inferno::Test
-    title 'Client Authorization code is used correctly'
+    title 'Uses authorization code correctly'
     id :udap_security_client_auth_code_usage
     description %(
-      Client applications SHALL use the authorization code correctly by:
-      - Ensuring the authorization code is not used more than once.
-      - Requesting an authorization code as per Section 4.1.1 of RFC 6749.
+      Client application uses the authorization code correctly by:
+            - Ensuring the authorization code is not used more than once.
+            - Requesting an authorization code as per Section 4.1.1 of RFC 6749.
     )
     verifies_requirements 'hl7.fhir.us.udap-security_1.0.0@136',
                           'hl7.fhir.us.udap-security_1.0.0@188'
 
     input :authorization_code_usage_correctly,
-          title: "Authorization code is used correctly",
+          title: "Uses authorization code correctly",
           description: %(
             I attest that the client application uses the authorization code correctly by:
             - Ensuring the authorization code is not used more than once.

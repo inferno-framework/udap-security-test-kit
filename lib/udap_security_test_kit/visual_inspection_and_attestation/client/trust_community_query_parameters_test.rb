@@ -1,15 +1,14 @@
 module UDAPSecurityTestKit
   class TrustCommunityAndQueryParametersAttestationTest < Inferno::Test
-    title 'Trust Community and Query Parameters Compliance'
+    title 'Complies with Trust Community and Query Parameter'
     id :udap_security_trust_community_query_parameters
     description %(
-      Client applications SHALL comply with the requirements for Trust Community and Query Parameters:
-      - When the client adds the `community` query parameter, the value SHALL be a URI as determined by the trust community.
+      Client application ensures the value of the `community` query parameter is a valid URI as determined by the trust community.
     )
     verifies_requirements 'hl7.fhir.us.udap-security_1.0.0@61'
 
     input :community_query_parameter_compliance,
-          title: "Client application ensures `community` query parameter value is a valid URI",
+          title: "Complies with Trust Community and Query Parameter",
           description: %(
             I attest that the client application ensures the value of the `community` query parameter is a valid URI as determined by the trust community.
           ),

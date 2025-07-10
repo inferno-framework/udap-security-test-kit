@@ -1,15 +1,15 @@
 module UDAPSecurityTestKit
   class JTIReusePreventionAttestationTest < Inferno::Test
-    title 'Client prevents reuse of JTI values in authentication tokens'
+    title 'Prevents reuse of JTI values in authentication tokens'
     id :udap_security_jti_reuse_prevention
     description %(
-      Client applications SHALL prevent reuse of JTI values in authentication tokens by:
-      - Ensuring the `jti` parameter is not reused in another authentication JWT before the time specified in the `exp` claim has passed.
+      Client application prevents reuse of JTI values in authentication tokens by:
+            - Ensuring the `jti` parameter is not reused in another authentication JWT before the time specified in the `exp` claim has passed.
     )
     verifies_requirements 'hl7.fhir.us.udap-security_1.0.0@159'
 
     input :jti_reuse_prevention_correctly,
-          title: "Client prevents reuse of JTI values in authentication tokens",
+          title: "Prevents reuse of JTI values in authentication tokens",
           description: %(
             I attest that the client application prevents reuse of JTI values in authentication tokens by:
             - Ensuring the `jti` parameter is not reused in another authentication JWT before the time specified in the `exp` claim has passed.

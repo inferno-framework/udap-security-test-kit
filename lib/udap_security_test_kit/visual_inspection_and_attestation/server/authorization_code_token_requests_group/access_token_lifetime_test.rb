@@ -1,14 +1,14 @@
 module UDAPSecurityTestKit
   class AccessTokenLifetimeAttestationTest < Inferno::Test
-    title 'Access tokens have a lifetime of no longer than 60 minutes'
+    title 'Limits lifetime of access tokens to no longer than 60 minutes'
     id :udap_security_access_token_lifetime
     description %(
-      The Authorization Server SHALL issue access tokens with a lifetime no longer than 60 minutes for all successful token requests.
+      The Authorization Server issues access tokens with a lifetime no longer than 60 minutes for all successful token requests.
     )
     verifies_requirements 'hl7.fhir.us.udap-security_1.0.0@184'
 
     input :access_token_lifetime_correct,
-          title: "Access tokens have a lifetime of no longer than 60 minutes",
+          title: "Authorization Code and Token Requests: Limits lifetime of access tokens to no longer than 60 minutes",
           description: %(
             I attest that the Authorization Server issues access tokens with a lifetime no longer than 60 minutes for all successful token requests.
           ),

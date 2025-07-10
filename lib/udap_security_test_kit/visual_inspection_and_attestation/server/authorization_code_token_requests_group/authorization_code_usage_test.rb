@@ -1,9 +1,9 @@
 module UDAPSecurityTestKit
   class AuthorizationCodeUsageAttestationTest < Inferno::Test
-    title 'Authorization code is used correctly'
+    title 'Ensures authorization code is used correctly'
     id :udap_security_auth_code_usage
     description %(
-      The Authorization Server SHALL ensure that:
+      The Authorization Server ensures that:
       - Authorization codes are not used more than once.
       - Authorization codes expire shortly after issuance to mitigate the risk of leaks.
     )
@@ -11,7 +11,7 @@ module UDAPSecurityTestKit
                           'hl7.fhir.us.udap-security_1.0.0@137'
 
     input :authorization_code_usage_correct,
-          title: "Authorization code is used correctly",
+          title: "Authorization Code and Token Requests: Ensures Authorization Code is used correctly",
           description: %(
             I attest that the Authorization Server ensures:
             - Authorization codes are not used more than once.

@@ -5,7 +5,7 @@ module UDAPSecurityTestKit
     description %(
       The server's UDAP metadata endpoint SHALL correctly represent the server’s capabilities with respect to the UDAP workflows described in the guide.
     )
-    verifies_requirements 'hl7.fhir.us.udap-security@18'
+    verifies_requirements 'hl7.fhir.us.udap-security_1.0.0@18'
 
     input :udap_metadata_representation_correct,
           title: "UDAP Metadata correctly represents server capabilities",

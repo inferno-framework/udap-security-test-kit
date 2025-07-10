@@ -5,7 +5,7 @@ module UDAPSecurityTestKit
     description %(
       If the IdP returns a successful authentication response, the Data Holder SHALL exchange the authorization code for tokens.
     )
-    verifies_requirements 'hl7.fhir.us.udap-security@279'
+    verifies_requirements 'hl7.fhir.us.udap-security_1.0.0@279'
 
     input :idp_token_exchange_correct,
           title: "Code is exchanged for tokens after successful authentication response",

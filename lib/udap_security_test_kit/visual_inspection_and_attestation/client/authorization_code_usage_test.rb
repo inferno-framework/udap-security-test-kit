@@ -7,8 +7,8 @@ module UDAPSecurityTestKit
       - Ensuring the authorization code is not used more than once.
       - Requesting an authorization code as per Section 4.1.1 of RFC 6749.
     )
-    verifies_requirements 'hl7.fhir.us.udap-security@136',
-                          'hl7.fhir.us.udap-security@188'
+    verifies_requirements 'hl7.fhir.us.udap-security_1.0.0@136',
+                          'hl7.fhir.us.udap-security_1.0.0@188'
 
     input :authorization_code_usage_correctly,
           title: "Authorization code is used correctly",

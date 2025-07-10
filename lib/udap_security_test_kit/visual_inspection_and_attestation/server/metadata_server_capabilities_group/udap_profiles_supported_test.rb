@@ -5,7 +5,7 @@ module UDAPSecurityTestKit
     description %(
       If the server supports the user authentication workflow described in Section 6, the `udap_profiles_supported` element SHALL include `udap_to` for UDAP Tiered OAuth for User Authentication.
     )
-    verifies_requirements 'hl7.fhir.us.udap-security@27'
+    verifies_requirements 'hl7.fhir.us.udap-security_1.0.0@27'
 
     input :udap_profiles_supported_correct,
           title: "UDAP Metadata includes supported profiles",

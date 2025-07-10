@@ -7,8 +7,8 @@ module UDAPSecurityTestKit
       - Ignore unsupported or unrecognized certifications.
       - Communicate required certifications via the `udap_certifications_required` element in its UDAP metadata.
     )
-    verifies_requirements 'hl7.fhir.us.udap-security@116',
-                          'hl7.fhir.us.udap-security@118'
+    verifies_requirements 'hl7.fhir.us.udap-security_1.0.0@116',
+                          'hl7.fhir.us.udap-security_1.0.0@118'
 
     input :certification_handling_correct,
           title: "Authorization Server handles certifications correctly",

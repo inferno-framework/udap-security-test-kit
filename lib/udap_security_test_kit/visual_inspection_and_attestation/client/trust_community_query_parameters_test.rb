@@ -6,7 +6,7 @@ module UDAPSecurityTestKit
       Client applications SHALL comply with the requirements for Trust Community and Query Parameters:
       - When the client adds the `community` query parameter, the value SHALL be a URI as determined by the trust community.
     )
-    verifies_requirements 'hl7.fhir.us.udap-security@61'
+    verifies_requirements 'hl7.fhir.us.udap-security_1.0.0@61'
 
     input :community_query_parameter_compliance,
           title: "Client application ensures `community` query parameter value is a valid URI",

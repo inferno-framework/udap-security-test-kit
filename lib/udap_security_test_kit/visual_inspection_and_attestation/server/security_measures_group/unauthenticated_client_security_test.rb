@@ -5,7 +5,7 @@ module UDAPSecurityTestKit
     description %(
       The Authorization Server MUST consider security implications of interacting with unauthenticated clients to prevent unauthorized access or misuse.
     )
-    verifies_requirements 'hl7.fhir.us.udap-security@288'
+    verifies_requirements 'hl7.fhir.us.udap-security_1.0.0@288'
 
     input :unauthenticated_client_security_measures,
           title: "Security measures are considered for unauthenticated clients",

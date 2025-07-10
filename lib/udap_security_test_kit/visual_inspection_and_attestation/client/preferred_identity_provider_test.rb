@@ -7,8 +7,8 @@ module UDAPSecurityTestKit
       - Adding `udap` to the list of scopes provided in the `scope` query parameter.
       - Adding the extension query parameter `idp` with a value equal to the base URL of the preferred OIDC IdP.
     )
-    verifies_requirements 'hl7.fhir.us.udap-security@236',
-                          'hl7.fhir.us.udap-security@237'
+    verifies_requirements 'hl7.fhir.us.udap-security_1.0.0@236',
+                          'hl7.fhir.us.udap-security_1.0.0@237'
 
     input :indicates_preferred_idp,
           title: "Client indicates preferred Identity Provider",

@@ -7,8 +7,8 @@ module UDAPSecurityTestKit
       - The `jti` claim in the JWT SHALL NOT be reused before the `exp` claim has passed.
       - A registration response with an empty `grant_types` array SHALL be interpreted as a cancellation of the `client_id` registration by the Authorization Server.
     )
-    verifies_requirements 'hl7.fhir.us.udap-security@82',
-                          'hl7.fhir.us.udap-security@123'
+    verifies_requirements 'hl7.fhir.us.udap-security_1.0.0@82',
+                          'hl7.fhir.us.udap-security_1.0.0@123'
 
     input :jti_reuse_compliance,
           title: "Client application does not reuse the `jti` claim before the `exp` claim has passed",

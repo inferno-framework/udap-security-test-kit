@@ -7,7 +7,7 @@ module UDAPSecurityTestKit
       - Including the `client_id` parameter in the token request if the client is not authenticating with the authorization server.
       - Authenticating to the Token Endpoint using the method registered for its `client_id` if the client is a Confidential Client.
     )
-    verifies_requirements 'hl7.fhir.us.udap-security@144',
+    verifies_requirements 'hl7.fhir.us.udap-security_1.0.0@144',
                           'openid.connect.core@280'
 
     input :token_request_authentication_correctly,

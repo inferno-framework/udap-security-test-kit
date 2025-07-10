@@ -6,8 +6,8 @@ module UDAPSecurityTestKit
       The Data Holder SHALL validate the ID Token as per OIDC Core specifications.
       This includes verifying the token's signature, claims, issuer, audience, and expiration.
     )
-    verifies_requirements 'hl7.fhir.us.udap-security@282',
-                          'hl7.fhir.us.udap-security@289'
+    verifies_requirements 'hl7.fhir.us.udap-security_1.0.0@282',
+                          'hl7.fhir.us.udap-security_1.0.0@289'
 
     input :id_token_validation_correct,
           title: "ID Token is validated correctly",

@@ -10,17 +10,17 @@ module UDAPSecurityTestKit
       - Proper handling of the `sub` Claim, `id_token_hint`, and `prompt` parameter.
       - Implementation of CSRF and Clickjacking protections.
     )
-    verifies_requirements 'hl7.fhir.us.udap-security@258',
-                          'hl7.fhir.us.udap-security@259',
-                          'hl7.fhir.us.udap-security@260',
-                          'hl7.fhir.us.udap-security@261',
-                          'hl7.fhir.us.udap-security@262',
-                          'hl7.fhir.us.udap-security@263',
-                          'hl7.fhir.us.udap-security@264',
-                          'hl7.fhir.us.udap-security@265',
-                          'hl7.fhir.us.udap-security@266',
-                          'hl7.fhir.us.udap-security@267',
-                          'hl7.fhir.us.udap-security@269'
+    verifies_requirements 'hl7.fhir.us.udap-security_1.0.0@258',
+                          'hl7.fhir.us.udap-security_1.0.0@259',
+                          'hl7.fhir.us.udap-security_1.0.0@260',
+                          'hl7.fhir.us.udap-security_1.0.0@261',
+                          'hl7.fhir.us.udap-security_1.0.0@262',
+                          'hl7.fhir.us.udap-security_1.0.0@263',
+                          'hl7.fhir.us.udap-security_1.0.0@264',
+                          'hl7.fhir.us.udap-security_1.0.0@265',
+                          'hl7.fhir.us.udap-security_1.0.0@266',
+                          'hl7.fhir.us.udap-security_1.0.0@267',
+                          'hl7.fhir.us.udap-security_1.0.0@269'
 
     input :auth_request_validation_correct,
           title: "Authentication Request Validation Compliance",

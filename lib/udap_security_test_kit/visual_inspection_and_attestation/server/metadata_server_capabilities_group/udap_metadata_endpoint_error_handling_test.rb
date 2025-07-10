@@ -5,7 +5,7 @@ module UDAPSecurityTestKit
     description %(
       If no UDAP workflows are supported, the server SHALL return a `404 Not Found` response to the metadata request.
     )
-    verifies_requirements 'hl7.fhir.us.udap-security@19'
+    verifies_requirements 'hl7.fhir.us.udap-security_1.0.0@19'
 
     input :udap_metadata_error_handling_correct,
           title: "UDAP Metadata endpoint correctly handles unsupported workflows",

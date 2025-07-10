@@ -5,7 +5,7 @@ module UDAPSecurityTestKit
     description %(
       If the `state` parameter does NOT match, the Resource Holder MUST terminate the workflow and redirect with a `server_error`.
     )
-    verifies_requirements 'hl7.fhir.us.udap-security@271'
+    verifies_requirements 'hl7.fhir.us.udap-security_1.0.0@271'
 
     input :state_mismatch_error_handling_correct,
           title: "State mismatch error is handled correctly",

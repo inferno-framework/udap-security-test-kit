@@ -7,8 +7,8 @@ module UDAPSecurityTestKit
       - Interpreting an empty array value in metadata as indicating that the corresponding capability is NOT supported by the server.
       - Using applicable values returned in a server’s UDAP metadata for workflows defined in this guide.
     )
-    verifies_requirements 'hl7.fhir.us.udap-security@20',
-                          'hl7.fhir.us.udap-security@21'
+    verifies_requirements 'hl7.fhir.us.udap-security_1.0.0@20',
+                          'hl7.fhir.us.udap-security_1.0.0@21'
 
     input :interprets_metadata_correctly,
           title: "Interprets metadata correctly",

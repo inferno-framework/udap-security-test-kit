@@ -5,7 +5,7 @@ module UDAPSecurityTestKit
     description %(
       If the IdP is trusted and supports UDAP Dynamic Registration, the Data Holder SHALL register as a client.
     )
-    verifies_requirements 'hl7.fhir.us.udap-security@239'
+    verifies_requirements 'hl7.fhir.us.udap-security_1.0.0@239'
 
     input :idp_dynamic_registration_correct,
           title: "IdP dynamic registration is performed if supported",

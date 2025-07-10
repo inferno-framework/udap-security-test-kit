@@ -5,7 +5,7 @@ module UDAPSecurityTestKit
     description %(
       If the Authorization Server requires the B2B Authorization Extension Object, the `udap_authorization_extensions_required` list SHALL include `["hl7-b2b"]`.
     )
-    verifies_requirements 'hl7.fhir.us.udap-security@32'
+    verifies_requirements 'hl7.fhir.us.udap-security_1.0.0@32'
 
     input :udap_authorization_extensions_required_correct,
           title: "UDAP Metadata includes required authorization extensions",

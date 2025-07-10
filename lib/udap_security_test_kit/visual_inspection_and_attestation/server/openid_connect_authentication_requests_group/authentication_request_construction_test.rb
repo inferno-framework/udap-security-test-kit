@@ -9,12 +9,12 @@ module UDAPSecurityTestKit
       - Presence and validity of required parameters such as `response_type`, `client_id`, and `redirect_uri`.
       - Exact matching of the `redirect_uri` with pre-registered values.
     )
-    verifies_requirements 'hl7.fhir.us.udap-security@246',
-                          'hl7.fhir.us.udap-security@247',
-                          'hl7.fhir.us.udap-security@248',
-                          'hl7.fhir.us.udap-security@249',
-                          'hl7.fhir.us.udap-security@250',
-                          'hl7.fhir.us.udap-security@251'
+    verifies_requirements 'hl7.fhir.us.udap-security_1.0.0@246',
+                          'hl7.fhir.us.udap-security_1.0.0@247',
+                          'hl7.fhir.us.udap-security_1.0.0@248',
+                          'hl7.fhir.us.udap-security_1.0.0@249',
+                          'hl7.fhir.us.udap-security_1.0.0@250',
+                          'hl7.fhir.us.udap-security_1.0.0@251'
 
     input :auth_request_construction_correct,
           title: "Authentication Request Construction Compliance",

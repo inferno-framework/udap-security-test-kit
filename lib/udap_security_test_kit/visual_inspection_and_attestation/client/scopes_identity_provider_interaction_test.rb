@@ -8,9 +8,9 @@ module UDAPSecurityTestKit
       - The `scope` query parameter of the authentication request SHALL contain at least the values `openid` and `udap`.
       - The Identity Provider SHALL authenticate the user as per OIDC Core and UDAP Tiered OAuth specifications.
     )
-    verifies_requirements 'hl7.fhir.us.udap-security@236',
-                          'hl7.fhir.us.udap-security@256',
-                          'hl7.fhir.us.udap-security@257'
+    verifies_requirements 'hl7.fhir.us.udap-security_1.0.0@236',
+                          'hl7.fhir.us.udap-security_1.0.0@256',
+                          'hl7.fhir.us.udap-security_1.0.0@257'
 
     input :scope_includes_udap,
           title: "Client application includes `udap` in the `scope` query parameter",

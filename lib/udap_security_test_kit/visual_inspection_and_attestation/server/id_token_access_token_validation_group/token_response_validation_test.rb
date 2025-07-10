@@ -6,9 +6,9 @@ module UDAPSecurityTestKit
       The Client MUST validate the Token Response as per RFC 6749 and OIDC Core specifications.
       This includes ensuring the presence of required parameters such as `access_token` and `token_type`.
     )
-    verifies_requirements 'hl7.fhir.us.udap-security@283',
-                          'hl7.fhir.us.udap-security@284',
-                          'hl7.fhir.us.udap-security@285'
+    verifies_requirements 'hl7.fhir.us.udap-security_1.0.0@283',
+                          'hl7.fhir.us.udap-security_1.0.0@284',
+                          'hl7.fhir.us.udap-security_1.0.0@285'
 
     input :token_response_validation_correct,
           title: "Token Response is validated correctly",

@@ -6,8 +6,8 @@ module UDAPSecurityTestKit
       The Data Holder SHALL validate the Access Token as per the Access Token validation rules.
       This includes verifying the token's integrity, claims, and expiration.
     )
-    verifies_requirements 'hl7.fhir.us.udap-security@283',
-                          'hl7.fhir.us.udap-security@290'
+    verifies_requirements 'hl7.fhir.us.udap-security_1.0.0@283',
+                          'hl7.fhir.us.udap-security_1.0.0@290'
 
     input :access_token_validation_correct,
           title: "Access Token is validated correctly",

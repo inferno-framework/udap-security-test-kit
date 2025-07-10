@@ -8,9 +8,9 @@ module UDAPSecurityTestKit
       - Ensuring the `aud` value contains the Authorization Server’s registration endpoint URL.
       - Ensuring the software statement is unexpired.
     )
-    verifies_requirements 'hl7.fhir.us.udap-security@107',
-                          'hl7.fhir.us.udap-security@108',
-                          'hl7.fhir.us.udap-security@109'
+    verifies_requirements 'hl7.fhir.us.udap-security_1.0.0@107',
+                          'hl7.fhir.us.udap-security_1.0.0@108',
+                          'hl7.fhir.us.udap-security_1.0.0@109'
 
     input :dynamic_client_registration_validation_correct,
           title: "Dynamic Client Registration request is validated correctly",

@@ -10,14 +10,14 @@ module UDAPSecurityTestKit
       - `subject_id` SHALL be omitted for non-human requestors or requestors without an NPI.
       - `consent_reference` SHALL include resolvable URLs and SHALL be omitted if `consent_policy` is not present.
     )
-    verifies_requirements 'hl7.fhir.us.udap-security@203',
-                          'hl7.fhir.us.udap-security@204',
-                          'hl7.fhir.us.udap-security@205',
-                          'hl7.fhir.us.udap-security@206',
-                          'hl7.fhir.us.udap-security@207',
-                          'hl7.fhir.us.udap-security@219',
-                          'hl7.fhir.us.udap-security@220',
-                          'hl7.fhir.us.udap-security@221'
+    verifies_requirements 'hl7.fhir.us.udap-security_1.0.0@203',
+                          'hl7.fhir.us.udap-security_1.0.0@204',
+                          'hl7.fhir.us.udap-security_1.0.0@205',
+                          'hl7.fhir.us.udap-security_1.0.0@206',
+                          'hl7.fhir.us.udap-security_1.0.0@207',
+                          'hl7.fhir.us.udap-security_1.0.0@219',
+                          'hl7.fhir.us.udap-security_1.0.0@220',
+                          'hl7.fhir.us.udap-security_1.0.0@221'
 
     input :subject_name_compliance,
           title: "Client application includes `subject_name` if known",

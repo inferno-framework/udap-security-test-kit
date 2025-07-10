@@ -5,7 +5,7 @@ module UDAPSecurityTestKit
     description %(
       If the Data Holder cannot resolve the authenticated user, it SHALL return an `access_denied` error response.
     )
-    verifies_requirements 'hl7.fhir.us.udap-security@296'
+    verifies_requirements 'hl7.fhir.us.udap-security_1.0.0@296'
 
     input :unauthenticated_user_error_handling_correct,
           title: "Unauthenticated user error is handled correctly",

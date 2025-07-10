@@ -6,8 +6,8 @@ module UDAPSecurityTestKit
       Client applications SHALL use private key authentication correctly by:
       - Omitting the HTTP Authorization header and client secret in token endpoint requests when authenticating with a private key and Authentication Token.
     )
-    verifies_requirements 'hl7.fhir.us.udap-security@164',
-                          'hl7.fhir.us.udap-security@224'
+    verifies_requirements 'hl7.fhir.us.udap-security_1.0.0@164',
+                          'hl7.fhir.us.udap-security_1.0.0@224'
 
     input :private_key_authentication_correctly,
           title: "Client uses private key authentication correctly",

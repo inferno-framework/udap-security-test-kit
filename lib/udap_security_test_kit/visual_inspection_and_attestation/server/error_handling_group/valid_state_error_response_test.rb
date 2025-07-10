@@ -5,7 +5,7 @@ module UDAPSecurityTestKit
     description %(
       If the `state` value is valid on an error response, the Resource Holder MUST redirect with an `access_denied` error code.
     )
-    verifies_requirements 'hl7.fhir.us.udap-security@273'
+    verifies_requirements 'hl7.fhir.us.udap-security_1.0.0@273'
 
     input :valid_state_error_response_handling_correct,
           title: "Valid state error response is handled correctly",

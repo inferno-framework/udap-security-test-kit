@@ -8,9 +8,9 @@ module UDAPSecurityTestKit
       - Use a binding value for CSRF protection that contains a non-guessable value.
       - Ensure the user-agent's authenticated state is accessible only to the client and user-agent, protected by the same-origin policy.
     )
-    verifies_requirements 'hl7.fhir.us.udap-security@275',
-                          'hl7.fhir.us.udap-security@276',
-                          'hl7.fhir.us.udap-security@277'
+    verifies_requirements 'hl7.fhir.us.udap-security_1.0.0@275',
+                          'hl7.fhir.us.udap-security_1.0.0@276',
+                          'hl7.fhir.us.udap-security_1.0.0@277'
 
     input :csrf_protection_implementation,
           title: "Client application implements CSRF protection for its redirection URI",

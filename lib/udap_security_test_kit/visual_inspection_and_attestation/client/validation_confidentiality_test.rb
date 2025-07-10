@@ -7,8 +7,8 @@ module UDAPSecurityTestKit
       - Validate the `state` parameter returned by the Resource Holder in response to an authorization request.
       - Ensure confidentiality of client passwords and other client credentials.
     )
-    verifies_requirements 'hl7.fhir.us.udap-security@274',
-                          'hl7.fhir.us.udap-security@286'
+    verifies_requirements 'hl7.fhir.us.udap-security_1.0.0@274',
+                          'hl7.fhir.us.udap-security_1.0.0@286'
 
     input :state_parameter_validation,
           title: "Client application validates the `state` parameter returned by the Resource Holder",

@@ -5,7 +5,7 @@ module UDAPSecurityTestKit
     description %(
       If a server supports the `community` parameter and recognizes the URI value, it SHALL select a certificate intended for use within the identified trust community and use that certificate when generating the signed JWT returned for the `signed_metadata` element.
     )
-    verifies_requirements 'hl7.fhir.us.udap-security@62'
+    verifies_requirements 'hl7.fhir.us.udap-security_1.0.0@62'
 
     input :community_parameter_support_correct,
           title: "Server supports community parameter correctly",

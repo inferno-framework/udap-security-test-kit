@@ -9,10 +9,10 @@ module UDAPSecurityTestKit
       - Verifying that the authorization code is valid.
       - Ensuring the `redirect_uri` parameter is present and matches the initial authorization request.
     )
-    verifies_requirements 'hl7.fhir.us.udap-security@146',
-                          'hl7.fhir.us.udap-security@147',
-                          'hl7.fhir.us.udap-security@149',
-                          'hl7.fhir.us.udap-security@150'
+    verifies_requirements 'hl7.fhir.us.udap-security_1.0.0@146',
+                          'hl7.fhir.us.udap-security_1.0.0@147',
+                          'hl7.fhir.us.udap-security_1.0.0@149',
+                          'hl7.fhir.us.udap-security_1.0.0@150'
 
     input :access_token_request_validation_correct,
           title: "Access token request is validated correctly",

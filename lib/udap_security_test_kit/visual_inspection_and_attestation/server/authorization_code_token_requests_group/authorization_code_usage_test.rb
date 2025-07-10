@@ -7,8 +7,8 @@ module UDAPSecurityTestKit
       - Authorization codes are not used more than once.
       - Authorization codes expire shortly after issuance to mitigate the risk of leaks.
     )
-    verifies_requirements 'hl7.fhir.us.udap-security@135',
-                          'hl7.fhir.us.udap-security@137'
+    verifies_requirements 'hl7.fhir.us.udap-security_1.0.0@135',
+                          'hl7.fhir.us.udap-security_1.0.0@137'
 
     input :authorization_code_usage_correct,
           title: "Authorization code is used correctly",

@@ -5,7 +5,7 @@ module UDAPSecurityTestKit
     description %(
       If the IdP does not return an ID Token or validation fails, the Data Holder MAY return an `invalid_idp` error code or attempt alternate authentication.
     )
-    verifies_requirements 'hl7.fhir.us.udap-security@291'
+    verifies_requirements 'hl7.fhir.us.udap-security_1.0.0@291'
 
     input :invalid_id_token_error_handling_correct,
           title: "Invalid ID Token error is handled correctly",

@@ -5,7 +5,7 @@ module UDAPSecurityTestKit
     description %(
       The Authorization Server MUST implement CSRF protection for its authorization endpoint to prevent unauthorized or malicious requests.
     )
-    verifies_requirements 'hl7.fhir.us.udap-security@278'
+    verifies_requirements 'hl7.fhir.us.udap-security_1.0.0@278'
 
     input :csrf_protection_implemented,
           title: "CSRF protection is implemented for the authorization endpoint",

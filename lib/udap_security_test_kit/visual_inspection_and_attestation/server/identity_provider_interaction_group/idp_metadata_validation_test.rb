@@ -5,7 +5,7 @@ module UDAPSecurityTestKit
     description %(
       The Data Holder SHALL validate the IdP’s UDAP metadata to determine trustworthiness before interacting with the IdP.
     )
-    verifies_requirements 'hl7.fhir.us.udap-security@238'
+    verifies_requirements 'hl7.fhir.us.udap-security_1.0.0@238'
 
     input :idp_metadata_validation_correct,
           title: "IdP metadata is validated to determine trust",

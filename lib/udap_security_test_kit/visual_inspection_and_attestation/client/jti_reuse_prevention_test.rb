@@ -4,8 +4,8 @@ module UDAPSecurityTestKit
     id :udap_security_jti_reuse_prevention
     description %(
       Client application prevents reuse of JTI values in authentication tokens by:
-            - Ensuring the `jti` parameter is not reused in another authentication JWT before the time specified
-              in the `exp` claim has passed.
+      - Ensuring the `jti` parameter is not reused in another authentication JWT before the time specified
+        in the `exp` claim has passed.
     )
     verifies_requirements 'hl7.fhir.us.udap-security_1.0.0@159'
 

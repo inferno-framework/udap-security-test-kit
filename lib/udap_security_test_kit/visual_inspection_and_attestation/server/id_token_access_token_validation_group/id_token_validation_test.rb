@@ -4,8 +4,8 @@ module UDAPSecurityTestKit
     id :udap_security_id_token_validation
     description %(
       Data Holder validates the ID Token as per OIDC Core specifications, including:
-            - Verifying the token's signature.
-            - Checking claims such as `iss`, `aud`, and `exp`.
+      - Verifying the token's signature.
+      - Checking claims such as `iss`, `aud`, and `exp`.
     )
     verifies_requirements 'hl7.fhir.us.udap-security_1.0.0@282',
                           'hl7.fhir.us.udap-security_1.0.0@289'

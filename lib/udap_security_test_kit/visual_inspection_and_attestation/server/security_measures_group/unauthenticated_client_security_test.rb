@@ -5,8 +5,8 @@ module UDAPSecurityTestKit
     description %(
         I attest that the Authorization Server considers security implications when interacting with unauthenticated
         clients, including:
-            - Restricting access to sensitive endpoints.
-            - Implementing rate limiting or other protective measures.
+        - Restricting access to sensitive endpoints.
+        - Implementing rate limiting or other protective measures.
     )
     verifies_requirements 'hl7.fhir.us.udap-security_1.0.0@288'
 

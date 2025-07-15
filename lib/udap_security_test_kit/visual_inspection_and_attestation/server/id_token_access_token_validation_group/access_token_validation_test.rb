@@ -5,8 +5,8 @@ module UDAPSecurityTestKit
     description %(
       Data Holder validates the Access Token as per the Access Token validation rules,
       including:
-            - Verifying the token's integrity.
-            - Checking claims such as `exp` and other relevant attributes.
+      - Verifying the token's integrity.
+      - Checking claims such as `exp` and other relevant attributes.
     )
     verifies_requirements 'hl7.fhir.us.udap-security_1.0.0@283',
                           'hl7.fhir.us.udap-security_1.0.0@290'

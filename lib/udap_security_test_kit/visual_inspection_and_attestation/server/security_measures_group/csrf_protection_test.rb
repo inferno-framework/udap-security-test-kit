@@ -4,8 +4,8 @@ module UDAPSecurityTestKit
     id :udap_security_csrf_protection
     description %(
       Authorization Server implements CSRF protection for its authorization endpoint, including mechanisms such as:
-            - Use of anti-CSRF tokens.
-            - Validation of `state` parameter to prevent cross-site request forgery.
+      - Use of anti-CSRF tokens.
+      - Validation of `state` parameter to prevent cross-site request forgery.
     )
     verifies_requirements 'hl7.fhir.us.udap-security_1.0.0@278'
 

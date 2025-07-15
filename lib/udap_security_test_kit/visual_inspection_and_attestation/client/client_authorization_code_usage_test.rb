@@ -4,8 +4,9 @@ module UDAPSecurityTestKit
     id :udap_security_client_auth_code_usage
     description %(
       Client application uses the authorization code correctly by:
-            - Ensuring the authorization code is not used more than once.
-            - Requesting an authorization code as per Section 4.1.1 of RFC 6749.
+      - Ensuring the authorization code is not used more than once.
+      - Requesting an authorization code as per [Section 4.1.1](https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.1)
+        of RFC 6749.
     )
     verifies_requirements 'hl7.fhir.us.udap-security_1.0.0@136',
                           'hl7.fhir.us.udap-security_1.0.0@188'
@@ -15,7 +16,8 @@ module UDAPSecurityTestKit
           description: %(
             I attest that the client application uses the authorization code correctly by:
             - Ensuring the authorization code is not used more than once.
-            - Requesting an authorization code as per Section 4.1.1 of RFC 6749.
+            - Requesting an authorization code as per [Section 4.1.1](https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.1)
+              of RFC 6749.
           ),
           type: 'radio',
           default: 'false',

@@ -4,8 +4,8 @@ module UDAPSecurityTestKit
     id :udap_security_idp_metadata_validation
     description %(
       Data Holder validates the IdP’s UDAP metadata to determine trustworthiness, including:
-            - Verifying the authenticity of the metadata.
-            - Ensuring the metadata meets UDAP specifications.
+      - Verifying the authenticity of the metadata.
+      - Ensuring the metadata meets UDAP specifications.
     )
     verifies_requirements 'hl7.fhir.us.udap-security_1.0.0@238'
 

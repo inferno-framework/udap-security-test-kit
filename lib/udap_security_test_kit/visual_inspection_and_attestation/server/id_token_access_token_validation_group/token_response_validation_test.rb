@@ -4,8 +4,8 @@ module UDAPSecurityTestKit
     id :udap_security_token_response_validation
     description %(
       Client validates the Token Response as per RFC 6749 and OIDC Core specifications, including:
-            - Ensuring the presence of `access_token` and `token_type` parameters.
-            - Validating the response structure and data integrity.
+      - Ensuring the presence of `access_token` and `token_type` parameters.
+      - Validating the response structure and data integrity.
     )
     verifies_requirements 'hl7.fhir.us.udap-security_1.0.0@283',
                           'hl7.fhir.us.udap-security_1.0.0@284',

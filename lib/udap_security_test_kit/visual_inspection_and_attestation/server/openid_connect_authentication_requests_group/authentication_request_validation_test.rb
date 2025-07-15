@@ -4,11 +4,11 @@ module UDAPSecurityTestKit
     id :oidc_auth_request_validation
     description %(
       Authorization Server complies with OpenID Connect requirements and ensures:
-            - Validation of all OAuth 2.0 parameters.
-            - Verification that the `scope` parameter contains the `openid` value.
-            - Required parameters are present and conform to the specification.
-            - Proper handling of the `sub` Claim, `id_token_hint`, and `prompt` parameter.
-            - Implementation of CSRF and Clickjacking protections.
+      - Validation of all OAuth 2.0 parameters.
+      - Verification that the `scope` parameter contains the `openid` value.
+      - Required parameters are present and conform to the specification.
+      - Proper handling of the `sub` Claim, `id_token_hint`, and `prompt` parameter.
+      - Implementation of CSRF and Clickjacking protections.
     )
     verifies_requirements 'hl7.fhir.us.udap-security_1.0.0@258',
                           'hl7.fhir.us.udap-security_1.0.0@259',

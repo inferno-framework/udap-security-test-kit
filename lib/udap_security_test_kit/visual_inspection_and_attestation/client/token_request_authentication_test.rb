@@ -3,11 +3,12 @@ module UDAPSecurityTestKit
     title 'Authenticates correctly when making token requests'
     id :udap_security_token_request_authentication
     description %(
-      Client application authenticates correctly when making token requests by:
-            - Including the `client_id` parameter in the token request if the client is not authenticating with the
-              authorization server.
-            - Authenticating to the Token Endpoint using the method registered for its `client_id` if the client
-              is a Confidential Client.
+      Client application authenticates correctly when making token requests as described in
+      [Section 3.2.1](https://datatracker.ietf.org/doc/html/rfc6749#section-3.2.1) by:
+      - Including the `client_id` parameter in the token request if the client is not authenticating with the
+        authorization server.
+      - Authenticating to the Token Endpoint using the method registered for its `client_id` if the client
+        is a Confidential Client.
     )
     verifies_requirements 'hl7.fhir.us.udap-security_1.0.0@144',
                           'hl7.fhir.us.udap-security_1.0.0@280'
@@ -15,7 +16,8 @@ module UDAPSecurityTestKit
     input :token_request_authentication_correctly,
           title: 'Authenticates correctly when making token requests',
           description: %(
-            I attest that the client application authenticates correctly when making token requests by:
+            I attest that the client application authenticates correctly when making token requests as
+            described in in [Section 3.2.1](https://datatracker.ietf.org/doc/html/rfc6749#section-3.2.1) by:
             - Including the `client_id` parameter in the token request if the client is not authenticating
               with the authorization server.
             - Authenticating to the Token Endpoint using the method registered for its `client_id` if the client

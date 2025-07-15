@@ -4,10 +4,10 @@ module UDAPSecurityTestKit
     id :oidc_auth_request_construction
     description %(
       Authorization Server complies ith OpenID Connect requirements and ensures:
-            - HTTP GET and POST methods are supported at the Authorization Endpoint.
-            - The `openid` scope value is included in requests.
-            - Required parameters (`response_type`, `client_id`, `redirect_uri`) are present and valid.
-            - The `redirect_uri` exactly matches pre-registered values.
+      - HTTP GET and POST methods are supported at the Authorization Endpoint.
+      - The `openid` scope value is included in requests.
+      - Required parameters (`response_type`, `client_id`, `redirect_uri`) are present and valid.
+      - The `redirect_uri` exactly matches pre-registered values.
     )
     verifies_requirements 'hl7.fhir.us.udap-security_1.0.0@246',
                           'hl7.fhir.us.udap-security_1.0.0@247',

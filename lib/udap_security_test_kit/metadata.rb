@@ -26,7 +26,7 @@ module UDAPSecurityTestKit
     last_updated LAST_UPDATED
     version VERSION
     maturity 'Low'
-    authors 'inferno@groups.mitre.org'
+    authors ''
     repo 'https://github.com/inferno-framework/udap-security-test-kit'
   end
 end

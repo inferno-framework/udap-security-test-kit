@@ -4,7 +4,6 @@ Gem::Specification.new do |spec|
   spec.name          = 'udap_security_test_kit'
   spec.version       = UDAPSecurityTestKit::VERSION
   spec.authors       = ['Stephen MacVicar', 'Alisa Wallace']
-  spec.email         = ['inferno@groups.mitre.org']
   spec.summary       = 'UDAP Security IG Test Kit'
   spec.description   = 'UDAP Security IG Test Kit'
   spec.homepage      = 'https://github.com/inferno-framework/udap-security-test-kit'

@@ -1,6 +1,6 @@
 module UDAPSecurityTestKit
   class AuthenticationRequestValidationAttestationTest < Inferno::Test
-    title 'OpenID Connect Authentication Requests: Complies with OpenID Connect requirements in validation'
+    title 'Complies with OpenID Connect requirements in validation'
     id :oidc_auth_request_validation
     description %(
       Authorization Server complies with OpenID Connect requirements and ensures:
@@ -23,7 +23,7 @@ module UDAPSecurityTestKit
                           'hl7.fhir.us.udap-security_1.0.0@269'
 
     input :auth_request_validation_correct,
-          title: 'OpenID Connect Authentication Requests: Complies with OpenID Connect requirements in validation',
+          title: 'Authentication Requests: Complies with OpenID Connect requirements in validation',
           description: %(
             I attest that the Authorization Server complies with OpenID Connect requirements and ensures:
             - Validation of all OAuth 2.0 parameters.

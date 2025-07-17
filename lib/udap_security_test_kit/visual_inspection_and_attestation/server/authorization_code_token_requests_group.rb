@@ -1,6 +1,7 @@
 require_relative 'authorization_code_token_requests_group/authorization_code_usage_test'
 require_relative 'authorization_code_token_requests_group/access_token_request_validation_test'
 require_relative 'authorization_code_token_requests_group/access_token_lifetime_test'
+require_relative 'authorization_code_token_requests_group/resource_holder_authorization_flow_test'
 
 module UDAPSecurityTestKit
   class AuthorizationCodeTokenRequestsAttestationGroup < Inferno::TestGroup
@@ -11,5 +12,6 @@ module UDAPSecurityTestKit
     test from: :udap_security_auth_code_usage
     test from: :udap_security_access_token_request_validation
     test from: :udap_security_access_token_lifetime
+    test from: :udap_security_authorization_code_flow
   end
 end

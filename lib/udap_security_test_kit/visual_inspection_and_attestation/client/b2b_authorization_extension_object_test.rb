@@ -1,35 +1,51 @@
 module UDAPSecurityTestKit
   class B2BAuthorizationExtensionObjectAttestationTest < Inferno::Test
-    title 'Complies with B2B Authorization Extension Object'
+    title 'Complies with requirements for the B2B Flow and Authorization Extension Object'
     id :udap_security_b2b_authorization_extension_object
     description %(
-      Client applications complies with requirements for the B2B Authorization Extension Object and:
+      Client application complies with requirements for the B2B Flow and Authorization Extension Object and:
       - Includes `subject_name` parameter if it is known for human or non-human requestors.
       - Includes `subject_id` parameter for human requestors when the `subject_name` parameter is present.
       - Uses the National Provider Identifier (NPI) as the value for `subject_id` for human requestors in the US Realm.
-      - Ensures that the `consent_reference` parameter includes URLs that are resolvable by the receiving party
+      - Ensures that the `consent_reference` parameter includes URLs that are resolvable by the receiving party.
       - Omits `consent_reference` if `consent_policy` is not present.
+      - Ensures that the Requestor’s User, if applicable, is using the app only as authorized by the Requestor.
+      - Omits the `extensions` claim for client apps using the `authorization_code` flow.
+      - Includes the `subject_role` value if known for human requestors when the `subject_name` parameter is
+        present, and for US Realm, uses values/formats constrained by trust communities (preferably from the
+        NUCC Provider Taxonomy Code Set).
+      - Includes the `organization_id` value, using a URI scheme defined by the trust community.
     )
-    verifies_requirements 'hl7.fhir.us.udap-security_1.0.0@203',
+    verifies_requirements 'hl7.fhir.us.udap-security_1.0.0@187',
+                          'hl7.fhir.us.udap-security_1.0.0@199',
+                          'hl7.fhir.us.udap-security_1.0.0@203',
                           'hl7.fhir.us.udap-security_1.0.0@204',
                           'hl7.fhir.us.udap-security_1.0.0@205',
                           'hl7.fhir.us.udap-security_1.0.0@206',
                           'hl7.fhir.us.udap-security_1.0.0@207',
+                          'hl7.fhir.us.udap-security_1.0.0@208',
+                          'hl7.fhir.us.udap-security_1.0.0@213',
                           'hl7.fhir.us.udap-security_1.0.0@219',
                           'hl7.fhir.us.udap-security_1.0.0@220',
                           'hl7.fhir.us.udap-security_1.0.0@221'
 
     input :b2b_authorization_extension_object_compliance,
-          title: 'Complies with requirements for the B2B Authorization Extension Object',
+          title: 'Complies with requirements for the B2B Flow and Authorization Extension Object',
           description: %(
-            I attest that the client applications complies with requirements for the B2B Authorization Extension Object
-            and:
+            I attest that the client application complies with requirements for the B2B Flow and Authorization
+            Extension Object and:
             - Includes `subject_name` parameter if it is known for human or non-human requestors.
             - Includes `subject_id` parameter for human requestors when the `subject_name` parameter is present.
-            - Uses the National Provider Identifier (NPI) as the value for `subject_id` for human requestors in the US
-              Realm.
-            - Ensures that the `consent_reference` parameter includes URLs that are resolvable by the receiving party
+            - Uses the National Provider Identifier (NPI) as the value for `subject_id` for human requestors in the
+              US Realm.
+            - Ensures that the `consent_reference` parameter includes URLs that are resolvable by the receiving party.
             - Omits `consent_reference` if `consent_policy` is not present.
+            - Ensures that the Requestor’s User, if applicable, is using the app only as authorized by the Requestor.
+            - Omits the `extensions` claim for client apps using the `authorization_code` flow.
+            - Includes the `subject_role` value if known for human requestors when the `subject_name` parameter is
+              present, and for US Realm, uses values/formats constrained by trust communities (preferably from the
+              NUCC Provider Taxonomy Code Set).
+            - Includes the `organization_id` value, using a URI scheme defined by the trust community.
           ),
           type: 'radio',
           default: 'false',

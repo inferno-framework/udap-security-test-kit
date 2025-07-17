@@ -8,6 +8,6 @@ module UDAPSecurityTestKit
 
     run_as_group
     test from: :oidc_auth_request_construction
-    test from: :udap_security_access_token_request_validation
+    test from: :oidc_auth_request_validation
   end
 end

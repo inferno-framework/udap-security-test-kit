@@ -2,25 +2,8 @@ require_relative '../../lib/udap_security_test_kit/well_known_endpoint_test'
 
 RSpec.describe UDAPSecurityTestKit::WellKnownEndpointTest do
   let(:suite_id) { 'udap_security' }
-  let(:runnable) { Inferno::Repositories::Tests.new.find('udap_well_known_endpoint') }
-  let(:session_data_repo) { Inferno::Repositories::SessionData.new }
-  let(:results_repo) { Inferno::Repositories::Results.new }
-  let(:test_session) { repo_create(:test_session, test_suite_id: 'udap_security') }
+  let(:runnable) { find_test(suite, 'udap_well_known_endpoint') }
   let(:udap_fhir_base_url) { 'http://example.com/fhir' }
-
-  def run(runnable, inputs = {})
-    test_run_params = { test_session_id: test_session.id }.merge(runnable.reference_hash)
-    test_run = Inferno::Repositories::TestRuns.new.create(test_run_params)
-    inputs.each do |name, value|
-      session_data_repo.save(
-        test_session_id: test_session.id,
-        name:,
-        value:,
-        type: runnable.config.input_type(name)
-      )
-    end
-    Inferno::TestRunner.new(test_session:, test_run:).run(runnable)
-  end
 
   it 'passes if JSON is served from the UDAP well-known endpoint' do
     stub_request(:get, "#{udap_fhir_base_url}/.well-known/udap")

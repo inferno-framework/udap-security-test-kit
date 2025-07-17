@@ -2,10 +2,7 @@ require_relative '../../lib/udap_security_test_kit/token_exchange_response_body_
 
 RSpec.describe UDAPSecurityTestKit::TokenExchangeResponseBodyTest do
   let(:suite_id) { 'udap_security' }
-  let(:runnable) { Inferno::Repositories::Tests.new.find('udap_token_exchange_response_body') }
-  let(:session_data_repo) { Inferno::Repositories::SessionData.new }
-  let(:results_repo) { Inferno::Repositories::Results.new }
-  let(:test_session) { repo_create(:test_session, test_suite_id: 'udap_security') }
+  let(:runnable) { find_test(suite, 'udap_token_exchange_response_body') }
 
   let(:required_parameters) do
     [
@@ -19,20 +16,6 @@ RSpec.describe UDAPSecurityTestKit::TokenExchangeResponseBodyTest do
       'access_token' => 'example_access_token',
       'token_type' => 'Bearer'
     }
-  end
-
-  def run(runnable, inputs = {})
-    test_run_params = { test_session_id: test_session.id }.merge(runnable.reference_hash)
-    test_run = Inferno::Repositories::TestRuns.new.create(test_run_params)
-    inputs.each do |name, value|
-      session_data_repo.save(
-        test_session_id: test_session.id,
-        name:,
-        value:,
-        type: runnable.config.input_type(name)
-      )
-    end
-    Inferno::TestRunner.new(test_session:, test_run:).run(runnable)
   end
 
   it 'fails if response is not valid JSON' do

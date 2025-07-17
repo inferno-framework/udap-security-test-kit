@@ -3,10 +3,7 @@ require_relative '../../lib/udap_security_test_kit/default_cert_file_loader'
 
 RSpec.describe UDAPSecurityTestKit::RegistrationFailureInvalidJWTSignatureTest do
   let(:suite_id) { 'udap_security' }
-  let(:runnable) { Inferno::Repositories::Tests.new.find('udap_registration_failure_invalid_jwt_signature') }
-  let(:session_data_repo) { Inferno::Repositories::SessionData.new }
-  let(:results_repo) { Inferno::Repositories::Results.new }
-  let(:test_session) { repo_create(:test_session, test_suite_id: 'udap_security') }
+  let(:runnable) { find_test(suite, 'udap_registration_failure_invalid_jwt_signature') }
   let(:udap_client_cert_pem) do
     UDAPSecurityTestKit::DefaultCertFileLoader.load_test_client_cert_pem_file
   end
@@ -17,6 +14,15 @@ RSpec.describe UDAPSecurityTestKit::RegistrationFailureInvalidJWTSignatureTest d
   let(:udap_registration_requested_scope) { 'system/*' }
   let(:udap_registration_grant_type) { 'client_credentials' }
   let(:udap_registration_certifications) { '' }
+  let(:udap_auth_code_flow_client_registration_status) { 'update' }
+  let(:udap_auth_code_flow_client_cert_pem) do
+    UDAPSecurityTestKit::DefaultCertFileLoader.load_test_client_cert_pem_file
+  end
+
+  let(:udap_auth_code_flow_client_private_key) do
+    UDAPSecurityTestKit::DefaultCertFileLoader.load_test_client_private_key_file
+  end
+
   let(:input) do
     {
       udap_client_cert_pem:,
@@ -25,22 +31,10 @@ RSpec.describe UDAPSecurityTestKit::RegistrationFailureInvalidJWTSignatureTest d
       udap_jwt_signing_alg:,
       udap_registration_requested_scope:,
       udap_registration_grant_type:,
-      udap_registration_certifications:
+      udap_registration_certifications:,
+      udap_auth_code_flow_client_registration_status:,
+      udap_auth_code_flow_client_private_key:
     }
-  end
-
-  def run(runnable, inputs = {})
-    test_run_params = { test_session_id: test_session.id }.merge(runnable.reference_hash)
-    test_run = Inferno::Repositories::TestRuns.new.create(test_run_params)
-    inputs.each do |name, value|
-      session_data_repo.save(
-        test_session_id: test_session.id,
-        name:,
-        value:,
-        type: runnable.config.input_type(name)
-      )
-    end
-    Inferno::TestRunner.new(test_session:, test_run:).run(runnable)
   end
 
   it 'fails if response status is not 400' do
@@ -49,7 +43,7 @@ RSpec.describe UDAPSecurityTestKit::RegistrationFailureInvalidJWTSignatureTest d
 
     result = run(runnable, input)
 
-    expect(result.result).to eq('fail')
+    expect(result.result).to eq('fail'), result.result_message
   end
 
   it 'passes when response status is 400' do
@@ -58,6 +52,6 @@ RSpec.describe UDAPSecurityTestKit::RegistrationFailureInvalidJWTSignatureTest d
 
     result = run(runnable, input)
 
-    expect(result.result).to eq('pass')
+    expect(result.result).to eq('pass'), result.result_message
   end
 end

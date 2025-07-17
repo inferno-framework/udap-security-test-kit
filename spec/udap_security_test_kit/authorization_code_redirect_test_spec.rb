@@ -2,12 +2,10 @@ require_relative '../../lib/udap_security_test_kit/authorization_code_redirect_t
 
 RSpec.describe UDAPSecurityTestKit::AuthorizationCodeRedirectTest, :request do
   let(:suite_id) { 'udap_security' }
-  let(:test) { Inferno::Repositories::Tests.new.find('udap_authorization_code_redirect') }
-  let(:session_data_repo) { Inferno::Repositories::SessionData.new }
+  let(:test) { find_test(suite, 'udap_authorization_code_redirect') }
+  let(:url) { 'http://example.com/fhir' }
   let(:results_repo) { Inferno::Repositories::Results.new }
   let(:requests_repo) { Inferno::Repositories::Requests.new }
-  let(:test_session) { repo_create(:test_session, test_suite_id: 'udap_security') }
-  let(:url) { 'http://example.com/fhir' }
   let(:inputs) do
     {
       udap_fhir_base_url: url,
@@ -21,22 +19,6 @@ RSpec.describe UDAPSecurityTestKit::AuthorizationCodeRedirectTest, :request do
       udap_authorization_code_request_scopes: 'patient/Condition.rs',
       udap_authorization_code_request_aud: ['include_aud']
     }
-  end
-
-  def run(runnable, inputs = {})
-    test_run_params = { test_session_id: test_session.id }.merge(runnable.reference_hash)
-    test_run = Inferno::Repositories::TestRuns.new.create(test_run_params)
-    inputs.each do |name, value|
-      type = runnable.config.input_type(name)
-      type = 'text' if type == 'radio'
-      session_data_repo.save(
-        test_session_id: test_session.id,
-        name:,
-        value:,
-        type:
-      )
-    end
-    Inferno::TestRunner.new(test_session:, test_run:).run(runnable)
   end
 
   context "when optional 'scope' and 'aud' inputs are omitted" do

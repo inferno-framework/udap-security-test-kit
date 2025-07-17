@@ -1,11 +1,9 @@
 require_relative '../../lib/udap_security_test_kit/registration_success_contents_test'
+require_relative '../../lib/udap_security_test_kit/default_cert_file_loader'
 
 RSpec.describe UDAPSecurityTestKit::RegistrationSuccessContentsTest do
   let(:suite_id) { 'udap_security' }
-  let(:runnable) { Inferno::Repositories::Tests.new.find('udap_registration_success_contents') }
-  let(:session_data_repo) { Inferno::Repositories::SessionData.new }
-  let(:results_repo) { Inferno::Repositories::Results.new }
-  let(:test_session) { repo_create(:test_session, test_suite_id: 'udap_security') }
+  let(:runnable) { find_test(suite, 'udap_registration_success_contents') }
 
   let(:udap_software_statement_json) do
     '{"iss":"https://inferno.org/udap_security_test_kit/1716937143",
@@ -36,6 +34,14 @@ RSpec.describe UDAPSecurityTestKit::RegistrationSuccessContentsTest do
       "scope": "user/*.read"}'
   end
 
+  let(:udap_auth_code_flow_client_cert_pem) do
+    UDAPSecurityTestKit::DefaultCertFileLoader.load_test_client_cert_pem_file
+  end
+
+  let(:udap_auth_code_flow_client_private_key) do
+    UDAPSecurityTestKit::DefaultCertFileLoader.load_test_client_private_key_file
+  end
+
   let(:required_immutable_claims) do
     ['grant_types',
      'token_endpoint_auth_method']
@@ -49,30 +55,27 @@ RSpec.describe UDAPSecurityTestKit::RegistrationSuccessContentsTest do
     (required_immutable_claims + required_mutable_claims).append('client_id')
   end
 
-  def run(runnable, inputs = {})
-    test_run_params = { test_session_id: test_session.id }.merge(runnable.reference_hash)
-    test_run = Inferno::Repositories::TestRuns.new.create(test_run_params)
-    inputs.each do |name, value|
-      session_data_repo.save(
-        test_session_id: test_session.id,
-        name:,
-        value:,
-        type: runnable.config.input_type(name)
-      )
-    end
-    Inferno::TestRunner.new(test_session:, test_run:).run(runnable)
+  let(:inputs) do
+    {
+      udap_software_statement_json:,
+      udap_software_statement_jwt:,
+      udap_registration_grant_type:,
+      udap_registration_endpoint: 'https://udap-security.fast.hl7.org/connect/register',
+      udap_auth_code_flow_client_registration_status: 'update',
+      udap_auth_code_flow_client_cert_pem:,
+      udap_auth_code_flow_client_private_key:,
+      udap_auth_code_flow_cert_iss: 'https://inferno.org/udap_security_test_kit/1716937143',
+      udap_jwt_signing_alg: 'RS256',
+      udap_auth_code_flow_registration_scope: 'user/*.read',
+    }
   end
 
   it 'fails if response does not include required claims' do
     all_required_claims.each do |key|
       response_json = JSON.parse(correct_response)
       response_json.delete(key)
-      result = run(runnable,
-                   udap_software_statement_json:,
-                   udap_software_statement_jwt:,
-                   udap_registration_response: JSON.generate(response_json),
-                   udap_registration_grant_type:)
-      expect(result.result).to eq('fail')
+      result = run(runnable, inputs.merge({udap_registration_response: JSON.generate(response_json)}))
+      expect(result.result).to eq('fail'), result.result_message
       expect(result.result_message).to match(key.to_s)
     end
   end
@@ -85,8 +88,10 @@ RSpec.describe UDAPSecurityTestKit::RegistrationSuccessContentsTest do
                    udap_software_statement_json:,
                    udap_software_statement_jwt:,
                    udap_registration_response: JSON.generate(response_json),
-                   udap_registration_grant_type:)
-      expect(result.result).to eq('fail')
+                   udap_registration_grant_type:,
+                   udap_registration_endpoint: 'https://udap-security.fast.hl7.org/connect/register'
+                  )
+      expect(result.result).to eq('fail'), result.result_message
       expect(result.result_message).to match(key.to_s)
     end
   end
@@ -99,8 +104,10 @@ RSpec.describe UDAPSecurityTestKit::RegistrationSuccessContentsTest do
                    udap_software_statement_json:,
                    udap_software_statement_jwt:,
                    udap_registration_response: JSON.generate(response_json),
-                   udap_registration_grant_type:)
-      expect(result.result).to eq('fail')
+                   udap_registration_grant_type:,
+                   udap_registration_endpoint: 'https://udap-security.fast.hl7.org/connect/register'
+                  )
+      expect(result.result).to eq('fail'), result.result_message
       expect(result.result_message).to match(key.to_s)
     end
   end
@@ -114,7 +121,7 @@ RSpec.describe UDAPSecurityTestKit::RegistrationSuccessContentsTest do
                    udap_software_statement_jwt:,
                    udap_registration_response: JSON.generate(response_json),
                    udap_registration_grant_type:)
-      expect(result.result).to eq('pass')
+      expect(result.result).to eq('pass'), result.result_message
     end
   end
 
@@ -122,9 +129,16 @@ RSpec.describe UDAPSecurityTestKit::RegistrationSuccessContentsTest do
     result = run(runnable,
                  udap_software_statement_json:,
                  udap_software_statement_jwt:,
+                 udap_registration_endpoint: 'https://udap-security.fast.hl7.org/connect/register',
                  udap_registration_response: correct_response,
-                 udap_registration_grant_type:)
+                 udap_registration_grant_type:,
+                 udap_auth_code_flow_client_registration_status: 'update',
+                 udap_auth_code_flow_client_cert_pem:,
+                 udap_auth_code_flow_client_private_key:,
+                 udap_auth_code_flow_cert_iss: 'https://inferno.org/udap_security_test_kit/1716937143',
+                 udap_jwt_signing_alg: 'RS256'
+                )
 
-    expect(result.result).to eq('pass')
+    expect(result.result).to eq('pass'), result.result_message
   end
 end

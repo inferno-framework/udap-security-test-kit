@@ -4,7 +4,7 @@ require_relative '../../lib/udap_security_test_kit/default_cert_file_loader'
 
 RSpec.describe UDAPSecurityTestKit::SignedMetadataTrustVerificationTest do
   let(:suite_id) { 'udap_security' }
-  let(:runnable) { Inferno::Repositories::Tests.new.find('udap_signed_metadata_trust_verification') }
+  let(:runnable) { find_test(suite, 'udap_signed_metadata_trust_verification') }
   let(:session_data_repo) { Inferno::Repositories::SessionData.new }
   let(:results_repo) { Inferno::Repositories::Results.new }
   let(:test_session) { repo_create(:test_session, test_suite_id: 'udap_security') }

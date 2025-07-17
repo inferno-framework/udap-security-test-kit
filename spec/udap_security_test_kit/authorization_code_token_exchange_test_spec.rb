@@ -4,10 +4,7 @@ require_relative '../../lib/udap_security_test_kit/default_cert_file_loader'
 
 RSpec.describe UDAPSecurityTestKit::AuthorizationCodeTokenExchangeTest do
   let(:suite_id) { 'udap_security' }
-  let(:runnable) { Inferno::Repositories::Tests.new.find('udap_authorization_code_token_exchange') }
-  let(:session_data_repo) { Inferno::Repositories::SessionData.new }
-  let(:results_repo) { Inferno::Repositories::Results.new }
-  let(:test_session) { repo_create(:test_session, test_suite_id: 'udap_security') }
+  let(:runnable) { find_test(suite, 'udap_authorization_code_token_exchange') }
   let(:udap_auth_code_flow_client_cert_pem) do
     UDAPSecurityTestKit::DefaultCertFileLoader.load_test_client_cert_pem_file
   end
@@ -38,20 +35,6 @@ RSpec.describe UDAPSecurityTestKit::AuthorizationCodeTokenExchangeTest do
       url:,
       test_session_id: test_session.id
     )
-  end
-
-  def run(runnable, inputs = {})
-    test_run_params = { test_session_id: test_session.id }.merge(runnable.reference_hash)
-    test_run = Inferno::Repositories::TestRuns.new.create(test_run_params)
-    inputs.each do |name, value|
-      session_data_repo.save(
-        test_session_id: test_session.id,
-        name:,
-        value:,
-        type: runnable.config.input_type(name)
-      )
-    end
-    Inferno::TestRunner.new(test_session:, test_run:).run(runnable)
   end
 
   it 'passes if the token response has a 200 status' do

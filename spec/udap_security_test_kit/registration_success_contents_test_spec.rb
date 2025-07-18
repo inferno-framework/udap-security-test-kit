@@ -66,7 +66,7 @@ RSpec.describe UDAPSecurityTestKit::RegistrationSuccessContentsTest do
       udap_auth_code_flow_client_private_key:,
       udap_auth_code_flow_cert_iss: 'https://inferno.org/udap_security_test_kit/1716937143',
       udap_jwt_signing_alg: 'RS256',
-      udap_auth_code_flow_registration_scope: 'user/*.read',
+      udap_auth_code_flow_registration_scope: 'user/*.read'
     }
   end
 
@@ -74,7 +74,7 @@ RSpec.describe UDAPSecurityTestKit::RegistrationSuccessContentsTest do
     all_required_claims.each do |key|
       response_json = JSON.parse(correct_response)
       response_json.delete(key)
-      result = run(runnable, inputs.merge({udap_registration_response: JSON.generate(response_json)}))
+      result = run(runnable, inputs.merge({ udap_registration_response: JSON.generate(response_json) }))
       expect(result.result).to eq('fail'), result.result_message
       expect(result.result_message).to match(key.to_s)
     end
@@ -84,13 +84,7 @@ RSpec.describe UDAPSecurityTestKit::RegistrationSuccessContentsTest do
     all_required_claims.each do |key|
       response_json = JSON.parse(correct_response)
       response_json[key] = ''
-      result = run(runnable,
-                   udap_software_statement_json:,
-                   udap_software_statement_jwt:,
-                   udap_registration_response: JSON.generate(response_json),
-                   udap_registration_grant_type:,
-                   udap_registration_endpoint: 'https://udap-security.fast.hl7.org/connect/register'
-                  )
+      result = run(runnable, inputs.merge(udap_registration_response: JSON.generate(response_json)))
       expect(result.result).to eq('fail'), result.result_message
       expect(result.result_message).to match(key.to_s)
     end
@@ -100,13 +94,7 @@ RSpec.describe UDAPSecurityTestKit::RegistrationSuccessContentsTest do
     required_immutable_claims.each do |key|
       response_json = JSON.parse(correct_response)
       response_json[key] = 'CHANGED_VALUE'
-      result = run(runnable,
-                   udap_software_statement_json:,
-                   udap_software_statement_jwt:,
-                   udap_registration_response: JSON.generate(response_json),
-                   udap_registration_grant_type:,
-                   udap_registration_endpoint: 'https://udap-security.fast.hl7.org/connect/register'
-                  )
+      result = run(runnable, inputs.merge(udap_registration_response: JSON.generate(response_json)))
       expect(result.result).to eq('fail'), result.result_message
       expect(result.result_message).to match(key.to_s)
     end
@@ -116,28 +104,13 @@ RSpec.describe UDAPSecurityTestKit::RegistrationSuccessContentsTest do
     required_mutable_claims.each do |key|
       response_json = JSON.parse(correct_response)
       response_json[key] = 'CHANGED VALUE'
-      result = run(runnable,
-                   udap_software_statement_json:,
-                   udap_software_statement_jwt:,
-                   udap_registration_response: JSON.generate(response_json),
-                   udap_registration_grant_type:)
+      result = run(runnable, inputs.merge(udap_registration_response: JSON.generate(response_json)))
       expect(result.result).to eq('pass'), result.result_message
     end
   end
 
   it 'passes when all required values in registration response exactly match original client request values' do
-    result = run(runnable,
-                 udap_software_statement_json:,
-                 udap_software_statement_jwt:,
-                 udap_registration_endpoint: 'https://udap-security.fast.hl7.org/connect/register',
-                 udap_registration_response: correct_response,
-                 udap_registration_grant_type:,
-                 udap_auth_code_flow_client_registration_status: 'update',
-                 udap_auth_code_flow_client_cert_pem:,
-                 udap_auth_code_flow_client_private_key:,
-                 udap_auth_code_flow_cert_iss: 'https://inferno.org/udap_security_test_kit/1716937143',
-                 udap_jwt_signing_alg: 'RS256'
-                )
+    result = run(runnable, inputs.merge(udap_registration_response: correct_response))
 
     expect(result.result).to eq('pass'), result.result_message
   end

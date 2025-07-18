@@ -14,7 +14,6 @@ RSpec.describe UDAPSecurityTestKit::ClientCredentialsTokenExchangeTest do
 
   let(:base_url) { 'http://example.com/fhir' }
   let(:udap_token_endpoint) { 'http://example.com/token' }
-
   let(:input) do
     {
       udap_token_endpoint:,

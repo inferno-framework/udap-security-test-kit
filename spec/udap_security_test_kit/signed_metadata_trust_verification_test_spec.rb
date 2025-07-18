@@ -5,9 +5,6 @@ require_relative '../../lib/udap_security_test_kit/default_cert_file_loader'
 RSpec.describe UDAPSecurityTestKit::SignedMetadataTrustVerificationTest do
   let(:suite_id) { 'udap_security' }
   let(:runnable) { find_test(suite, 'udap_signed_metadata_trust_verification') }
-  let(:session_data_repo) { Inferno::Repositories::SessionData.new }
-  let(:results_repo) { Inferno::Repositories::Results.new }
-  let(:test_session) { repo_create(:test_session, test_suite_id: 'udap_security') }
 
   let(:client_cert) do
     UDAPSecurityTestKit::DefaultCertFileLoader.load_test_client_cert_pem_file
@@ -58,20 +55,6 @@ RSpec.describe UDAPSecurityTestKit::SignedMetadataTrustVerificationTest do
   # intermediate CA
   # Or, intermediate CA is in chain but system does not have access to root CA
   let(:missing_cert_error) { /unable to get local issuer certificate/ }
-
-  def run(runnable, inputs = {})
-    test_run_params = { test_session_id: test_session.id }.merge(runnable.reference_hash)
-    test_run = Inferno::Repositories::TestRuns.new.create(test_run_params)
-    inputs.each do |name, value|
-      session_data_repo.save(
-        test_session_id: test_session.id,
-        name:,
-        value:,
-        type: runnable.config.input_type(name)
-      )
-    end
-    Inferno::TestRunner.new(test_session:, test_run:).run(runnable)
-  end
 
   def create_test_jwt(include_root_ca: true)
     rsa_private = OpenSSL::PKey::RSA.generate 2048

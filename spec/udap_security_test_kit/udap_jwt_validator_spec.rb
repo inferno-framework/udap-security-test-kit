@@ -2,7 +2,6 @@ require_relative '../../lib/udap_security_test_kit/udap_jwt_validator'
 require_relative '../../lib/udap_security_test_kit/udap_jwt_builder'
 require_relative '../../lib/udap_security_test_kit/udap_x509_certificate'
 require_relative '../../lib/udap_security_test_kit/default_cert_file_loader'
-require 'pry'
 
 RSpec.describe UDAPSecurityTestKit::UDAPJWTValidator do # rubocop:disable RSpec/SpecFilePathFormat
   let(:inferno_client_cert) do

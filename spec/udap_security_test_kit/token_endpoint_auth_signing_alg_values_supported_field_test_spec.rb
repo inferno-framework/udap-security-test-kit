@@ -2,9 +2,7 @@ require_relative '../../lib/udap_security_test_kit/token_endpoint_auth_signing_a
 
 RSpec.describe UDAPSecurityTestKit::TokenEndpointAuthSigningAlgValuesSupportedFieldTest do
   let(:suite_id) { 'udap_security' }
-  let(:runnable) do
-    find_test(suite, 'udap_token_endpoint_auth_signing_alg_values_supported_field')
-  end
+  let(:runnable) { find_test(suite, 'udap_token_endpoint_auth_signing_alg_values_supported_field') }
 
   it 'fails if field is not present' do
     config = {}

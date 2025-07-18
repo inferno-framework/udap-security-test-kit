@@ -3,23 +3,6 @@ require_relative '../../lib/udap_security_test_kit/udap_certifications_required_
 RSpec.describe UDAPSecurityTestKit::UDAPCertificationsRequiredFieldTest do
   let(:suite_id) { 'udap_security' }
   let(:runnable) { find_test(suite, 'udap_certifications_required_field') }
-  let(:session_data_repo) { Inferno::Repositories::SessionData.new }
-  let(:results_repo) { Inferno::Repositories::Results.new }
-  let(:test_session) { repo_create(:test_session, test_suite_id: 'udap_security') }
-
-  def run(runnable, inputs = {})
-    test_run_params = { test_session_id: test_session.id }.merge(runnable.reference_hash)
-    test_run = Inferno::Repositories::TestRuns.new.create(test_run_params)
-    inputs.each do |name, value|
-      session_data_repo.save(
-        test_session_id: test_session.id,
-        name:,
-        value:,
-        type: runnable.config.input_type(name)
-      )
-    end
-    Inferno::TestRunner.new(test_session:, test_run:).run(runnable)
-  end
 
   it 'skips if udap_certifications_supported field is not present' do
     config = {}

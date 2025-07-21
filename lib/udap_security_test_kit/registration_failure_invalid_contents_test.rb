@@ -8,7 +8,7 @@ module UDAPSecurityTestKit
     description %(
       The [UDAP IG Section 3.1](https://hl7.org/fhir/us/udap-security/STU1/registration.html#software-statement) states:
       > The unique client URI used for the iss claim SHALL match the uriName entry in the Subject Alternative Name
-      > extension of the client app operator’s X.509 certificate, and SHALL uniquely identify a single client app
+      > extension of the client app operator’s X.509 certificate, and SHALL uniquelys identify a single client app
       > operator and application over time
 
       The [UDAP IG Section 3.2.3](https://hl7.org/fhir/us/udap-security/STU1/registration.html#request-body) states:

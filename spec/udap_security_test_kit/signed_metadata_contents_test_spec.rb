@@ -5,10 +5,7 @@ require_relative '../../lib/udap_security_test_kit/udap_x509_certificate'
 
 RSpec.describe UDAPSecurityTestKit::SignedMetadataContentsTest do
   let(:suite_id) { 'udap_security' }
-  let(:runnable) { Inferno::Repositories::Tests.new.find('udap_signed_metadata_contents') }
-  let(:session_data_repo) { Inferno::Repositories::SessionData.new }
-  let(:results_repo) { Inferno::Repositories::Results.new }
-  let(:test_session) { repo_create(:test_session, test_suite_id: 'udap_security') }
+  let(:runnable) { find_test(suite, 'udap_signed_metadata_contents') }
   let(:udap_well_known_metadata) do
     {
       'udap_versions_supported' => ['1'],
@@ -65,20 +62,6 @@ RSpec.describe UDAPSecurityTestKit::SignedMetadataContentsTest do
   end
 
   let(:signing_algorithm) { 'RS256' }
-
-  def run(runnable, inputs = {})
-    test_run_params = { test_session_id: test_session.id }.merge(runnable.reference_hash)
-    test_run = Inferno::Repositories::TestRuns.new.create(test_run_params)
-    inputs.each do |name, value|
-      session_data_repo.save(
-        test_session_id: test_session.id,
-        name:,
-        value:,
-        type: runnable.config.input_type(name)
-      )
-    end
-    Inferno::TestRunner.new(test_session:, test_run:).run(runnable)
-  end
 
   it 'skips if signed_metadata_jwt is blank' do
     config = {}

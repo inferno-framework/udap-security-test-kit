@@ -3,6 +3,7 @@ require_relative 'udap_security_test_kit/authorization_code_group'
 require_relative 'udap_security_test_kit/client_credentials_group'
 require_relative 'udap_security_test_kit/redirect_uri'
 require_relative 'udap_security_test_kit/metadata'
+require_relative 'udap_security_test_kit/visual_inspection_and_attestation/server_attestation_group'
 
 module UDAPSecurityTestKit
   class Suite < Inferno::TestSuite
@@ -93,5 +94,6 @@ module UDAPSecurityTestKit
 
     group from: :udap_authorization_code_group
     group from: :udap_client_credentials_group
+    group from: :udap_server_v100_visual_inspection_and_attestation
   end
 end

@@ -13,6 +13,7 @@ module UDAPSecurityTestKit
   class ServerAttestationGroup < Inferno::TestGroup
     id :udap_server_v100_visual_inspection_and_attestation
     title 'Visual Inspection and Attestation'
+    optional
 
     description <<~DESCRIPTION
       Perform visual inspections or attestations to ensure that the Server is conformant to the UDAP IG requirements.

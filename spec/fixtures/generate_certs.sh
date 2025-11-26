@@ -7,7 +7,7 @@ echo "CA private key generated"
 
 echo "Now generating self-signed CA cert"
 
-openssl req -x509 -new -nodes -key InfernoCA.key -sha256 -days 3650 -subj "/C=US/ST=MA/L=Bedford/O=Inferno/CN=Inferno-UDAP-Root-CA/emailAddress=inferno@groups.mitre.org" -addext "keyUsage = digitalSignature, keyCertSign, cRLSign" -addext "certificatePolicies = anyPolicy" -out InfernoCA.pem
+openssl req -x509 -new -nodes -key InfernoCA.key -sha256 -days 3650 -subj "/C=US/ST=MA/L=Bedford/O=Inferno/CN=Inferno-UDAP-Root-CA/" -addext "keyUsage = digitalSignature, keyCertSign, cRLSign" -addext "certificatePolicies = anyPolicy" -out InfernoCA.pem
 
 echo "Self-signed CA cert generated"
 

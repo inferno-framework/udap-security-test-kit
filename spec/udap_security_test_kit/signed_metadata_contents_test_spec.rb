@@ -47,7 +47,7 @@ RSpec.describe UDAPSecurityTestKit::SignedMetadataContentsTest do
     }
   end
 
-  let(:udap_fhir_base_url) { 'https://inferno.com/udap_security/ac' }
+  let(:udap_fhir_base_url) { 'https://inferno.com/udap_security_test_kit/ac' }
 
   let(:client_cert_pem) do
     UDAPSecurityTestKit::DefaultCertFileLoader.load_test_client_cert_pem_file

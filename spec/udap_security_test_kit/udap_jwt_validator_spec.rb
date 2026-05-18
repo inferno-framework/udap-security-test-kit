@@ -44,9 +44,6 @@ RSpec.describe UDAPSecurityTestKit::UDAPJWTValidator do # rubocop:disable RSpec/
         trust_anchor_certs
       )
       expect(validation_result[:success]).to be true
-      unless validation_result[:success]
-        puts "Trust chain validation error message: #{validation_result[:error_message]}" # rubocop:disable RSpec/Output
-      end
     end
 
     it 'returns that trust chain cannot be verified if CRL endpoint not accessible' do
@@ -91,9 +88,6 @@ RSpec.describe UDAPSecurityTestKit::UDAPJWTValidator do # rubocop:disable RSpec/
       )
 
       expect(validation_result[:success]).to be true
-      unless validation_result[:success]
-        puts "JWT Signature validation error message: #{validation_result[:error_message]}" # rubocop:disable RSpec/Output
-      end
     end
   end
 end

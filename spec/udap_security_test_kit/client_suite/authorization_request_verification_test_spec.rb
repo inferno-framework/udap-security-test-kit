@@ -1,5 +1,6 @@
 RSpec.describe UDAPSecurityTestKit::UDAPClientAppLaunchAuthorizationRequestVerification do # rubocop:disable RSpec/SpecFilePathFormat
   include UDAPSecurityTestKit::URLs
+
   let(:suite_id) { 'udap_security_client' }
   let(:test) { described_class }
   let(:test_session) do # overriden to add suite options

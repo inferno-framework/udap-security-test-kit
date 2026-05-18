@@ -1,5 +1,6 @@
 RSpec.describe UDAPSecurityTestKit::UDAPClientRegistrationInteraction, :request do # rubocop:disable RSpec/SpecFilePathFormat
   include UDAPSecurityTestKit::URLs
+
   let(:suite_id) { 'udap_security_client' }
   let(:test) { described_class }
   let(:results_repo) { Inferno::Repositories::Results.new }

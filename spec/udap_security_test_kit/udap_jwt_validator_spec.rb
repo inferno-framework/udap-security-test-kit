@@ -45,7 +45,7 @@ RSpec.describe UDAPSecurityTestKit::UDAPJWTValidator do # rubocop:disable RSpec/
       )
       expect(validation_result[:success]).to be true
       unless validation_result[:success]
-        puts "Trust chain validation error message: #{validation_result[:error_message]}"
+        puts "Trust chain validation error message: #{validation_result[:error_message]}" # rubocop:disable RSpec/Output
       end
     end
 
@@ -92,7 +92,7 @@ RSpec.describe UDAPSecurityTestKit::UDAPJWTValidator do # rubocop:disable RSpec/
 
       expect(validation_result[:success]).to be true
       unless validation_result[:success]
-        puts "JWT Signature validation error message: #{validation_result[:error_message]}"
+        puts "JWT Signature validation error message: #{validation_result[:error_message]}" # rubocop:disable RSpec/Output
       end
     end
   end

@@ -2,6 +2,7 @@ require_relative 'common_assertions'
 
 module UDAPSecurityTestKit
   extend CommonAssertions
+
   class RegEndpointJWTSigningAlgValuesSupportedFieldTest < Inferno::Test
     include Inferno::DSL::Assertions
 

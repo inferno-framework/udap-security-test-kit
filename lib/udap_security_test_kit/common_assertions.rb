@@ -7,7 +7,7 @@ module CommonAssertions
 
     assert values.is_a?(Array), "`#{field}` should be an Array, but found #{values.class.name}"
 
-    non_string_values = values.reject { |value| value.is_a?(String) }
+    non_string_values = values.grep_v(String)
 
     assert non_string_values.blank?,
            "`#{field}` should be an Array of strings, but found

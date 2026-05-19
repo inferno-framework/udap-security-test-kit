@@ -1,5 +1,6 @@
 RSpec.describe UDAPSecurityTestKit::MockUDAPServer, :request, :runnable do # rubocop:disable RSpec/SpecFilePathFormat
   include UDAPSecurityTestKit::URLs
+
   let(:suite_id) { 'udap_security_client' }
   let(:test) { suite.children[2].children[0] } # access test
   let(:results_repo) { Inferno::Repositories::Results.new }

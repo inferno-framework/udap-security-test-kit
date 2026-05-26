@@ -94,7 +94,8 @@ module UDAPSecurityTestKit
       return unless decoded_token.present?
 
       # header checked with signature
-      check_jwt_payload(oauth_flow, decoded_token.payload, request_num, jti_list, registered_client_id, request_time)
+      check_jwt_payload(oauth_flow, decoded_token.unverified_payload, request_num, jti_list, registered_client_id,
+                        request_time)
       check_jwt_signature(decoded_token, registration_token, request_num)
     end
 

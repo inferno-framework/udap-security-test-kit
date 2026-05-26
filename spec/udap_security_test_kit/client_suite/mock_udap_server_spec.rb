@@ -66,10 +66,15 @@ RSpec.describe UDAPSecurityTestKit::MockUDAPServer, :request, :runnable do # rub
   end
   let(:udap_assertion_correct_cert) { make_signed_udap_jwt(udap_payload_invalid, leaf_key, [leaf_cert]) }
   let(:udap_assertion_wrong_cert) { make_signed_udap_jwt(udap_payload_invalid, root_key, [root_cert]) }
+  let(:udap_assertion_sig_invalid) do
+    parts = udap_assertion_correct_cert.split('.')
+    parts[2] = Base64.urlsafe_encode64(SecureRandom.bytes(256), padding: false)
+    parts.join('.')
+  end
   let(:udap_token_request_body_sig_invalid) do
     { grant_type: 'client_credentials',
       client_assertion_type: 'invalid',
-      client_assertion: "#{udap_assertion_correct_cert}bad",
+      client_assertion: udap_assertion_sig_invalid,
       udap: 1 }
   end
   let(:udap_token_request_body_sig_valid) do
@@ -103,7 +108,7 @@ RSpec.describe UDAPSecurityTestKit::MockUDAPServer, :request, :runnable do # rub
   let(:udap_ac_token_request_body_sig_invalid) do
     { grant_type: 'authorization_code',
       client_assertion_type: 'invalid',
-      client_assertion: "#{udap_assertion_correct_cert}bad",
+      client_assertion: udap_assertion_sig_invalid,
       udap: 1,
       code: authorization_code }
   end
@@ -119,7 +124,7 @@ RSpec.describe UDAPSecurityTestKit::MockUDAPServer, :request, :runnable do # rub
     { grant_type: 'refresh_token',
       refresh_token:,
       client_assertion_type: 'invalid',
-      client_assertion: "#{udap_assertion_correct_cert}bad",
+      client_assertion: udap_assertion_sig_invalid,
       udap: 1 }
   end
 

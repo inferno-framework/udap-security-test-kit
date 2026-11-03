@@ -13,8 +13,19 @@ module UDAPSecurityTestKit
         MockUDAPServer.issued_token_to_client_id(request.params[:token])
       end
 
+      # RFC 7662 section 2.2: a token the server does not recognize is reported
+      # as inactive rather than as an error, including when it cannot be
+      # matched to a waiting test session.
+      def no_session_response
+        render_introspection_response({ active: false })
+      end
+
       def make_response
-        response.body = make_udap_introspection_response.to_json
+        render_introspection_response(make_udap_introspection_response)
+      end
+
+      def render_introspection_response(body)
+        response.body = body.to_json
         response.headers['Cache-Control'] = 'no-store'
         response.headers['Pragma'] = 'no-cache'
         response.headers['Access-Control-Allow-Origin'] = '*'

@@ -205,6 +205,9 @@ module UDAPSecurityTestKit
     def update_response_for_expired_token(response, type)
       response.status = 401
       response.format = :json
+      response.headers['Cache-Control'] = 'no-store'
+      response.headers['Pragma'] = 'no-cache'
+      response.headers['Access-Control-Allow-Origin'] = '*'
       response.body = FHIR::OperationOutcome.new(
         issue: FHIR::OperationOutcome::Issue.new(severity: 'fatal', code: 'expired',
                                                  details: FHIR::CodeableConcept.new(text: "#{type} has expired"))
@@ -276,10 +279,13 @@ module UDAPSecurityTestKit
       parsed_body&.dig('software_statement')
     end
 
-    def update_response_for_error(response, error_message)
-      response.status = 401
+    def update_response_for_error(response, error_message, status: 401, error: 'invalid_client')
+      response.status = status
       response.format = :json
-      response.body = { error: 'invalid_client', error_description: error_message }.to_json
+      response.headers['Cache-Control'] = 'no-store'
+      response.headers['Pragma'] = 'no-cache'
+      response.headers['Access-Control-Allow-Origin'] = '*'
+      response.body = { error:, error_description: error_message }.to_json
     end
 
     def client_id_from_client_assertion(client_assertion_jwt)
